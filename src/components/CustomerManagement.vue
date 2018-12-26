@@ -1,0 +1,13 @@
+<template>
+    <div>CustomerManagement</div>
+</template>
+
+<script>
+    export default {
+        name: "CustomerManagement"
+    }
+</script>
+
+<style scoped>
+
+</style>
