@@ -122,16 +122,16 @@
 <script>
   export default {
     name: 'App',
-    methods:{
-      handleOpen:function (key) {
-        console.log(key)
-        this.$router.push(key);
+    methods: {
+      handleOpen: function (key) {
+        if (key.length > 1) {
+          this.$router.push(key);
+        }
       },
-      handleClose:function () {
+      handleClose: function () {
 
       },
-      handleSelect(key){
-        console.log(key)
+      handleSelect(key) {
         this.$router.push(key);
         // this.breadcrumbItems  = ['消费开单']
       },
@@ -144,18 +144,21 @@
     margin: 0;
     padding: 0;
   }
-  .logo{
+
+  .logo {
     height: 55px;
     width: 185px;
     position: relative;
-    transform: translate(-50%,-50%);
+    transform: translate(-50%, -50%);
     top: 50%;
     left: 8%;
   }
-  .el-submenu-margin{
+
+  .el-submenu-margin {
     margin-left: 15px;
   }
-  .el-aside-hidden{
+
+  .el-aside-hidden {
     overflow: hidden;
   }
 
