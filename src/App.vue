@@ -11,7 +11,7 @@
 
         <el-aside width="200px">
           <el-menu default-active="active" class="el-menu-vertical-demo" @open="handleOpen"
-                   @close="handleClose" @select="handleSelect">
+                   @close="handleClose" @select="handleSelect" router="true">
 
             <el-menu-item index="0">
               <template slot="title">
@@ -108,7 +108,13 @@
 
         <el-main>
           <el-container>
-            <el-header class="nav-title">{{$route.name}}</el-header>
+            <el-header class="nav-title">
+              <el-breadcrumb style="line-height: 45px" separator-class="el-icon-arrow-right">
+                <el-breadcrumb-item :to="{ path: '/' }">首页</el-breadcrumb-item>
+                <el-breadcrumb-item v-for="(item,index) in navPath">{{item}}</el-breadcrumb-item>
+              </el-breadcrumb>
+              <!--{{$route.name}}-->
+            </el-header>
             <el-main>
               <router-view/>
             </el-main>
@@ -124,17 +130,24 @@
 <script>
   export default {
     name: 'App',
+    data() {
+      return {
+        navPath: []
+      }
+    },
     methods: {
       handleOpen: function (key) {
         if (key.length > 1) {
-          this.$router.push(key);
+          // this.$router.push(key);
         }
       },
       handleClose: function () {
 
       },
-      handleSelect(key) {
-        this.$router.push(key);
+      handleSelect(key,path) {
+        console.log(path)
+        // this.$router.push(key);
+        this.navPath = path
         // this.breadcrumbItems  = ['消费开单']
       },
     }

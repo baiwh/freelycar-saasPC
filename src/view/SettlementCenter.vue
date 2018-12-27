@@ -44,6 +44,7 @@
       <div slot="header" class="clearfix">
         <span>支付方式</span>
       </div>
+
       <el-row>
         <el-col :span="8">
           <span class="fontSize">支付方式：</span>
@@ -63,6 +64,7 @@
           <i class="el-icon-circle-plus-outline" @click="handlePlusIconClick"></i>
         </el-col>
       </el-row>
+
       <!--可隐藏的叠加支付方式模块-->
       <div v-show="visible">
         <el-row>
@@ -96,23 +98,24 @@
     name: 'SettlementCenter',
     data() {
       return {
-        settlementCenterTable: [{
-          project: '维修维修维修',
-          price: '554',
-          staff: '张三'
-        }, {
-          project: '洗车',
-          price: '20',
-          staff: '李四'
-        }, {
-          project: '维修',
-          price: '123',
-          staff: '王五'
-        }, {
-          project: '维修',
-          price: '11',
-          staff: '赵六'
-        }],
+        settlementCenterTable: [
+          {
+            project: '维修维修维修',
+            price: '554',
+            staff: '张三'
+          }, {
+            project: '洗车',
+            price: '20',
+            staff: '李四'
+          }, {
+            project: '维修',
+            price: '123',
+            staff: '王五'
+          }, {
+            project: '维修',
+            price: '11',
+            staff: '赵六'
+          }],
         fittingDetailsTable: [{
           fittingCategory: '机油',
           fittingName: '嘉实多机油',
@@ -123,33 +126,35 @@
         deductionAmounts: '',
         payAmounts: '',
         payMethods: '',
-        payMethodOptions: [{
-          value: '1',
-          label: '会员卡'
-        }, {
-          value: '2',
-          label: '现金'
-        }, {
-          value: '3',
-          label: '微信'
-        }, {
-          value: '4',
-          label: '支付宝'
-        }, {
-          value: '5',
-          label: '易付宝'
-        }, {
-          value: '6',
-          label: '刷卡'
-        }],
+        payMethodOptions: [
+          {
+            value: '1',
+            label: '会员卡'
+          }, {
+            value: '2',
+            label: '现金'
+          }, {
+            value: '3',
+            label: '微信'
+          }, {
+            value: '4',
+            label: '支付宝'
+          }, {
+            value: '5',
+            label: '易付宝'
+          }, {
+            value: '6',
+            label: '刷卡'
+          }],
         usableCards: '',
-        usableCardOptions: [{
-          value: '1',
-          label: '1500储值卡'
-        }, {
-          value: '2',
-          label: '3000储值卡'
-        }],
+        usableCardOptions: [
+          {
+            value: '1',
+            label: '1500储值卡'
+          }, {
+            value: '2',
+            label: '3000储值卡'
+          }],
         visible: false,
         sumMoney: []
       }
@@ -169,7 +174,7 @@
             this.sumMoney[this.sumMoney.length] = sums[index]
           }
         })
-        console.log('sums:',sums)
+        console.log('sums:', sums)
         return sums
       },
       getFittingSummaries(param) {
@@ -199,7 +204,7 @@
       amountsPayableComputed() {
         // console.log('typeof this.sumMoney:',typeof this.sumMoney)
         if (this.sumMoney.length !== 0) {
-          console.log('typeof this.sumMoney:',this.sumMoney.reduce((prev, curr) => prev + curr))
+          console.log('typeof this.sumMoney:', this.sumMoney.reduce((prev, curr) => prev + curr))
           this.amountsPayableComputed = this.sumMoney.reduce((prev, curr) => prev + curr)
         }
       }
@@ -227,9 +232,10 @@
     margin: 0 auto;
   }
 
-  .paymentInput{
+  .paymentInput {
     margin-bottom: 40px;
   }
+
   .buttonStyle {
     width: 200px;
     text-align: center;
