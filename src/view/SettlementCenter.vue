@@ -1,33 +1,26 @@
 <template>
   <div>
+
     <!--服务项目模块-->
-    <div>
-      <p>服务项目</p>
-      <el-table
-        :data="settlementCenterTable"
-        border
-        style="width: 95%"
-        show-summary
-        :summary-method="getProjectSummaries"
-      >
+    <el-card shadow="hover">
+      <div slot="header" class="clearfix">
+        <span>服务项目</span>
+      </div>
+      <el-table :data="settlementCenterTable" show-summary :summary-method="getProjectSummaries">
         <el-table-column type="index" width="50" label="序号" align="center"/>
         <el-table-column width="70" align="center"/>
         <el-table-column property="project" label="项目" width="200" align="center"/>
         <el-table-column property="price" label="项目价格" width="120" align="center"/>
         <el-table-column property="staff" label="施工人员" align="center"/>
       </el-table>
-    </div>
+    </el-card>
 
     <!--配件明细模块-->
-    <div class="marginTop">
-      <p>配件明细</p>
-      <el-table
-        :data="fittingDetailsTable"
-        border
-        style="width: 95%"
-        show-summary
-        :summary-method="getFittingSummaries"
-      >
+    <el-card shadow="hover">
+      <div slot="header" class="clearfix">
+        <span>配件明细</span>
+      </div>
+      <el-table :data="fittingDetailsTable" show-summary :summary-method="getFittingSummaries">
         <el-table-column type="index" width="50" label="序号" align="center"/>
         <el-table-column width="70" align="center"/>
         <el-table-column property="fittingCategory" width="90" label="配件类别" align="center"/>
@@ -36,21 +29,21 @@
         <el-table-column property="perPrice" width="70" label="单价" align="center"/>
         <el-table-column property="sumPrice" label="总价" align="center"/>
       </el-table>
-    </div>
+    </el-card>
 
     <!--应付金额模块-->
-    <div class="marginTop">
-      <el-row>
-        <el-col :span="8" :offset="16">
-          应付金额：
-          <el-input :value="amountsPayableComputed" size="small" class="inputWidth red" disabled/>
-        </el-col>
-      </el-row>
-    </div>
+    <el-row class="paymentInput">
+      <el-col :span="6" :offset="18">
+        应付金额：
+        <el-input :value="amountsPayableComputed" size="small" class="inputWidth red" disabled/>
+      </el-col>
+    </el-row>
 
     <!--支付方式模块-->
-    <div>
-      <p>支付方式</p>
+    <el-card shadow="hover">
+      <div slot="header" class="clearfix">
+        <span>支付方式</span>
+      </div>
       <el-row>
         <el-col :span="8">
           <span class="fontSize">支付方式：</span>
@@ -70,29 +63,31 @@
           <i class="el-icon-circle-plus-outline" @click="handlePlusIconClick"></i>
         </el-col>
       </el-row>
-    </div>
+      <!--可隐藏的叠加支付方式模块-->
+      <div v-show="visible">
+        <el-row>
+          <el-col :span="8">
+            <span class="fontSize">支付方式：</span>
+            <el-select v-model="payMethods" size="small" class="inputWidth">
+              <el-option v-for="item in payMethodOptions" :key="item.value" :label="item.label" :value="item.value"/>
+            </el-select>
+          </el-col>
+          <el-col :span="8">
+            <span class="fontSize">支付金额：</span>
+            <el-input v-model="payAmounts" size="small" class="inputWidth red"/>
+          </el-col>
+          <el-col :span="2" :offset="6">
+            <i class="el-icon-remove-outline" @click="handleRemoveIconClick"></i>
+          </el-col>
+        </el-row>
+      </div>
 
-    <!--可隐藏的叠加支付方式模块-->
-    <div class="marginTop" v-show="visible">
-      <el-row>
-        <el-col :span="8">
-          <span class="fontSize">支付方式：</span>
-          <el-select v-model="payMethods" size="small" class="inputWidth">
-            <el-option v-for="item in payMethodOptions" :key="item.value" :label="item.label" :value="item.value"/>
-          </el-select>
-        </el-col>
-        <el-col :span="8">
-          <span class="fontSize">支付金额：</span>
-          <el-input v-model="payAmounts" size="small" class="inputWidth red"/>
-        </el-col>
-        <el-col :span="2" :offset="6">
-          <i class="el-icon-remove-outline" @click="handleRemoveIconClick"></i>
-        </el-col>
-      </el-row>
-    </div>
-    <div class="buttonStyle">
-      <el-button type="primary" size="small" class="marginTop">确定</el-button>
-    </div>
+      <!--确定按钮-->
+      <div class="buttonStyle">
+        <el-button type="primary" size="small" style="margin: 40px">确定</el-button>
+      </div>
+    </el-card>
+
   </div>
 </template>
 
@@ -143,7 +138,7 @@
         }, {
           value: '5',
           label: '易付宝'
-        },{
+        }, {
           value: '6',
           label: '刷卡'
         }],
@@ -162,31 +157,30 @@
     methods: {
       getProjectSummaries(param) {
         // 计算服务项目的总价
-         console.log(1)
-         const { columns, data } = param
-         const sums = []
-         columns.forEach((column, index) => {
-           if (index === 1) {
-             sums[index] = '合计'
-             return
-           }else if(index === 3){
-             const values = data.map(item => Number(item.price))
-             sums[index] = values.reduce((prev, curr) => prev + curr)
-             this.sumMoney[this.sumMoney.length] = sums[index]
-           }
+        const {columns, data} = param
+        const sums = []
+        columns.forEach((column, index) => {
+          if (index === 1) {
+            sums[index] = '合计'
+            return
+          } else if (index === 3) {
+            const values = data.map(item => Number(item.price))
+            sums[index] = values.reduce((prev, curr) => prev + curr)
+            this.sumMoney[this.sumMoney.length] = sums[index]
+          }
         })
+        console.log('sums:',sums)
         return sums
       },
       getFittingSummaries(param) {
         // 计算配件明细的总价
-        console.log(2)
-        const { columns, data } = param
+        const {columns, data} = param
         const sums = []
         columns.forEach((column, index) => {
-          if(index === 1){
+          if (index === 1) {
             sums[index] = '合计'
             return
-          }else if(index === columns.length-1){
+          } else if (index === columns.length - 1) {
             const values = data.map(item => Number(item.sumPrice))
             sums[index] = values.reduce((prev, curr) => prev + curr)
             this.sumMoney[this.sumMoney.length] = sums[index]
@@ -203,8 +197,9 @@
     },
     computed: {
       amountsPayableComputed() {
-        console.log(3)
-        if(this.sumMoney.length !== 0){
+        // console.log('typeof this.sumMoney:',typeof this.sumMoney)
+        if (this.sumMoney.length !== 0) {
+          console.log('typeof this.sumMoney:',this.sumMoney.reduce((prev, curr) => prev + curr))
           this.amountsPayableComputed = this.sumMoney.reduce((prev, curr) => prev + curr)
         }
       }
@@ -216,24 +211,33 @@
 </script>
 
 <style lang="less" scoped>
-.inputWidth {
-  width: 50%;
-}
-.marginTop {
-  margin-top: 30px;
-}
-.fontSize {
-  font-size: 14px;
-}
-.marginHorizontal {
-  margin: 0 auto;
-}
-.buttonStyle {
-  width: 200px;
-  text-align: center;
-  margin: 0 auto;
-}
-.red /deep/ .el-input__inner {
-  color: red!important;
-}
+  .inputWidth {
+    width: 50%;
+  }
+
+  .el-card {
+    margin-bottom: 40px;
+  }
+
+  .fontSize {
+    font-size: 14px;
+  }
+
+  .marginHorizontal {
+    margin: 0 auto;
+  }
+
+  .paymentInput{
+    margin-bottom: 40px;
+  }
+  .buttonStyle {
+    width: 200px;
+    text-align: center;
+    margin: 0 auto;
+  }
+
+  .red /deep/ .el-input__inner {
+    color: red !important;
+  }
+
 </style>
