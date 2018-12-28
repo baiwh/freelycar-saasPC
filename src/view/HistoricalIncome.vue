@@ -22,14 +22,13 @@
           <el-table-column property="date" label="时间" align="center"/>
           <el-table-column property="paidAmount" label="实收金额" align="center"/>
         </el-table>
+        <!--更多-->
+        <el-row class="more">
+          <el-col :span="2" :offset="22">
+            <a href="###">更多</a>
+          </el-col>
+        </el-row>
       </el-card>
-
-      <!--更多-->
-      <el-row>
-        <el-col :span="2" :offset="22">
-          <a href="###">更多</a>
-        </el-col>
-      </el-row>
     </div>
 </template>
 
@@ -86,5 +85,8 @@
 }
 .el-card {
   margin: 40px 0 20px;
+}
+.more {
+  margin: 20px 0;
 }
 </style>

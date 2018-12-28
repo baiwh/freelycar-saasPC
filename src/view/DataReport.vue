@@ -28,7 +28,7 @@
       <!--消费金额卡片-->
       <el-row :gutter="20">
         <el-col :span="8" v-for="(item, index) of dataReportCard" :key="index">
-          <el-card class="text-center">
+          <el-card class="text-center" shadow="hover">
             <div slot="header" class="clearfix">
               <span>{{item.title}}</span>
             </div>
@@ -39,7 +39,7 @@
 
       <!--收款方式模块-->
       <el-row>
-        <el-card>
+        <el-card shadow="hover">
           <div slot="header" class="clearfix">
             <span>收款方式</span>
           </div>
@@ -56,7 +56,7 @@
 
       <!--项目类别-->
       <el-row>
-        <el-card>
+        <el-card shadow="hover">
           <div slot="header" class="clearfix">
             <span>项目类别</span>
           </div>
@@ -109,14 +109,8 @@
         },
         methods: {
           onButtonChange (e) {
-            if(e === 'search'){
-              this.visible = true
-              this.num = 0
-            }else {
-              this.visible = false
-              this.num = 12
-            }
-
+            this.visible = e === 'search' ? true : false
+            this.num = e === 'search' ? 0 : 12
           }
         },
         mounted: function () {
