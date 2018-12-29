@@ -7,11 +7,7 @@
         </div>
         <el-row>
           <el-col :span="10">
-            <el-form
-              :model="clientForm"
-              :rules="clientFormRules"
-              ref="clientForm"
-              label-width="100px">
+            <el-form :model="clientForm" :rules="clientFormRules" ref="clientForm" label-width="100px">
               <el-form-item label="客户姓名：" prop="clientName">
                 <el-input v-model="clientForm.clientName"></el-input>
               </el-form-item>
@@ -23,21 +19,13 @@
               </el-form-item>
               <el-form-item label="车辆型号：">
                 <el-select v-model="clientForm.clientVehicleModel" placeholder="请选择车辆型号">
-                  <el-option
-                    v-for="item in vehicleModelOptions"
-                    :key="item.index"
-                    :label="item.vehicleModel"
-                    :value="item.vehicleModel"/>
+                  <el-option v-for="item in vehicleModelOptions" :key="item.index" :label="item.vehicleModel" :value="item.vehicleModel"/>
                 </el-select>
               </el-form-item>
             </el-form>
           </el-col>
           <el-col :span="10" :offset="2">
-            <el-form
-              :model="clientForm"
-              :rules="clientFormRules"
-              ref="clientForm"
-              label-width="100px">
+            <el-form :model="clientForm" :rules="clientFormRules" ref="clientForm" label-width="100px">
               <el-form-item label="性别：" prop="clientGender">
                 <el-radio-group v-model="clientForm.clientGender">
                   <el-radio label="男"></el-radio>
@@ -62,10 +50,7 @@
         </div>
         <el-row>
           <el-col :span="10">
-            <el-form
-              :model="memberForm"
-              ref="memberForm"
-              label-width="100px">
+            <el-form :model="memberForm" ref="memberForm" label-width="100px">
               <el-form-item label="会员卡号：" prop="memberCard">
                 <el-input v-model="memberForm.memberCard"></el-input>
               </el-form-item>
@@ -77,26 +62,16 @@
               </el-form-item>
               <el-form-item label="支付方式：">
                 <el-select v-model="memberForm.payMethods" placeholder="请选择支付方式">
-                  <el-option
-                    v-for="item in payMethodsOptions"
-                    :key="item.index"
-                    :label="item.payMethods"
-                    :value="item.payMethods"/>
+                  <el-option v-for="item in payMethodsOptions" :key="item.index" :label="item.payMethods" :value="item.payMethods"/>
                 </el-select>
               </el-form-item>
             </el-form>
           </el-col>
           <el-col :span="10" :offset="2">
-            <el-form
-              :model="memberForm"
-              label-width="100px">
+            <el-form :model="memberForm" label-width="100px">
               <el-form-item label="支付方式：">
                 <el-select v-model="memberForm.memberCardKind" placeholder="请选择储值卡">
-                  <el-option
-                    v-for="item in memberCardKindOptions"
-                    :key="item.index"
-                    :label="item.memberCardKind"
-                    :value="item.memberCardKind"/>
+                  <el-option v-for="item in memberCardKindOptions" :key="item.index" :label="item.memberCardKind" :value="item.memberCardKind"/>
                 </el-select>
               </el-form-item>
               <el-form-item label="有效期：" prop="validityPeriod">

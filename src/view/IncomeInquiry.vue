@@ -24,7 +24,7 @@
       <!--收入查询页面卡片-->
       <el-row :gutter="40">
         <el-col :span="12" v-for="(item, index) of incomeInquiryCard" :key="index">
-          <el-card class="text-center" shadow="hover">
+          <el-card :class="['text-center',item.cardClass]" shadow="hover">
             <div slot="header" class="clearfix">
               <span>{{item.title}}</span>
             </div>
@@ -64,10 +64,12 @@
               visible: false,
               incomeInquiryCard: [{
                 title: '实际收入',
-                number: '12456.234'
+                number: '12456.234',
+                cardClass: 'orange'
               }, {
                 title: '实际支出',
-                number: '12456.234'
+                number: '12456.234',
+                cardClass: 'green'
               }],
               incomeInquiryTable: [{
                 date: '2019-1',
@@ -103,5 +105,11 @@
 }
 .more {
   margin: 20px 0;
+}
+.orange /deep/ .el-card__header {
+  background-color: #f90;
+}
+.green /deep/ .el-card__header {
+  background-color: #81cdd8;
 }
 </style>

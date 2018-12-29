@@ -28,7 +28,7 @@
       <!--消费金额卡片-->
       <el-row :gutter="20">
         <el-col :span="8" v-for="(item, index) of dataReportCard" :key="index">
-          <el-card class="text-center" shadow="hover">
+          <el-card :class="['text-center',item.cardClass]" shadow="hover">
             <div slot="header" class="clearfix">
               <span>{{item.title}}</span>
             </div>
@@ -81,13 +81,16 @@
               datePickerValue: '',
               dataReportCard: [{
                 title: '实收金额',
-                number: '81.00'
+                number: '81.00',
+                cardClass: 'orange'
               }, {
                 title: '会员消费金额',
-                number: '81.00'
+                number: '81.00',
+                cardClass: 'green'
               }, {
                 title: '散客消费金额',
-                number: '81.00'
+                number: '81.00',
+                cardClass: 'grey'
               }],
               amountMethodsTable: [{
                 crash: '2121',
@@ -136,5 +139,14 @@
 }
 .text-center {
   text-align: center;
+}
+.orange /deep/ .el-card__header {
+  background-color: #f90;
+}
+.green /deep/ .el-card__header {
+  background-color: #81cdd8;
+}
+.grey /deep/ .el-card__header {
+  background-color: #ccc;
 }
 </style>
