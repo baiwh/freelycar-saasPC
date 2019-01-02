@@ -4,6 +4,8 @@
       <div slot="header">
         <span>门店信息</span>
       </div>
+
+      <!--表单信息-->
       <el-row>
         <el-col :span="15">
           <el-form :model="storeForm" label-width="100px">
@@ -29,6 +31,8 @@
           </el-form>
           <el-button type="primary">确认上传</el-button>
         </el-col>
+
+        <!--图片上传-->
         <el-col :span="7" :offset="2">
           <p>上传图片：</p>
           <el-upload
