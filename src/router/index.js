@@ -19,10 +19,6 @@ import CardManagement from '@/view/CardManagement'
 import CreditVoucherManagement from '@/view/CreditVoucherManagement'
 // 财务管理
 import IncomeInquiry from '@/view/IncomeInquiry'
-import IncomeBreakdown from '@/view/IncomeBreakdown'
-import HistoricalIncome from '@/view/HistoricalIncome'
-import HistoricalIncomeBreakdown from '@/view/HistoricalIncomeBreakdown'
-import DataReport from '@/view/DataReport'
 import FlowDetails from '@/view/FlowDetails'
 // 系统设置
 import EmployeeManagement from '@/view/EmployeeManagement'
@@ -111,26 +107,6 @@ export default new Router({
       path: '/FlowDetails',
       name: '流水明细',
       component:FlowDetails
-    },
-    {
-      path: '/IncomeBreakdown',
-      name: '收入明细',
-      component:IncomeBreakdown
-    },
-    {
-      path: '/HistoricalIncome',
-      name: '历史收入',
-      component:HistoricalIncome
-    },
-    {
-      path: '/HistoricalIncomeBreakdown',
-      name: '历史收入明细',
-      component:HistoricalIncomeBreakdown
-    },
-    {
-      path: '/DataReport',
-      name: '数据报表',
-      component:DataReport
     },
     {
       path: '/EmployeeManagement',
