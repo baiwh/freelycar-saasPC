@@ -20,87 +20,61 @@
               </template>
             </el-menu-item>
 
-            <el-submenu index="1">
+            <el-submenu index="消费开单">
               <template slot="title">
                 <i class="el-icon-document"></i>
                 <span>消费开单</span>
               </template>
-              <el-submenu index="/QuickBilling" class="el-submenu-margin">
-                <template slot="title">快速开单</template>
-                <el-menu-item index="/SettlementCenter">结算中心</el-menu-item>
-              </el-submenu>
-              <el-submenu index="/DocumentManagement" class="el-submenu-margin">
-                <template slot="title">单据管理</template>
-                <el-menu-item index="/DocumentDetails">单据详情</el-menu-item>
-              </el-submenu>
+              <el-menu-item index="/QuickBilling"
+                            class="el-submenu-margin">快速开单</el-menu-item>
+              <el-menu-item index="/DocumentManagement"
+                            class="el-submenu-margin">单据管理</el-menu-item>
             </el-submenu>
 
-            <el-submenu index="2">
+            <el-submenu index="会员管理">
               <template slot="title">
                 <i class="el-icon-service"></i>
                 <span>会员管理</span>
               </template>
-              <el-submenu index="/CustomerManagement" class="el-submenu-margin">
-                <template slot="title">客户管理</template>
-                <el-menu-item index="/AddNewCustomers">新增客户</el-menu-item>
-                <el-menu-item index="/ModifyCustomerInformation">修改客户信息</el-menu-item>
-                <el-submenu index="/CustomerInformation" class="el-submenu-margin">
-                  <template slot="title">客户信息</template>
-                  <el-menu-item index="/ExpensesRecord">消费记录</el-menu-item>
-                </el-submenu>
-              </el-submenu>
-              <el-menu-item index="/MemberProcessing" class="el-submenu-margin">
-                <template slot="title">会员办理</template>
-              </el-menu-item>
+              <el-menu-item index="/MemberProcessing"
+                            class="el-submenu-margin">会员办理</el-menu-item>
+              <el-menu-item index="/CustomerManagement"
+                            class="el-submenu-margin">客户管理</el-menu-item>
             </el-submenu>
 
-            <el-submenu index="3">
+            <el-submenu index="产品管理">
               <template slot="title">
                 <i class="el-icon-menu"></i>
                 <span>产品管理</span>
               </template>
-              <el-submenu index="/ProjectManagement" class="el-submenu-margin">
-                <template slot="title">项目管理</template>
-                <el-menu-item index="/ItemCategory">项目类别</el-menu-item>
-              </el-submenu>
-              <el-menu-item index="/CardManagement" class="el-submenu-margin">
-                <template slot="title">卡类管理</template>
-              </el-menu-item>
-              <el-menu-item index="/CreditVoucherManagement" class="el-submenu-margin">
-                <template slot="title">抵用券管理</template>
-              </el-menu-item>
+              <el-menu-item index="/ProjectManagement"
+                            class="el-submenu-margin">项目管理</el-menu-item>
+              <el-menu-item index="/CardManagement"
+                            class="el-submenu-margin">卡类管理</el-menu-item>
+              <el-menu-item index="/CreditVoucherManagement"
+                            class="el-submenu-margin">抵用券管理</el-menu-item>
             </el-submenu>
 
-            <el-submenu index="4">
+            <el-submenu index="财务管理">
               <template slot="title">
                 <i class="el-icon-edit"></i>
                 <span>财务管理</span>
               </template>
-              <el-submenu index="/IncomeInquiry" class="el-submenu-margin">
-                <template slot="title">收入查询</template>
-                <el-menu-item index="/IncomeBreakdown">收入明细</el-menu-item>
-                <el-submenu index="/HistoricalIncome" class="el-submenu-margin">
-                  <template slot="title">历史收入</template>
-                  <el-menu-item index="/HistoricalIncomeBreakdown">历史收入明细</el-menu-item>
-                </el-submenu>
-              </el-submenu>
-
-              <el-menu-item index="/DataReport" class="el-submenu-margin">
-                <template slot="title">数据报表</template>
-              </el-menu-item>
+              <el-menu-item index="/IncomeInquiry"
+                            class="el-submenu-margin">收入查询</el-menu-item>
+              <el-menu-item index="/FlowDetails"
+                            class="el-submenu-margin">流水明细</el-menu-item>
             </el-submenu>
 
-            <el-submenu index="5">
+            <el-submenu index="系统设置">
               <template slot="title">
                 <i class="el-icon-setting"></i>
                 <span>系统设置</span>
               </template>
-              <el-menu-item index="/EmployeeManagement" class="el-submenu-margin">
-                <template slot="title">员工管理</template>
-              </el-menu-item>
-              <el-menu-item index="/StoreManagement" class="el-submenu-margin">
-                <template slot="title">门店管理</template>
-              </el-menu-item>
+              <el-menu-item index="/EmployeeManagement"
+                            class="el-submenu-margin">员工管理</el-menu-item>
+              <el-menu-item index="/StoreManagement"
+                            class="el-submenu-margin">门店管理</el-menu-item>
             </el-submenu>
 
           </el-menu>
@@ -111,9 +85,9 @@
             <el-header class="nav-title">
               <el-breadcrumb style="line-height: 45px" separator-class="el-icon-arrow-right">
                 <el-breadcrumb-item :to="{ path: '/' }">首页</el-breadcrumb-item>
-                <el-breadcrumb-item v-for="(item,index) in navPath">{{item}}</el-breadcrumb-item>
+                <el-breadcrumb-item>{{navPath[0]}}</el-breadcrumb-item>
+                <el-breadcrumb-item>{{$route.name}}</el-breadcrumb-item>
               </el-breadcrumb>
-              <!--{{$route.name}}-->
             </el-header>
             <el-main>
               <router-view/>

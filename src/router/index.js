@@ -23,6 +23,7 @@ import IncomeBreakdown from '@/view/IncomeBreakdown'
 import HistoricalIncome from '@/view/HistoricalIncome'
 import HistoricalIncomeBreakdown from '@/view/HistoricalIncomeBreakdown'
 import DataReport from '@/view/DataReport'
+import FlowDetails from '@/view/FlowDetails'
 // 系统设置
 import EmployeeManagement from '@/view/EmployeeManagement'
 import StoreManagement from '@/view/StoreManagement'
@@ -105,6 +106,11 @@ export default new Router({
       path: '/IncomeInquiry',
       name: '收入查询',
       component:IncomeInquiry
+    },
+    {
+      path: '/FlowDetails',
+      name: '流水明细',
+      component:FlowDetails
     },
     {
       path: '/IncomeBreakdown',
