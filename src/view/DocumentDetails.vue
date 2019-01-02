@@ -2,11 +2,17 @@
   <div>
     <!--接完交状态-->
     <el-card shadow="hover">
-      <el-steps :active="stepActive" :finish-status="stepStatus">
+      <div slot="header" class="clearfix">
+        <span>当前状态</span>
+      </div>
+      <el-steps process-status="finish" :active="stepActive" finish-status="success">
         <el-step title="接车"></el-step>
         <el-step title="完成"></el-step>
         <el-step title="交车"></el-step>
       </el-steps>
+    </el-card>
+
+    <el-card shadow="hover">
       <el-row :gutter="20" class="marginTop">
         <el-col :span="8">
           <el-form :data="carInfoForm" label-width="100px">

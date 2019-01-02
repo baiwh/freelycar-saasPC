@@ -11,7 +11,7 @@
 
         <el-aside width="200px">
           <el-menu default-active="active" class="el-menu-vertical-demo" @open="handleOpen"
-                   @close="handleClose" @select="handleSelect" router="true">
+                   @close="handleClose" @select="handleSelect" :router="true">
 
             <el-menu-item index="0">
               <template slot="title">
@@ -84,7 +84,7 @@
           <el-container>
             <el-header class="nav-title">
               <el-breadcrumb style="line-height: 45px" separator-class="el-icon-arrow-right">
-                <el-breadcrumb-item :to="{ path: '/' }">首页</el-breadcrumb-item>
+                <el-breadcrumb-item>首页</el-breadcrumb-item>
                 <el-breadcrumb-item>{{navPath[0]}}</el-breadcrumb-item>
                 <el-breadcrumb-item>{{$route.name}}</el-breadcrumb-item>
               </el-breadcrumb>
@@ -117,7 +117,6 @@
 
       },
       handleSelect(key,path) {
-        // this.$router.push(key);
         this.navPath = path
       },
     }

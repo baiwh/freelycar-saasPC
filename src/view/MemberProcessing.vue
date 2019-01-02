@@ -39,9 +39,9 @@
         </el-row>
 
         <el-row>
-          <el-col :span="11">
+          <el-col>
             <el-form-item label="品牌车系：" prop="clientBrandCar">
-              <el-button type="primary" icon="el-icon-plus"></el-button>
+              <el-button round type="primary" plain icon="el-icon-plus" size="small"></el-button>
             </el-form-item>
           </el-col>
         </el-row>
