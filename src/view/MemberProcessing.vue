@@ -73,46 +73,79 @@
       <div slot="header">
         <span>会员信息</span>
       </div>
-      <el-row>
-        <el-col :span="10">
-          <el-form :model="memberForm" ref="memberForm" label-width="100px">
+
+      <!--表单部分-->
+      <el-form :model="memberForm" ref="memberForm" label-width="100px">
+
+        <el-row>
+          <el-col :span="11">
             <el-form-item label="会员卡号：" prop="memberCard">
               <el-input v-model="memberForm.memberCard"></el-input>
             </el-form-item>
+          </el-col>
+          <el-col :span="11" :offset="1">
+            <el-form-item label="会员卡类：">
+              <el-select v-model="memberForm.memberCardKind" placeholder="请选择会员卡类">
+                <el-option v-for="item in memberCardKindOptions" :key="item.index" :label="item.memberCardKind"
+                           :value="item.memberCardKind"/>
+              </el-select>
+            </el-form-item>
+          </el-col>
+          <el-col :span="1">
+            <i class="el-icon-circle-plus-outline icon"></i>
+          </el-col>
+        </el-row>
+
+        <el-row>
+          <el-col :span="11">
             <el-form-item label="售卡金额：" prop="memberCard">
               <el-input v-model="memberForm.cardAmount" disabled></el-input>
             </el-form-item>
+          </el-col>
+          <el-col :span="11" :offset="1">
+            <el-form-item label="有效期：" prop="validityPeriod">
+              <el-input v-model="memberForm.validityPeriod" disabled></el-input>
+            </el-form-item>
+          </el-col>
+        </el-row>
+
+        <el-row>
+          <el-col :span="11">
             <el-form-item label="卡面金额：" prop="cardSurfaceAmount">
               <el-input v-model="memberForm.cardSurfaceAmount" disabled></el-input>
             </el-form-item>
-            <el-form-item label="支付方式：">
-              <el-select v-model="memberForm.payMethods" placeholder="请选择支付方式">
-                <el-option v-for="item in payMethodsOptions" :key="item.index" :label="item.payMethods"
-                           :value="item.payMethods"/>
-              </el-select>
+          </el-col>
+          <el-col :span="11" :offset="1">
+            <el-form-item label="折扣比例：" prop="discount">
+              <el-input v-model="memberForm.discount"></el-input>
             </el-form-item>
-          </el-form>
-        </el-col>
-        <el-col :span="10" :offset="2">
-          <el-form :model="memberForm" label-width="100px">
+          </el-col>
+        </el-row>
+
+        <el-row>
+          <el-col :span="11">
             <el-form-item label="支付方式：">
               <el-select v-model="memberForm.memberCardKind" placeholder="请选择储值卡">
                 <el-option v-for="item in memberCardKindOptions" :key="item.index" :label="item.memberCardKind"
                            :value="item.memberCardKind"/>
               </el-select>
             </el-form-item>
-            <el-form-item label="有效期：" prop="validityPeriod">
-              <el-input v-model="memberForm.validityPeriod" disabled></el-input>
+          </el-col>
+          <el-col :span="11" :offset="1">
+            <el-form-item label="办理人员：">
+              <el-select v-model="memberForm.handlingStaff" placeholder="请选择办理人员">
+                <el-option v-for="item in handlingStaffOptions" :key="item.index" :label="item.handlingStaff"
+                           :value="item.handlingStaff"/>
+              </el-select>
             </el-form-item>
-            <el-form-item label="折扣比例：" prop="discount">
-              <el-input v-model="memberForm.discount"></el-input>
-            </el-form-item>
-          </el-form>
-        </el-col>
-        <el-col :span="1">
-          <i class="el-icon-circle-plus-outline icon"></i>
-        </el-col>
-        <el-col :span="2" :offset="11">
+          </el-col>
+        </el-row>
+
+      </el-form>
+
+      <!--按钮-->
+      <el-row>
+        <el-col :span="2" :offset="20">
           <el-button type="primary">办理</el-button>
         </el-col>
       </el-row>
@@ -193,6 +226,13 @@
         memberCardKindOptions: [{
           index: '1',
           memberCardKind: '3000储值卡'
+        }],
+        handlingStaffOptions: [{
+          index: '1',
+          handlingStaff: '小易'
+        }, {
+          index: '2',
+          handlingStaff: '科科'
         }]
       }
     },
