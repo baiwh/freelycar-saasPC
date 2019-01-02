@@ -61,7 +61,8 @@
         <el-col :span="8">
           <span class="fontSize">扣除金额：</span>
           <el-input v-model="deductionAmounts" size="small" class="inputWidth red"/>
-          <i class="el-icon-circle-plus-outline" @click="handlePlusIconClick"></i>
+          <el-button round type="primary" plain icon="el-icon-plus"
+                     @click="handlePlusIconClick" size="small"></el-button>
         </el-col>
       </el-row>
 
