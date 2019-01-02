@@ -15,7 +15,7 @@
               <el-input v-model="clientForm.clientPhone"></el-input>
             </el-form-item>
             <el-form-item label="生日：" prop="clientBirth">
-              <el-date-picker v-model="clientForm.clientBirth" type="date" placeholder="选择日期"/>
+              <el-date-picker v-model="clientForm.clientBirth" type="date" placeholder="选择日期"></el-date-picker>
             </el-form-item>
             <el-form-item label="行驶证号：">
               <el-input v-model="clientForm.drivingLicenseNumber"></el-input>
@@ -38,9 +38,6 @@
             </el-form-item>
           </el-form>
         </el-col>
-        <el-col :span="2" :offset="18">
-          <el-button type="primary">保存</el-button>
-        </el-col>
       </el-row>
     </el-card>
 
@@ -56,7 +53,7 @@
               <el-input v-model="carInfoForm.carNumber"></el-input>
             </el-form-item>
             <el-form-item label="品牌车系：" prop="carBrand">
-              <i class="el-icon-circle-plus-outline"></i>
+              <el-button type="primary" icon="el-icon-plus"></el-button>
             </el-form-item>
             <el-form-item label="车辆型号：" prop="carModel">
               <el-input v-model="carInfoForm.carModel"></el-input>

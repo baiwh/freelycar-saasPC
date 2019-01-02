@@ -74,7 +74,7 @@
 
 <script>
   export default {
-    name: 'DataReport',
+    name: 'IncomeInquiry',
     data() {
       return {
         tabPosition: 'today',
