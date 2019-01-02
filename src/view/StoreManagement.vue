@@ -22,7 +22,8 @@
                 range-separator="~"
                 start-placeholder="开始时间"
                 end-placeholder="结束时间"
-                placeholder="请选择时间">
+                placeholder="请选择时间"
+                class="timePickerWidth">
               </el-time-picker>
             </el-form-item>
             <el-form-item label="客服电话：" prop="servicePhone">
@@ -39,6 +40,7 @@
             action="https://jsonplaceholder.typicode.com/posts/"
             multiple
             list-type="picture-card"
+            :limit="5"
             :before-upload="beforeUploadPicture"
             :on-preview="handlePictureCardPreview"
             :on-progress="uploadProgress"
@@ -48,6 +50,8 @@
             :file-list="fileList"
             class="imgWidth imgListWidth">
             <i class="el-icon-plus icon-position"></i>
+            <div slot="tip" class="el-upload__tip">*最多上传五张图片</div>
+            <div slot="tip" class="el-upload__tip">*注意图片方向和大小</div>
           </el-upload>
           <el-dialog :visible.sync="imgVisible">
             <img width="100%" :src="dialogImageUrl" alt="">
@@ -116,6 +120,9 @@
 </script>
 
 <style lang="less" scoped>
+  .timePickerWidth{
+    width: 99%;
+  }
   .imgWidth /deep/ .el-upload--picture-card {
     width: 60px;
     height: 60px;
