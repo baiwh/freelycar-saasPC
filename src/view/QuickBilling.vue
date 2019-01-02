@@ -3,20 +3,18 @@
 </template>
 
 <script>
-export default {
-  name: 'QuickBilling',
-  data () {
-    return {
-      msg: ''
+  export default {
+    name: 'QuickBilling',
+    data() {
+      return {
+        msg: ''
+      }
+    },
+    methods: {},
+    mounted: function () {
+
     }
-  },
-  methods: {
-
-  },
-  mounted:function () {
-
   }
-}
 </script>
 
 <style lang="less">

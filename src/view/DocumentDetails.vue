@@ -167,7 +167,7 @@
             sums[index] = values.reduce((prev, curr) => prev + curr)
           }
         })
-        console.log('sums:',sums)
+        console.log('sums:', sums)
         return sums
       },
       getFittingSummaries(param) {
@@ -193,30 +193,36 @@
 </script>
 
 <style lang="less" scoped>
-.el-card {
-  margin-bottom: 40px;
-}
-.marginTop {
-  margin-top: 20px;
-}
-.clearfix:before,
-.clearfix:after {
-  display: table;
-  content: "";
-}
-.clearfix:after {
-  clear: both
-}
-.inputWidth {
-  width: 50%;
-}
-.red /deep/ .el-input__inner {
-  color: red !important;
-  font-size: 18px;
-  font-weight: 700;
-}
-.buttonStyle {
-  width: 150px;
-  text-align: center;
-}
+  .el-card {
+    margin-bottom: 40px;
+  }
+
+  .marginTop {
+    margin-top: 20px;
+  }
+
+  .clearfix:before,
+  .clearfix:after {
+    display: table;
+    content: "";
+  }
+
+  .clearfix:after {
+    clear: both
+  }
+
+  .inputWidth {
+    width: 50%;
+  }
+
+  .red /deep/ .el-input__inner {
+    color: red !important;
+    font-size: 18px;
+    font-weight: 700;
+  }
+
+  .buttonStyle {
+    width: 150px;
+    text-align: center;
+  }
 </style>

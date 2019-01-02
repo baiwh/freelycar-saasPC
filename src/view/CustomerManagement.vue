@@ -1,13 +1,22 @@
 <template>
-    <div>CustomerManagement</div>
+  <div>CustomerManagement</div>
 </template>
 
 <script>
-    export default {
-        name: "CustomerManagement"
+  export default {
+    name: 'CustomerManagement',
+    data() {
+      return {
+        msg: ''
+      }
+    },
+    methods: {},
+    mounted: function () {
+
     }
+  }
 </script>
 
-<style scoped>
+<style lang="less" scoped>
 
 </style>

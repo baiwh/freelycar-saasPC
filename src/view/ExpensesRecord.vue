@@ -1,20 +1,20 @@
 <template>
-    <div>ExpensesRecord</div>
+  <div>ExpensesRecord</div>
 </template>
 
 <script>
-    export default {
-        name: 'ExpensesRecord',
-        data() {
-            return {
-                msg: ''
-            }
-        },
-        methods: {},
-        mounted: function () {
+  export default {
+    name: 'ExpensesRecord',
+    data() {
+      return {
+        msg: ''
+      }
+    },
+    methods: {},
+    mounted: function () {
 
-        }
     }
+  }
 </script>
 
 <style lang="less">

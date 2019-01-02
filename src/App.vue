@@ -47,8 +47,8 @@
                 <i class="el-icon-menu"></i>
                 <span>产品管理</span>
               </template>
-              <el-menu-item index="/ProjectManagement"
-                            class="el-submenu-margin">项目管理</el-menu-item>
+              <el-menu-item index="/ItemCategory"
+                            class="el-submenu-margin">项目类别</el-menu-item>
               <el-menu-item index="/CardManagement"
                             class="el-submenu-margin">卡类管理</el-menu-item>
               <el-menu-item index="/CreditVoucherManagement"
@@ -110,19 +110,15 @@
       }
     },
     methods: {
-      handleOpen: function (key) {
-        if (key.length > 1) {
-          // this.$router.push(key);
-        }
+      handleOpen: function () {
+
       },
       handleClose: function () {
 
       },
       handleSelect(key,path) {
-        console.log(path)
         // this.$router.push(key);
         this.navPath = path
-        // this.breadcrumbItems  = ['消费开单']
       },
     }
   }

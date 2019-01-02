@@ -8,12 +8,10 @@ import DocumentDetails from '@/view/DocumentDetails'
 // 会员管理
 import CustomerManagement from '@/view/CustomerManagement'
 import AddNewCustomers from '@/view/AddNewCustomers'
-import ModifyCustomerInformation from '@/view/ModifyCustomerInformation'
 import CustomerInformation from '@/view/CustomerInformation'
 import ExpensesRecord from '@/view/ExpensesRecord'
 import MemberProcessing from '@/view/MemberProcessing'
 // 产品管理
-import ProjectManagement from '@/view/ProjectManagement'
 import ItemCategory from '@/view/ItemCategory'
 import CardManagement from '@/view/CardManagement'
 import CreditVoucherManagement from '@/view/CreditVoucherManagement'
@@ -59,11 +57,6 @@ export default new Router({
       component:AddNewCustomers
     },
     {
-      path: '/ModifyCustomerInformation',
-      name: '修改客户信息',
-      component:ModifyCustomerInformation
-    },
-    {
       path: '/CustomerInformation',
       name: '客户信息',
       component:CustomerInformation
@@ -77,11 +70,6 @@ export default new Router({
       path: '/MemberProcessing',
       name: '会员办理',
       component:MemberProcessing
-    },
-    {
-      path: '/ProjectManagement',
-      name: '项目管理',
-      component:ProjectManagement
     },
     {
       path: '/ItemCategory',
