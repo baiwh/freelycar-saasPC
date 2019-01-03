@@ -53,7 +53,7 @@
               <el-input v-model="carInfoForm.carNumber"></el-input>
             </el-form-item>
             <el-form-item label="品牌车系：" prop="carBrand">
-              <el-button round type="primary" plain icon="el-icon-plus" size="small"></el-button>
+              <addNewButton></addNewButton>
             </el-form-item>
             <el-form-item label="车辆型号：" prop="carModel">
               <el-input v-model="carInfoForm.carModel"></el-input>

@@ -41,7 +41,7 @@
         <el-row>
           <el-col>
             <el-form-item label="品牌车系：" prop="clientBrandCar">
-              <el-button round type="primary" plain icon="el-icon-plus" size="small"></el-button>
+              <addNewButton></addNewButton>
             </el-form-item>
           </el-col>
         </el-row>
@@ -91,9 +91,7 @@
               </el-select>
             </el-form-item>
           </el-col>
-          <el-col :span="1">
-            <i class="el-icon-circle-plus-outline icon"></i>
-          </el-col>
+          <addNewButton></addNewButton>
         </el-row>
 
         <el-row>
@@ -154,6 +152,7 @@
 </template>
 
 <script>
+
   export default {
     name: 'MemberProcessing',
     data() {
