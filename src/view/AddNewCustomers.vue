@@ -5,40 +5,59 @@
       <div slot="header">
         <span>客户信息</span>
       </div>
-      <el-row>
-        <el-col :span="10">
-          <el-form :model="clientForm" :rules="clientFormRules" ref="clientForm" label-width="100px">
+      <el-form :model="clientForm" :rules="clientFormRules" ref="clientForm" label-width="100px">
+
+        <el-row>
+          <el-col :span="10">
             <el-form-item label="客户姓名：" prop="clientName">
               <el-input v-model="clientForm.clientName"></el-input>
             </el-form-item>
-            <el-form-item label="手机号：" prop="clientPhone">
-              <el-input v-model="clientForm.clientPhone"></el-input>
-            </el-form-item>
-            <el-form-item label="生日：" prop="clientBirth">
-              <el-date-picker v-model="clientForm.clientBirth" type="date" placeholder="选择日期"></el-date-picker>
-            </el-form-item>
-            <el-form-item label="行驶证号：">
-              <el-input v-model="clientForm.drivingLicenseNumber"></el-input>
-            </el-form-item>
-          </el-form>
-        </el-col>
-        <el-col :span="10" :offset="2">
-          <el-form :model="clientForm" :rules="clientFormRules" ref="clientForm" label-width="100px">
+          </el-col>
+          <el-col :span="10" :offset="2">
             <el-form-item label="性别：" prop="clientGender">
               <el-radio-group v-model="clientForm.clientGender">
                 <el-radio label="男"></el-radio>
                 <el-radio label="女"></el-radio>
               </el-radio-group>
             </el-form-item>
+          </el-col>
+        </el-row>
+
+        <el-row>
+          <el-col :span="10">
+            <el-form-item label="手机号：" prop="clientPhone">
+              <el-input v-model="clientForm.clientPhone"></el-input>
+            </el-form-item>
+          </el-col>
+          <el-col :span="10" :offset="2">
             <el-form-item label="年龄：" prop="clientAge">
               <el-input v-model="clientForm.clientAge"></el-input>
             </el-form-item>
+          </el-col>
+        </el-row>
+
+        <el-row>
+          <el-col :span="10">
+            <el-form-item label="生日：" prop="clientBirth">
+              <el-date-picker v-model="clientForm.clientBirth" type="date" placeholder="选择日期"></el-date-picker>
+            </el-form-item>
+          </el-col>
+          <el-col :span="10" :offset="2">
             <el-form-item label="身份证：" prop="clientIDCard">
               <el-input v-model="clientForm.clientIDCard"></el-input>
             </el-form-item>
-          </el-form>
-        </el-col>
-      </el-row>
+          </el-col>
+        </el-row>
+
+        <el-row>
+          <el-col :span="10">
+            <el-form-item label="行驶证号：">
+              <el-input v-model="clientForm.drivingLicenseNumber"></el-input>
+            </el-form-item>
+          </el-col>
+        </el-row>
+
+      </el-form>
     </el-card>
 
     <!--车辆信息-->
@@ -46,55 +65,90 @@
       <div slot="header">
         <span>车辆信息</span>
       </div>
-      <el-row>
-        <el-col :span="10">
-          <el-form :model="carInfoForm" :rules="carInfoForm" ref="carInfoForm" label-width="100px">
+      <el-form :model="carInfoForm" :rules="carInfoForm" ref="carInfoForm" label-width="100px">
+
+        <el-row>
+          <el-col :span="10">
             <el-form-item label="车牌号码：" prop="carNumber">
               <el-input v-model="carInfoForm.carNumber"></el-input>
             </el-form-item>
-            <el-form-item label="品牌车系：" prop="carBrand">
-              <addNewButton></addNewButton>
-            </el-form-item>
-            <el-form-item label="车辆型号：" prop="carModel">
-              <el-input v-model="carInfoForm.carModel"></el-input>
-            </el-form-item>
-            <el-form-item label="上次里程：" prop="lastMileage">
-              <el-input v-model="carInfoForm.lastMileage"></el-input>
-            </el-form-item>
-            <el-form-item label="本次里程：" prop="thisMileage">
-              <el-input v-model="carInfoForm.thisMileage"></el-input>
-            </el-form-item>
-            <el-form-item label="车架号：" prop="frameNumber">
-              <el-input v-model="carInfoForm.frameNumber"></el-input>
-            </el-form-item>
-          </el-form>
-        </el-col>
-        <el-col :span="10" :offset="2">
-          <el-form :model="carInfoForm" :rules="carInfoForm" ref="carInfoForm" label-width="110px">
+          </el-col>
+          <el-col :span="10" :offset="2">
             <el-form-item label="是否新车：" prop="isNewCar">
               <el-radio-group v-model="clientForm.isNewCar">
                 <el-radio label="是"></el-radio>
                 <el-radio label="否"></el-radio>
               </el-radio-group>
             </el-form-item>
+          </el-col>
+        </el-row>
+
+        <el-row>
+          <el-col :span="10">
+            <el-form-item label="品牌车系：" prop="carBrand">
+              <addNewButton></addNewButton>
+            </el-form-item>
+          </el-col>
+          <el-col :span="10" :offset="2">
             <el-form-item label="保险开始日期：" prop="insuranceStart">
               <el-date-picker v-model="clientForm.insuranceStart" type="date" placeholder="选择日期"/>
             </el-form-item>
+          </el-col>
+        </el-row>
+
+        <el-row>
+          <el-col :span="10">
+            <el-form-item label="车辆型号：" prop="carModel">
+              <el-input v-model="carInfoForm.carModel"></el-input>
+            </el-form-item>
+          </el-col>
+          <el-col :span="10" :offset="2">
             <el-form-item label="保险截止日期：" prop="insuranceEnd">
               <el-date-picker v-model="clientForm.insuranceEnd" type="date" placeholder="选择日期"/>
             </el-form-item>
+          </el-col>
+        </el-row>
+
+        <el-row>
+          <el-col :span="10">
+            <el-form-item label="上次里程：" prop="lastMileage">
+              <el-input v-model="carInfoForm.lastMileage"></el-input>
+            </el-form-item>
+          </el-col>
+          <el-col :span="10" :offset="2">
             <el-form-item label="保险金额：" prop="insuranceAmount">
               <el-input v-model="carInfoForm.insuranceAmount"></el-input>
             </el-form-item>
+          </el-col>
+        </el-row>
+
+        <el-row>
+          <el-col :span="10">
+            <el-form-item label="本次里程：" prop="thisMileage">
+              <el-input v-model="carInfoForm.thisMileage"></el-input>
+            </el-form-item>
+          </el-col>
+          <el-col :span="10" :offset="2">
             <el-form-item label="上牌时间：" prop="boardingDate">
               <el-date-picker v-model="clientForm.boardingDate" type="date" placeholder="选择日期"/>
             </el-form-item>
+          </el-col>
+        </el-row>
+
+        <el-row>
+          <el-col :span="10">
+            <el-form-item label="车架号：" prop="frameNumber">
+              <el-input v-model="carInfoForm.frameNumber"></el-input>
+            </el-form-item>
+          </el-col>
+          <el-col :span="10" :offset="2">
             <el-form-item label="发动机号：" prop="engineNumber">
               <el-input v-model="carInfoForm.engineNumber"></el-input>
             </el-form-item>
-          </el-form>
-        </el-col>
-      </el-row>
+          </el-col>
+        </el-row>
+        
+      </el-form>
     </el-card>
 
     <!--按钮-->
