@@ -12,51 +12,74 @@
       </el-steps>
     </el-card>
 
+    <!--表单模块-->
     <el-card shadow="hover">
-      <el-row :gutter="20" class="marginTop">
-        <el-col :span="8">
-          <el-form :data="carInfoForm" label-width="100px">
+      <el-form :data="carInfoForm" label-width="100px">
+
+        <el-row :gutter="20">
+          <el-col :span="8">
             <el-form-item label="车牌号码：" prop="carNumber">
               <el-input v-model="carInfoForm.carNumber" disabled size="small"/>
             </el-form-item>
-            <el-form-item label="车牌型号：" prop="carModel">
-              <el-input v-model="carInfoForm.carModel" disabled size="small"/>
-            </el-form-item>
-            <el-form-item label="上次里程：" prop="lastMileage">
-              <el-input v-model="carInfoForm.carNumber" disabled size="small"/>
-            </el-form-item>
-            <el-form-item label="本次里程：" prop="thisMileage">
-              <el-input v-model="carInfoForm.carNumber" disabled size="small"/>
-            </el-form-item>
-          </el-form>
-        </el-col>
-        <el-col :span="8">
-          <el-form :data="carInfoForm" label-width="100px">
+          </el-col>
+          <el-col :span="8">
             <el-form-item label="客户姓名：" prop="clientName">
               <el-input v-model="carInfoForm.clientName" disabled size="small"/>
             </el-form-item>
-            <el-form-item label="手机号码：" prop="clientPhone">
-              <el-input v-model="carInfoForm.clientPhone" disabled size="small"/>
-            </el-form-item>
-            <el-form-item label="停车位置：" prop="parkPlace">
-              <el-input v-model="carInfoForm.parkPlace" disabled size="small"/>
-            </el-form-item>
-            <el-form-item label="接车时间：" prop="pickUpTime">
-              <el-input v-model="carInfoForm.pickUpTime" disabled size="small"/>
-            </el-form-item>
-          </el-form>
-        </el-col>
-        <el-col :span="8">
-          <el-form :data="carInfoForm" label-width="100px">
+          </el-col>
+          <el-col :span="8">
             <el-form-item label="完工时间：" prop="completionTime">
               <el-input v-model="carInfoForm.completionTime" disabled size="small"/>
             </el-form-item>
+          </el-col>
+        </el-row>
+
+        <el-row :gutter="20">
+          <el-col :span="8">
+            <el-form-item label="车牌型号：" prop="carModel">
+              <el-input v-model="carInfoForm.carModel" disabled size="small"/>
+            </el-form-item>
+          </el-col>
+          <el-col :span="8">
+            <el-form-item label="手机号码：" prop="clientPhone">
+              <el-input v-model="carInfoForm.clientPhone" disabled size="small"/>
+            </el-form-item>
+          </el-col>
+          <el-col :span="8">
             <el-form-item label="交车时间：" prop="deliveryTime">
               <el-input v-model="carInfoForm.deliveryTime" disabled size="small"/>
             </el-form-item>
-          </el-form>
-        </el-col>
-      </el-row>
+          </el-col>
+        </el-row>
+
+        <el-row :gutter="20">
+          <el-col :span="8">
+            <el-form-item label="上次里程：" prop="lastMileage">
+              <el-input v-model="carInfoForm.carNumber" disabled size="small"/>
+            </el-form-item>
+          </el-col>
+          <el-col :span="8">
+            <el-form-item label="停车位置：" prop="parkPlace">
+              <el-input v-model="carInfoForm.parkPlace" disabled size="small"/>
+            </el-form-item>
+          </el-col>
+        </el-row>
+
+        <el-row :gutter="20">
+          <el-col :span="8">
+            <el-form-item label="本次里程：" prop="thisMileage">
+              <el-input v-model="carInfoForm.carNumber" disabled size="small"/>
+            </el-form-item>
+          </el-col>
+          <el-col :span="8">
+            <el-form-item label="接车时间：" prop="pickUpTime">
+              <el-input v-model="carInfoForm.pickUpTime" disabled size="small"/>
+            </el-form-item>
+          </el-col>
+        </el-row>
+
+      </el-form>
+
     </el-card>
 
     <!--服务项目模块-->
@@ -93,11 +116,11 @@
     <el-card shadow="hover">
       <el-row>
         <el-col :span="6" :offset="18">
-          整单金额：
+          订单金额：
           <el-input :value="wholeAmount" size="small" class="inputWidth red" disabled/>
         </el-col>
         <el-col :span="6" :offset="18" class="marginTop">
-          实收金额：
+          支付金额：
           <el-input :value="payAmounts" size="small" class="inputWidth red" disabled/>
         </el-col>
       </el-row>
