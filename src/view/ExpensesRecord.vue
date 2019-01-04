@@ -1,26 +1,31 @@
 <template>
   <div>
     <el-row>
-      <el-radio-group v-model="tabPosition" @change="onTabChange">
-        <el-radio-button label="today">今日</el-radio-button>
-        <el-radio-button label="thisMonth">本月</el-radio-button>
-        <el-radio-button label="search">全部</el-radio-button>
-      </el-radio-group>
+      <el-col :span="12">
+        <el-radio-group v-model="tabPosition" @change="onTabChange">
+          <el-radio-button label="today">今日</el-radio-button>
+          <el-radio-button label="thisMonth">本月</el-radio-button>
+          <el-radio-button label="search">全部</el-radio-button>
+        </el-radio-group>
+      </el-col>
+
+      <el-col :span="12" v-if="visible">
+        <span>查找日期：</span>
+        <el-date-picker
+          v-model="datePickerValue"
+          type="daterange"
+          range-separator="~"
+          start-placeholder="开始日期"
+          end-placeholder="结束日期"
+          class="dateWidth">
+        </el-date-picker>
+      </el-col>
     </el-row>
+
+    <!--消费记录表格-->
     <el-card shadow="hover">
       <div slot="header">
-        <p>合计消费</p>
-        <el-row v-if="visible">
-          <span>查找日期：</span>
-          <el-date-picker
-            v-model="datePickerValue"
-            type="daterange"
-            range-separator="~"
-            start-placeholder="开始日期"
-            end-placeholder="结束日期"
-            class="dateWidth">
-          </el-date-picker>
-        </el-row>
+        <span>合计消费</span>
       </div>
       <el-table :data="expensesRecordTable">
         <el-table-column type="index" label="序号" align="center"/>
