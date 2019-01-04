@@ -246,8 +246,4 @@
   .el-card {
     margin-bottom: 40px;
   }
-
-  .icon {
-    margin: 10px 0 0 10px;
-  }
 </style>
