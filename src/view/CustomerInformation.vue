@@ -51,10 +51,10 @@
           <el-table-column property="cardName" label="卡名称" align="center"/>
           <el-table-column property="cardOpeningTime" label="开卡时间" align="center"/>
           <el-table-column property="cardClosingTime" label="有效期至" align="center"/>
-          <el-table-column label="操作">
+          <el-table-column label="操作" align="center">
             <template slot-scope="scope">
-              <el-button type="text" size="small" @click="onDetail(scope.row)">查看详情</el-button>
-              <el-button type="text" size="small" @click="onRenewalCard(scope.row)">续卡</el-button>
+              <el-button type="text" @click="onDetail(scope.row)">查看详情</el-button>
+              <el-button type="text" @click="onRenewalCard(scope.row)">续卡</el-button>
             </template>
           </el-table-column>
         </el-table>
@@ -90,9 +90,21 @@
           <el-table-column property="isNewCar" label="是否新车" align="center"/>
           <el-table-column property="insuranceAmount" label="保险金额" align="center"/>
           <el-table-column property="insuranceValidity" label="保险有效期" align="center"/>
-          <el-table-column label="操作">
+          <el-table-column label="操作" align="center">
             <template slot-scope="scope">
-              <el-button type="danger" size="mini">删除</el-button>
+              <el-popover
+                ref="popover{{$index}}"
+                placement="top"
+                width="160"
+                v-model="scope.row.deletePopVisible"
+              >
+                <p>表格数据确定删除吗？</p>
+                <div style="text-align: right; margin: 0">
+                  <el-button size="mini" type="text" @click="scope.row.deletePopVisible = false">取消</el-button>
+                  <el-button type="primary" size="mini" @click="onDeletePop(scope.$index,scope.row.deletePopVisible)">确定</el-button>
+                </div>
+                <el-button slot="reference" type="danger" size="mini">删除</el-button>
+              </el-popover>
             </template>
           </el-table-column>
         </el-table>
@@ -159,9 +171,8 @@
           </el-select>
         </el-form-item>
       </el-form>
-      <div slot="footer" class="dialog-footer">
-        <el-button @click="dialogFormVisible = false">取 消</el-button>
-        <el-button type="primary" @click="dialogFormVisible = false">确 定</el-button>
+      <div slot="footer" class="dialog-footer" style="text-align: center;">
+        <el-button type="primary" @click="renewalCardVisible = false">办 理</el-button>
       </div>
     </el-dialog>
 
@@ -198,33 +209,33 @@
         </el-col>
       </el-row>
       <div slot="footer" class="dialog-footer">
-        <el-button @click="dialogFormVisible = false">取 消</el-button>
-        <el-button type="primary" @click="dialogFormVisible = false">确 定</el-button>
+        <el-button @click="detailsVisible = false">取 消</el-button>
+        <el-button type="primary" @click="detailsVisible = false">确 定</el-button>
       </div>
     </el-dialog>
 
     <!--新增车辆对话框-->
-    <el-dialog title="新增车辆" :visible.sync="addNewCarVisible">
+    <el-dialog title="新增车辆" :visible.sync="addNewCarVisible" width="70%">
       <el-form :model="addNewCarForm" label-width="120px">
-        <el-row>
-          <el-col :span="10" :offset="1">
+        <el-row :gutter="20">
+          <el-col :span="11">
             <el-form-item label="车牌号：" prop="carNumber">
               <el-input v-model="addNewCarForm.carNumber" size="mini"/>
             </el-form-item>
           </el-col>
-          <el-col :span="10" :offset="1">
+          <el-col :span="11">
             <el-form-item label="车辆品牌：" prop="carBrand">
               <el-input v-model="addNewCarForm.carBrand" size="mini"/>
             </el-form-item>
           </el-col>
         </el-row>
         <el-row>
-          <el-col :span="10" :offset="1">
+          <el-col :span="11">
             <el-form-item label="车牌类型：" prop="vehicleModel">
               <el-input v-model="addNewCarForm.vehicleModel" size="mini"/>
             </el-form-item>
           </el-col>
-          <el-col :span="10" :offset="1">
+          <el-col :span="11">
             <el-form-item label="保险起止时间：" prop="insuranceTime">
               <el-date-picker
                 v-model="datePickerValue"
@@ -238,7 +249,7 @@
           </el-col>
         </el-row>
         <el-row>
-          <el-col :span="10" :offset="1">
+          <el-col :span="11">
             <el-form-item label="是否二手车：" prop="isNewCar">
               <el-select v-model="addNewCarForm.isNewCar" placeholder="请选择储值卡">
                 <el-option label="是" value="yes"/>
@@ -246,31 +257,31 @@
               </el-select>
             </el-form-item>
           </el-col>
-          <el-col :span="10" :offset="1">
+          <el-col :span="11">
             <el-form-item label="保险金额：" prop="insuranceAmount">
               <el-input v-model="addNewCarForm.insuranceAmount" size="mini"/>
             </el-form-item>
           </el-col>
         </el-row>
         <el-row>
-          <el-col :span="10" :offset="1">
+          <el-col :span="11">
             <el-form-item label="里程数：" prop="mileage">
               <el-input v-model="addNewCarForm.mileage" size="mini"/>
             </el-form-item>
           </el-col>
-          <el-col :span="10" :offset="1">
+          <el-col :span="11">
             <el-form-item label="上牌时间：" prop="addLicenseTime">
               <el-input v-model="addNewCarForm.addLicenseTime" size="mini"/>
             </el-form-item>
           </el-col>
         </el-row>
         <el-row>
-          <el-col :span="10" :offset="1">
+          <el-col :span="11">
             <el-form-item label="车架号：" prop="frameNumber">
               <el-input v-model="addNewCarForm.frameNumber" size="mini"/>
             </el-form-item>
           </el-col>
-          <el-col :span="10" :offset="1">
+          <el-col :span="11">
             <el-form-item label="发动机号：" prop="engineNumber">
               <el-input v-model="addNewCarForm.engineNumber" size="mini"/>
             </el-form-item>
@@ -300,6 +311,16 @@
         couponInfoTable: [],
         carInfoTable: [{
           carNumber: '1111',
+          deletePopVisible: false
+        }, {
+          carNumber: '2222',
+          deletePopVisible: false
+        }, {
+          carNumber: '3333',
+          deletePopVisible: false
+        }, {
+          carNumber: '4444',
+          deletePopVisible: false
         }],
         expensesRecordTable: [],
         renewalCardVisible: false,
@@ -338,7 +359,8 @@
           insuranceAmount: '',
           addLicenseTime: ''
         },
-        datePickerValue: ''
+        datePickerValue: '',
+        index: 4,
       }
     },
     methods: {
@@ -352,6 +374,10 @@
       },
       addNewCar() {
         this.addNewCarVisible = true
+      },
+      onDeletePop(index,deletePopVisible) {
+        this.carInfoTable.splice(index,1)
+        deletePopVisible = false
       }
     },
     mounted: function () {
@@ -365,12 +391,10 @@
   margin-bottom: 40px;
 }
 .el-col > .el-input {
-  width: 70%;
+  width: 60%;
+  margin-bottom: 20px;
 }
 .dateWidth {
-  width: 70%;
-}
-.el-date-picker {
   width: 99%;
 }
 </style>
