@@ -12,10 +12,10 @@
 
     <!--两个按钮-->
     <el-row :gutter="30">
-      <el-col :span="4">
+      <el-col :span="3">
         <el-button type="primary" plain>新增储值卡</el-button>
       </el-col>
-      <el-col :span="4">
+      <el-col :span="3">
         <el-button type="primary" plain>删除储值卡</el-button>
       </el-col>
     </el-row>
@@ -117,7 +117,7 @@
   }
 </script>
 
-<style lang="less">
+<style lang="less" scoped>
   .el-input {
     width: 60%;
   }
