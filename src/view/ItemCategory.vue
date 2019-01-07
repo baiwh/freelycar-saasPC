@@ -1,5 +1,67 @@
 <template>
-  <div>ItemCategory</div>
+  <div>
+    <!--查询条件-->
+    <el-row :gutter="5">
+      <el-col :span="5">
+        <span>姓名：</span>
+        <el-input v-model="name" size="small"></el-input>
+      </el-col>
+      <el-col :span="7">
+        <span>手机号码：</span>
+        <el-input v-model="phone" size="small"></el-input>
+      </el-col>
+      <el-col :span="7">
+        <span>车牌号码：</span>
+        <el-input v-model="carNumber" size="small"></el-input>
+      </el-col>
+      <el-col :span="4">
+        <span>是否会员：</span>
+        <el-button circle :type="buttonType" size="small" @click="onVipButton">是</el-button>
+      </el-col>
+      <el-col :span="1">
+        <el-button type="primary" size="small">查询</el-button>
+      </el-col>
+    </el-row>
+
+    <!--按钮-->
+    <el-row :gutter="30">
+      <el-col :span="3">
+        <el-button type="primary" plain size="small">新增客户</el-button>
+      </el-col>
+      <el-col :span="3">
+        <el-button type="primary" plain size="small">会员统计</el-button>
+      </el-col>
+      <el-col :span="3">
+        <el-button type="primary" icon="el-icon-download" size="small">导出表单</el-button>
+      </el-col>
+    </el-row>
+
+    <!--客户表格-->
+    <el-table :data="tableData" border>
+      <el-table-column label="序号" type="index"></el-table-column>
+      <el-table-column prop="name" label="姓名"></el-table-column>
+      <el-table-column prop="price" label="手机号码"></el-table-column>
+      <el-table-column prop="actualAmount" label="车牌号码"></el-table-column>
+      <el-table-column prop="validityPeriod" label="品牌"></el-table-column>
+      <el-table-column prop="creationTime" label="是否会员"></el-table-column>
+      <el-table-column prop="creationTime" label="总消费次数"></el-table-column>
+      <el-table-column prop="creationTime" label="最近到店时间"></el-table-column>
+      <el-table-column prop="creationTime" label="卡内未消费金额"></el-table-column>
+      <el-table-column label="操作" width="220">
+        <template slot-scope="scope">
+          <el-button size="mini" type="primary" @click="handleDelete(scope.$index, scope.row)">开卡</el-button>
+          <el-button size="mini" type="primary" @click="handleDelete(scope.$index, scope.row)">修改</el-button>
+          <el-button size="mini" type="danger" @click="handleDelete(scope.$index, scope.row)">删除</el-button>
+        </template>
+      </el-table-column>
+    </el-table>
+
+    <!--分页器-->
+    <pagingDevice
+      :pageData.sync="pageData"
+      @changePage="changePage"></pagingDevice>
+
+  </div>
 </template>
 
 <script>
@@ -7,10 +69,24 @@
     name: 'ItemCategory',
     data() {
       return {
-        msg: ''
+        buttonType: '',
+        name: '',
+        phone: '',
+        carNumber: '',
+        tableData: [{}],
+        pageData: {
+          currentPage: 1,
+          pageSize: 10,
+          pageTotal: 100
+        }
       }
     },
-    methods: {},
+    methods: {
+      onVipButton() {
+        this.buttonType = this.buttonType === '' ? 'primary' : ''
+      },
+      changePage() {}
+    },
     mounted: function () {
 
     }
@@ -18,5 +94,10 @@
 </script>
 
 <style lang="less">
-
+.el-input {
+  width: 60%;
+}
+.el-row {
+  margin-bottom: 40px;
+}
 </style>
