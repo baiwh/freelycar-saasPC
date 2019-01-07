@@ -49,16 +49,9 @@
 
     <!--分页器-->
 
-    <el-pagination
-      @size-change="handleSizeChange"
-      @current-change="handleCurrentChange"
-      :current-page.sync="currentPage"
-      :page-size="10"
-      :page-sizes="[5, 10, 20, 100]"
-      :total="1000"
-      layout="prev, pager, next, sizes, total"
-      background>
-    </el-pagination>
+    <pagingDevice
+      :pageData.sync="pageData"
+      @changePage="changePage"></pagingDevice>
 
 
   </div>
@@ -90,24 +83,36 @@
             up: 1
           }
         ],
+        multipleSelection: [],
+        pageData: {
+          currentPage: 1,
+          pageSize: 10,
+          pageTotal: 1000
+        },
         currentPage: 1,
+        pageSize: 10,
+        pageTotal: 1000
       }
     },
     methods: {
+      // table多选功能
       handleSelectionChange(val) {
         this.multipleSelection = val;
       },
+
+      // 上架下架
       handleEdit() {
 
       },
+
+      // 删除当前行
       handleDelete() {
 
       },
-      handleSizeChange(val) {
-        console.log(`每页 ${val} 条`);
-      },
-      handleCurrentChange(val) {
-        console.log(`当前页: ${val}`);
+
+      // 页码发生改变时调用
+      changePage() {
+        //可以获取列表用。也可以直接换成获取列表的方法
       }
     },
     mounted: function () {
@@ -123,11 +128,5 @@
 
   .el-row {
     margin-bottom: 30px;
-  }
-  .el-pagination{
-    transform: translateX(-50%);
-    left: 50%;
-    position: absolute;
-    margin: 50px;
   }
 </style>

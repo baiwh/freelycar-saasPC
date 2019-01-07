@@ -12,6 +12,9 @@ Vue.use(ElementUI);
 // 加号按钮组件
 import addNewButton from '@/components/addNewButton'
 Vue.component('addNewButton', addNewButton)
+// 分页器组件
+import pagingDevice from '@/components/pagingDevice'
+Vue.component('pagingDevice', pagingDevice)
 
 // import axios from 'axios'
 // vue.use(axios)
