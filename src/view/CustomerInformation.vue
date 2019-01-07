@@ -45,7 +45,9 @@
         <span>会员卡信息</span>
       </div>
       <div>
-        <el-button>开卡</el-button>
+        <router-link to="/MemberProcessing">
+          <el-button>开卡</el-button>
+        </router-link>
         <el-table :data="cardInfoTable">
           <el-table-column property="cardNumber" label="卡号" align="center"/>
           <el-table-column property="cardName" label="卡名称" align="center"/>
@@ -53,8 +55,8 @@
           <el-table-column property="cardClosingTime" label="有效期至" align="center"/>
           <el-table-column label="操作" align="center">
             <template slot-scope="scope">
-              <el-button type="text" @click="onDetail(scope.row)">查看详情</el-button>
-              <el-button type="text" @click="onRenewalCard(scope.row)">续卡</el-button>
+              <el-button size="mini" type="primary" @click="onDetail(scope.row)">详情</el-button>
+              <el-button size="mini" type="primary" @click="onRenewalCard(scope.row)">续卡</el-button>
             </template>
           </el-table-column>
         </el-table>
