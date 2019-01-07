@@ -48,7 +48,6 @@
     </el-table>
 
     <!--分页器-->
-
     <pagingDevice
       :pageData.sync="pageData"
       @changePage="changePage"></pagingDevice>
@@ -89,9 +88,6 @@
           pageSize: 10,
           pageTotal: 1000
         },
-        currentPage: 1,
-        pageSize: 10,
-        pageTotal: 1000
       }
     },
     methods: {

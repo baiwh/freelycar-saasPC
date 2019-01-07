@@ -4,19 +4,6 @@
 
 <script>
   export default {
-    name: 'addNewButton',
-    data() {
-      return {
-        msg: ''
-      }
-    },
-    methods: {},
-    mounted: function () {
-
-    }
+    name: 'addNewButton'
   }
 </script>
-
-<style lang="less">
-
-</style>

@@ -23,11 +23,6 @@
         pageTotal: 1000
       },
     },
-    data() {
-      return {
-
-      }
-    },
     methods: {
       // 修改分页器的每页显示条数
       handleSizeChange(val) {
@@ -40,9 +35,6 @@
         console.log(`组件当前页: ${val}`);
         this.$emit('changePage')
       }
-    },
-    mounted: function () {
-
     }
   }
 </script>
