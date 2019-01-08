@@ -3,21 +3,36 @@
 import Vue from 'vue'
 import App from './App'
 import router from './router/index'
-
-// elementUI
+import axios from 'axios'
 import ElementUI from 'element-ui';
 import 'element-ui/lib/theme-chalk/index.css';
+import {get,post} from "./components/axiosHttp";
+import addNewButton from '@/components/addNewButton'
+import pagingDevice from '@/components/pagingDevice'
+
+
+// 引入elementUI
 Vue.use(ElementUI);
 
+
 // 加号按钮组件
-import addNewButton from '@/components/addNewButton'
 Vue.component('addNewButton', addNewButton)
+
+
 // 分页器组件
-import pagingDevice from '@/components/pagingDevice'
 Vue.component('pagingDevice', pagingDevice)
 
-// import axios from 'axios'
-// vue.use(axios)
+
+// 引入axios
+Vue.prototype.axios = axios
+// import Qs from 'qs'
+// Vue.prototype.qs = Qs;
+
+
+// 引入两个封装接口
+Vue.prototype.$get=get
+Vue.prototype.$post=post
+
 
 Vue.config.productionTip = false
 
