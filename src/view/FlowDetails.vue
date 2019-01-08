@@ -52,6 +52,7 @@
     name: 'FlowDetails',
     data() {
       return {
+        datePickerValue: '',
         sumAmounts: '',
         flowDetailsTable: [{
           carModel: '111',
@@ -70,7 +71,11 @@
         }
       }
     },
-    methods: {},
+    methods: {
+      changePage() {
+
+      }
+    },
     mounted: function () {
 
     }
