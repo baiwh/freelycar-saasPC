@@ -1,5 +1,8 @@
 import Vue from 'vue'
 import Router from 'vue-router'
+
+import login from '@/login'
+import home from '@/view/home'
 // 消费开单
 import QuickBilling from '@/view/QuickBilling'
 import SettlementCenter from '@/view/SettlementCenter'
@@ -18,6 +21,7 @@ import CreditVoucherManagement from '@/view/CreditVoucherManagement'
 // 财务管理
 import IncomeInquiry from '@/view/IncomeInquiry'
 import FlowDetails from '@/view/FlowDetails'
+import ProcurementExpenditure from '@/view/ProcurementExpenditure'
 // 系统设置
 import EmployeeManagement from '@/view/EmployeeManagement'
 import StoreManagement from '@/view/StoreManagement'
@@ -26,6 +30,16 @@ Vue.use(Router)
 
 export default new Router({
   routes: [
+    {
+      path: '/login',
+      name: '登录',
+      component: login
+    },
+    {
+      path: '/home',
+      name: '首页',
+      component: home
+    },
     {
       path: '/QuickBilling',
       name: '快速开单',
@@ -95,6 +109,11 @@ export default new Router({
       path: '/FlowDetails',
       name: '流水明细',
       component:FlowDetails
+    },
+    {
+      path: '/ProcurementExpenditure',
+      name: '支出采购',
+      component:ProcurementExpenditure
     },
     {
       path: '/EmployeeManagement',

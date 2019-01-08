@@ -27,7 +27,7 @@
       <el-input :value="sumAmounts" size="small" disabled></el-input>
     </el-row>
 
-    <el-table :data="flowDetailsTable">
+    <el-table :data="flowDetailsTable" border>
       <el-table-column type="index" label="序号" align="center"></el-table-column>
       <el-table-column property="carModel" label="车型" align="center"></el-table-column>
       <el-table-column property="carNumber" label="车牌号码" align="center"></el-table-column>
