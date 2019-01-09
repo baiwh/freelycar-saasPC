@@ -91,7 +91,7 @@
       <el-table :data="docManagementTable">
         <el-table-column label="单据编号" align="center">
           <template slot-scope="scope">
-            <router-link to="/DocumentDetails">
+            <router-link to="/ConsumptionOrder/DocumentDetails">
               {{scope.row.docNumber}}
             </router-link>
           </template>
@@ -111,12 +111,12 @@
         <el-table-column label="操作" width="150" align="center">
           <template slot-scope="scope">
             <el-button size="mini" type="primary" v-show="scope.row.car === '已接'" @click="completedVisible = true">完工</el-button>
-            <router-link to="/DocumentDetails">
+            <router-link to="/ConsumptionOrder/DocumentDetails">
               <el-button size="mini" type="primary" v-show="scope.row.car === '已接' && scope.row.state === '未结算'">修改</el-button>
               <el-button size="mini" type="primary" v-show="scope.row.car === '已交' && scope.row.state === '已结算'" class="marginLeft">查看</el-button>
             </router-link>
             <el-button size="mini" type="primary" v-show="scope.row.car === '已完'" @click="handleDelete(scope.$index, scope.row)">交车</el-button>
-            <router-link to="/SettlementCenter">
+            <router-link to="/ConsumptionOrder/SettlementCenter">
               <el-button size="mini" type="primary" v-show="scope.row.car !== '已接' && scope.row.state === '未结算'">结算</el-button>
             </router-link>
           </template>

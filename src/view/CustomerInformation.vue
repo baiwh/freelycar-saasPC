@@ -45,7 +45,7 @@
         <span>会员卡信息</span>
       </div>
       <div>
-        <router-link to="/MemberProcessing">
+        <router-link to="/MembershipManagement/MemberProcessing">
           <el-button>开卡</el-button>
         </router-link>
         <el-table :data="cardInfoTable">

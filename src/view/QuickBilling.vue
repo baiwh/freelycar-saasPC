@@ -5,13 +5,13 @@
       <el-row :gutter="60">
         <el-col :span="8">车牌号码：
           <el-input v-model="input" placeholder="请输入内容"></el-input>
-          <router-link to="/AddNewCustomers">
+          <router-link to="/MembershipManagement/AddNewCustomers">
             <addNewButton></addNewButton>
           </router-link>
         </el-col>
         <el-col :span="8">客户管理：
           <el-input v-model="input" disabled></el-input>
-          <router-link to="/AddNewCustomers">
+          <router-link to="/MembershipManagement/AddNewCustomers">
             <addNewButton></addNewButton>
           </router-link>
         </el-col>

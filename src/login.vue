@@ -74,7 +74,7 @@
             username: this.form.userName,
             password: this.form.passWord
           }).then((res)=>{
-          console.log(res.data)
+          console.log(res)
           this.axios.defaults.headers.common["Authorization"] = res.data.result
         })
       }
