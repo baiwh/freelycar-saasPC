@@ -7,22 +7,14 @@ export function get(url, params = {}) {
       params: params
     })
       .then(response => {
-        if (response.data.code === 1 || response.data.status === 0) {
-          if (response.data.result) {
-            resolve(response.data.result)
-          } else {
-            resolve(response.data.data)
-          }
+        if (response.data.code === 1) {
+          resolve(response.data.data)
         } else {
-          if (response.data.message) {
-            Message(response.data.message)
-          } else {
-            Message(response.data.msg)
-          }
+          Message.error(response.data.msg)
         }
       })
       .catch(err => {
-        Message(err)
+        Message.error(err)
       })
   })
 }
@@ -39,9 +31,9 @@ export function post(url, data = {}) {
           }
         } else {
           if (response.data.message) {
-            Message(response.data.message)
+            Message.error('用户名或密码有误')
           } else {
-            Message(response.data.msg)
+            Message.error(response.data.msg)
           }
         }
       }, err => {

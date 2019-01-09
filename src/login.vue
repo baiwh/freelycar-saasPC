@@ -70,12 +70,14 @@
     },
     methods: {
       logIn() {
-        this.axios.post('/api/login', {
+        this.$post('/api/login', {
             username: this.form.userName,
             password: this.form.passWord
           }).then((res)=>{
           console.log(res)
-          this.axios.defaults.headers.common["Authorization"] = res.data.result
+          if (res){
+            this.axios.defaults.headers.common["Authorization"] = res
+          }
         })
       }
     }
