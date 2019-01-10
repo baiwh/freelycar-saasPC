@@ -73,7 +73,7 @@
     <el-card shadow="hover">
       <div slot="header">
         <span>服务项目</span>
-        <el-button type="primary" class="addButton" icon="el-icon-plus" plain>添加</el-button>
+        <el-button type="primary" class="addButton" icon="el-icon-plus" plain @click="projectAddVisible = true">添加</el-button>
       </div>
       <el-table :data="tableData1" show-summary :summary-method="getSummaries" style="width: 100%">
         <el-table-column type="index" label="序号"></el-table-column>
@@ -92,7 +92,7 @@
     <el-card shadow="hover">
       <div slot="header">
         <span>使用配件</span>
-        <el-button type="primary" class="addButton" icon="el-icon-plus" plain>添加</el-button>
+        <el-button type="primary" class="addButton" icon="el-icon-plus" plain @click="fittingAddVisible = true">添加</el-button>
       </div>
       <el-table :data="tableData2" show-summary :summary-method="getFittingSummaries" style="width: 100%">
         <el-table-column type="index" label="序号"></el-table-column>
@@ -125,6 +125,100 @@
         <el-button type="primary">结算</el-button>
       </el-col>
     </el-row>
+
+    <!--服务项目-添加模态框-->
+    <el-dialog title="项目查询" :visible.sync="projectAddVisible" width="80%">
+      <!--条件查询-->
+      <el-row>
+        <el-col :span="10">
+          <span>项目名称：</span>
+          <el-input v-model="input"></el-input>
+        </el-col>
+        <el-col :span="10">
+          <span>项目类别：</span>
+          <el-select v-model="selectValue" placeholder="请选择项目类别">
+            <el-option
+              v-for="item in selectOptions"
+              :key="item.value"
+              :label="item.label"
+              :value="item.value">
+            </el-option>
+          </el-select>
+        </el-col>
+        <el-col :span="4">
+          <el-button type="primary">查询</el-button>
+        </el-col>
+      </el-row>
+
+      <el-table :data="projectAddTable">
+        <el-table-column type="selection"></el-table-column>
+        <el-table-column type="index" label="序号"></el-table-column>
+        <el-table-column prop="projectName" label="项目名称"></el-table-column>
+        <el-table-column prop="item" label="项目类别"></el-table-column>
+        <el-table-column prop="price" label="项目价格"></el-table-column>
+        <el-table-column prop="reference" label="参考"></el-table-column>
+        <el-table-column prop="hour" label="工时"></el-table-column>
+        <el-table-column prop="tips" label="备注"></el-table-column>
+      </el-table>
+
+      <!--分页器-->
+      <el-row style="height: 80px">
+
+          <pagingDevice
+            :pageData.sync="pageData"
+            @changePage="changePage"></pagingDevice>
+      </el-row>
+
+
+      <div slot="footer" class="dialog-footer">
+        <el-button @click="projectAddVisible = false">取 消</el-button>
+        <el-button type="primary" @click="projectAddVisible = false">确 定</el-button>
+      </div>
+    </el-dialog>
+
+
+    <!--适用配件-添加模态框-->
+    <el-dialog title="配件添加" :visible.sync="fittingAddVisible" width="80%">
+      <el-table :data="fittingAddTable">
+        <el-table-column prop="item" label="配件类别">
+          <template slot-scope="scope">
+            <el-input v-model="scope.row[scope.column.property]"></el-input>
+          </template>
+        </el-table-column>
+        <el-table-column prop="fittingName" label="配件名称">
+          <template slot-scope="scope">
+            <el-input v-model="scope.row[scope.column.property]"></el-input>
+          </template>
+        </el-table-column>
+        <el-table-column prop="number" label="数量">
+          <template slot-scope="scope">
+            <el-select v-model="scope.row[scope.column.property]" placeholder="请选择数量">
+              <el-option
+                v-for="item in selectOptions"
+                :key="item.value"
+                :label="item.label"
+                :value="item.value">
+              </el-option>
+            </el-select>
+          </template>
+        </el-table-column>
+        <el-table-column prop="fittingPrice" label="单价">
+          <template slot-scope="scope">
+            <el-input v-model="scope.row[scope.column.property]"></el-input>
+          </template>
+        </el-table-column>
+        <el-table-column prop="fittingSum" label="总价">
+          <template slot-scope="scope">
+            <el-input v-model="scope.row[scope.column.property]"></el-input>
+          </template>
+        </el-table-column>
+      </el-table>
+
+      <div slot="footer" class="dialog-footer">
+        <el-button @click="fittingAddVisible = false">取 消</el-button>
+        <el-button type="primary" @click="fittingAddVisible = false">确 定</el-button>
+      </div>
+    </el-dialog>
 
   </div>
 </template>
@@ -167,6 +261,17 @@
           people: 'b',
           count: 2,
           unitPrice: 3
+        }],
+        projectAddVisible: false,
+        projectAddTable: [{}],
+        pageData: {
+          currentPage: 1,
+          pageSize: 10,
+          pageTotal: 100
+        },
+        fittingAddVisible: false,
+        fittingAddTable: [{
+          item: 'yuio'
         }]
       }
     },
@@ -198,7 +303,8 @@
       },
       getFittingSummaries(param) {
         return this.sum(param, 0, 5, true)
-      }
+      },
+      changePage() {}
     },
     mounted: function () {
 
