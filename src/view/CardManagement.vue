@@ -12,11 +12,11 @@
 
     <!--两个按钮-->
     <el-row :gutter="30">
-      <el-col :span="3">
-        <el-button type="primary" plain>新增储值卡</el-button>
+      <el-col :span="4">
+        <el-button type="primary" plain @click="handleModify(false)">新增储值卡</el-button>
       </el-col>
-      <el-col :span="3">
-        <el-button type="primary" plain>删除储值卡</el-button>
+      <el-col :span="4">
+        <el-button type="primary" plain @click="allDelete">删除储值卡</el-button>
       </el-col>
     </el-row>
 
@@ -33,14 +33,14 @@
       <el-table-column prop="comment" label="备注" show-overflow-tooltip></el-table-column>
       <el-table-column label="操作" width="150">
         <template slot-scope="scope">
-          <el-button size="mini" type="primary" @click="handleDelete(scope.row)">修改</el-button>
+          <el-button size="mini" type="primary" @click="handleModify(true,scope.row)">修改</el-button>
           <el-button size="mini" type="danger" @click="handleDelete(scope.row)">删除</el-button>
         </template>
       </el-table-column>
       <el-table-column prop="up" label="上架/下架">
         <template slot-scope="scope">
           <el-button size="mini" @click="handleEdit(scope.row)"
-                     :type="scope.row.bookOnline?'info':'success'">
+                     :type="scope.row.bookOnline?'success':'info'">
             {{ scope.row.bookOnline?'下架':'上架'}}
           </el-button>
         </template>
@@ -50,7 +50,7 @@
     <!--分页器-->
     <pagingDevice
       :pageData.sync="pageData"
-      @changePage="changePage"></pagingDevice>
+      @changePage="getDataList"></pagingDevice>
 
 
   </div>
@@ -91,31 +91,61 @@
 
       // table多选功能
       handleSelectionChange(val) {
-        this.multipleSelection = val;
+        this.multipleSelection = val
       },
 
       // 上架下架
       handleEdit(row) {
-        console.log(row)
         if (!row.bookOnline) {
           // 上架
           this.$get('/cardService/upperShelf', {
             id: row.id
+          }).then(res => {
+            this.$message({
+              message: '上架成功',
+              type: 'success'
+            })
+            this.getDataList()
           })
         } else {
           // 下架
+          this.$get('/cardService/lowerShelf', {
+            id: row.id
+          }).then(res => {
+            this.$message({
+              message: '下架成功',
+              type: 'success'
+            })
+            this.getDataList()
+          })
         }
+      },
+
+      // 行内删除
+      handleDelete(row) {
+        this.$get('/cardService/delete', {
+          id: row.id
+        }).then(res => {
+          this.$message({
+            message: '删除成功',
+            type: 'success'
+          })
+          this.getDataList()
+        })
+      },
+
+      // 批量删除
+      allDelete(){
 
       },
 
-      // 删除当前行
-      handleDelete() {
-
-      },
-
-      // 页码发生改变时调用
-      changePage() {
-        //可以获取列表用。也可以直接换成获取列表的方法
+      // 新增、修改
+      handleModify(type,row) {
+        if(type){
+          // 修改
+        }else{
+          // 新增
+        }
       }
     },
     mounted: function () {
