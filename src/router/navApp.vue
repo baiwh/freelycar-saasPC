@@ -27,7 +27,6 @@
 
         <el-aside width="200px">
           <el-menu default-active="active" class="el-menu-vertical-demo"
-                   @select="getNavPath"
                    :collapse="isCollapse" :router="true">
 
             <el-menu-item index="/home">
@@ -149,12 +148,7 @@
       // 收起/打开左侧导航
       modifyNav() {
         this.isCollapse = !this.isCollapse
-      },
-      // 导航面包屑
-      // getNavPath(){
-      //   let router=this.$route.matched
-      //   this.navPath = router.map(item=>item.name)
-      // }
+      }
     },
     computed: {
       getNavPath: function () {
@@ -164,7 +158,6 @@
       }
     },
     mounted() {
-      // this.getNavPath()
     }
   }
 </script>

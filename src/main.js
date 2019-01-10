@@ -6,7 +6,7 @@ import router from './router/index'
 import axios from 'axios'
 import ElementUI from 'element-ui';
 import 'element-ui/lib/theme-chalk/index.css';
-import {get,post} from "./components/axiosHttp";
+import {get, post} from "./components/axiosHttp";
 import addNewButton from '@/components/addNewButton'
 import pagingDevice from '@/components/pagingDevice'
 
@@ -30,16 +30,37 @@ Vue.prototype.axios = axios
 
 
 // 引入两个封装接口
-Vue.prototype.$get=get
-Vue.prototype.$post=post
+Vue.prototype.$get = get
+Vue.prototype.$post = post
 
 
 Vue.config.productionTip = false
+
+router.beforeEach((to, from, next) => {
+  let login = document.cookie
+  if (to.path === '/login') {
+    next()
+    return
+  }
+  if (login!=='') {
+    if (to.path === '/') {
+      next({
+        path: '/'
+      })
+    } else {
+      next()
+    }
+  } else {
+    next({
+      path: '/login'
+    })
+  }
+})
 
 /* eslint-disable no-new */
 new Vue({
   el: '#app',
   router,
-  components: { App },
+  components: {App},
   template: '<App/>'
 })

@@ -9,6 +9,13 @@
     name: 'App',
     data() {
       return {}
+    },
+    mounted(){
+      let cookie = document.cookie
+      if (cookie !== '') {
+        let jwt = cookie.split('=')
+        this.axios.defaults.headers.common["Authorization"] = jwt[1]
+      }
     }
   }
 </script>
