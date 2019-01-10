@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div id="navBody">
     <el-card>
 
       <!--标题-->
@@ -23,6 +23,7 @@
         <el-form-item>
           <el-input
             class="log-in-input"
+            type="password"
             placeholder="请输入密码"
             prefix-icon="el-icon-search"
             v-model="form.passWord">
@@ -57,8 +58,7 @@
             label: '还有哪'
           }
         ],
-        form:{
-          value: '',
+        form: {
           userName: '',
           passWord: '',
         },
@@ -69,14 +69,21 @@
 
     },
     methods: {
+      // 登录
       logIn() {
         this.$post('/api/login', {
-            username: this.form.userName,
-            password: this.form.passWord
-          }).then((res)=>{
+          username: this.form.userName,
+          password: this.form.passWord
+        }).then((res) => {
           console.log(res)
-          if (res){
+          if (res) {
             this.axios.defaults.headers.common["Authorization"] = res
+            if (this.checked) {
+              let time = new Date()
+              let nowTime = time.getTime()
+              document.cookie = "jwt=" + res + "; expires=" + new Date(nowTime + 5 * 24 * 60 * 60 * 1000)
+            }
+            this.$router.push('/home')
           }
         })
       }
@@ -85,12 +92,15 @@
 </script>
 
 <style lang="less" scoped>
-  body{
+  #navBody {
+    height: 100vh;
+    width: 100vw;
     margin: 0;
     padding: 0;
     background: url("./../static/c.jpg");
     background-size: 100% 100%;
   }
+
   .log-in-header {
     display: flex;
     justify-content: center;

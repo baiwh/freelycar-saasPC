@@ -12,7 +12,8 @@ module.exports = {
     assetsPublicPath: '/',
     proxyTable: {
       '/api': {
-        target: 'http://192.168.0.167:8080',
+        target: 'http://www.pwai.net.cn/SaaS',
+        // target: 'http://192.168.0.167:8080',
         secure: false,
         changeOrigin: true,
         withCredentials: false,

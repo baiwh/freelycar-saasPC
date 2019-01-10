@@ -49,7 +49,7 @@ export default new Router({
       children: [
         {
           path: 'home',
-          name: '主页',
+          name: '',
           component: home
         },
         {

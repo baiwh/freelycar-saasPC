@@ -37,7 +37,7 @@
               </template>
             </el-menu-item>
 
-            <el-submenu index="消费开单">
+            <el-submenu index="/ConsumptionOrder">
               <template slot="title">
                 <i class="el-icon-document"></i>
                 <span>消费开单</span>
@@ -117,7 +117,7 @@
                 <!--</el-col>-->
                 <el-col :span="22">
                   <el-breadcrumb style="line-height: 45px" separator-class="el-icon-arrow-right">
-                    <el-breadcrumb-item v-for="item in navPath" :key = "item.id">{{item}}</el-breadcrumb-item>
+                    <el-breadcrumb-item v-for="item in getNavPath" :key="item.id">{{item}}</el-breadcrumb-item>
                   </el-breadcrumb>
                 </el-col>
               </el-row>
@@ -142,7 +142,7 @@
       return {
         userName: 'admin',
         isCollapse: false,
-        navPath:[]
+        navPath: []
       }
     },
     methods: {
@@ -151,13 +151,20 @@
         this.isCollapse = !this.isCollapse
       },
       // 导航面包屑
-      getNavPath(){
-        let router=this.$route.matched
-        this.navPath = router.map(item=>item.name)
+      // getNavPath(){
+      //   let router=this.$route.matched
+      //   this.navPath = router.map(item=>item.name)
+      // }
+    },
+    computed: {
+      getNavPath: function () {
+        let router = this.$route.matched
+        let path = router.map(item => item.name)
+        return path
       }
     },
-    mounted(){
-      this.getNavPath()
+    mounted() {
+      // this.getNavPath()
     }
   }
 </script>
