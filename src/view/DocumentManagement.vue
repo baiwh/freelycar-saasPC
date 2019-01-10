@@ -115,7 +115,7 @@
               <el-button size="mini" type="primary" v-show="scope.row.car === '已接' && scope.row.state === '未结算'">修改</el-button>
               <el-button size="mini" type="primary" v-show="scope.row.car === '已交' && scope.row.state === '已结算'" class="marginLeft">查看</el-button>
             </router-link>
-            <el-button size="mini" type="primary" v-show="scope.row.car === '已完'" @click="handleDelete(scope.$index, scope.row)">交车</el-button>
+            <el-button size="mini" type="primary" v-show="scope.row.car === '已完'" @click="deliveryVisible = true">交车</el-button>
             <router-link to="/ConsumptionOrder/SettlementCenter">
               <el-button size="mini" type="primary" v-show="scope.row.car !== '已接' && scope.row.state === '未结算'">结算</el-button>
             </router-link>
@@ -131,25 +131,34 @@
     </el-card>
 
     <!--完工弹出框-->
-    <el-dialog title="完工" :visible.sync="completedVisible">
+    <el-dialog title="完工" :visible.sync="completedVisible" width="50%">
       <div>
         <el-row>
-          <span>完工时间：</span>
+          <el-col :span="4">
+            完工时间：
+          </el-col>
           <el-date-picker
             v-model="datePickerValue"
             type="daterange"
             size="small"
             range-separator="~"
             start-placeholder="开始日期"
-            end-placeholder="结束日期">
+            end-placeholder="结束日期"
+            style="width:80%">
           </el-date-picker>
         </el-row>
-        <el-row>
-          <span>停车位置：</span>
-          <el-input v-model="input" placeholder="请输入内容"></el-input>
+        <el-row style="margin-top: 20px">
+          <el-col :span="4">
+            停车位置：
+          </el-col>
+          <el-input v-model="input" placeholder="请输入内容" style="width: 80%" size="small"></el-input>
         </el-row>
-        <el-row>
-
+        <el-row style="margin-top: 20px">
+          <el-col :span="4">
+            备注：
+          </el-col>
+          <el-input  type="textarea" :rows="2" placeholder="请输入内容" v-model="input" style="width: 80%">
+          </el-input>
         </el-row>
       </div>
 
@@ -162,7 +171,27 @@
     <!--交车弹出框-->
     <el-dialog title="交车" :visible.sync="deliveryVisible">
       <div>
-
+        <el-row>
+          <el-col :span="4">
+            完工时间：
+          </el-col>
+          <el-date-picker
+            v-model="datePickerValue"
+            type="daterange"
+            size="small"
+            range-separator="~"
+            start-placeholder="开始日期"
+            end-placeholder="结束日期"
+            style="width:80%">
+          </el-date-picker>
+        </el-row>
+        <el-row style="margin-top: 20px">
+          <el-col :span="4">
+            备注：
+          </el-col>
+          <el-input  type="textarea" :rows="2" placeholder="请输入内容" v-model="input" style="width: 80%">
+          </el-input>
+        </el-row>
       </div>
       <div slot="footer" class="dialog-footer">
         <el-button @click="deliveryVisible = false">取 消</el-button>
