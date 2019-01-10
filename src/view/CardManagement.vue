@@ -91,6 +91,18 @@
       }
     },
     methods: {
+      // 获取卡类列表
+      getDataList(){
+        this.$get('/api/cardService/list',{
+          storeId:1,
+          currentPage:0,
+          pageSize:10,
+          name:''
+        }).then((res)=>{
+          console.log(res)
+        })
+      },
+
       // table多选功能
       handleSelectionChange(val) {
         this.multipleSelection = val;
@@ -112,7 +124,7 @@
       }
     },
     mounted: function () {
-
+      this.getDataList()
     }
   }
 </script>
