@@ -26,10 +26,12 @@
     <!--按钮-->
     <el-row :gutter="30">
       <el-col :span="3">
-        <el-button type="primary" plain size="small">新增客户</el-button>
+        <router-link to="/MembershipManagement/AddNewCustomers">
+          <el-button type="primary" plain size="small">新增客户</el-button>
+        </router-link>
       </el-col>
       <el-col :span="3">
-        <el-button type="primary" plain size="small">会员统计</el-button>
+        <el-button type="primary" plain size="small" @click="statisticsVisible = true">会员统计</el-button>
       </el-col>
       <el-col :span="3">
         <el-button type="primary" icon="el-icon-download" size="small">导出表单</el-button>
@@ -49,9 +51,24 @@
       <el-table-column prop="creationTime" label="卡内未消费金额" align="center"></el-table-column>
       <el-table-column label="操作" width="220" align="center">
         <template slot-scope="scope">
-          <el-button size="mini" type="primary" @click="handleDelete(scope.$index, scope.row)">开卡</el-button>
-          <el-button size="mini" type="primary" @click="handleDelete(scope.$index, scope.row)">修改</el-button>
-          <el-button size="mini" type="danger" @click="handleDelete(scope.$index, scope.row)">删除</el-button>
+          <router-link to="/MembershipManagement/MemberProcessing">
+            <el-button size="mini" type="primary">开卡</el-button>
+          </router-link>
+          <router-link to="/MembershipManagement/AddNewCustomers">
+            <el-button size="mini" type="primary">修改</el-button>
+          </router-link>
+          <el-popover
+            ref="popover{{$index}}"
+            placement="top"
+            width="160"
+            v-model="scope.row.deleteVisible">
+            <p>确定删除吗？</p>
+            <div style="text-align: right; margin: 0">
+              <el-button size="mini" type="text" @click="scope.row.deleteVisible = false">取消</el-button>
+              <el-button type="primary" size="mini" @click="scope.row.deleteVisible = false">确定</el-button>
+            </div>
+            <el-button size="mini" type="danger" slot="reference">删除</el-button>
+          </el-popover>
         </template>
       </el-table-column>
     </el-table>
@@ -60,6 +77,18 @@
     <pagingDevice
       :pageData.sync="pageData"
       @changePage="changePage"></pagingDevice>
+
+    <!--会员统计模态框-->
+    <el-dialog title="交车" :visible.sync="statisticsVisible" width="30%">
+      <el-row>会员总数：{{memberCount}}</el-row>
+      <el-row>本月新增：{{newMemberCount}}</el-row>
+      <el-row>今日新增：{{todayNewCount}}</el-row>
+
+      <div slot="footer" class="dialog-footer">
+        <el-button @click="statisticsVisible = false">取 消</el-button>
+        <el-button type="primary" @click="statisticsVisible = false">确 定</el-button>
+      </div>
+    </el-dialog>
 
   </div>
 </template>
@@ -73,12 +102,20 @@
         name: '',
         phone: '',
         carNumber: '',
-        tableData: [{}],
+        tableData: [{
+          deleteVisible: false
+        }, {
+          deleteVisible: false
+        }],
         pageData: {
           currentPage: 1,
           pageSize: 10,
           pageTotal: 100
-        }
+        },
+        statisticsVisible: false,
+        memberCount: 5,
+        newMemberCount: 1,
+        todayNewCount: 0
       }
     },
     methods: {
