@@ -71,7 +71,7 @@
     methods: {
       // 登录
       logIn() {
-        this.$post('/api/login', {
+        this.$post('/login', {
           username: this.form.userName,
           password: this.form.passWord
         }).then((res) => {

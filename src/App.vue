@@ -10,7 +10,7 @@
     data() {
       return {}
     },
-    mounted(){
+    beforeCreate(){
       let cookie = document.cookie
       if (cookie !== '') {
         let jwt = cookie.split('=')

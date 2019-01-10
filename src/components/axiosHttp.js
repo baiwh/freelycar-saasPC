@@ -3,7 +3,7 @@ import {Message} from 'element-ui'
 
 export function get(url, params = {}) {
   return new Promise((resolve, reject) => {
-    axios.get(url, {
+    axios.get('/api' + url, {
       params: params
     })
       .then(response => {
@@ -21,7 +21,7 @@ export function get(url, params = {}) {
 
 export function post(url, data = {}) {
   return new Promise((resolve, reject) => {
-    axios.post(url, data)
+    axios.post('/api' + url, data)
       .then(response => {
         if (response.data.code === 1 || response.data.status === 0) {
           if (response.data.result) {
@@ -31,7 +31,7 @@ export function post(url, data = {}) {
           }
         } else {
           if (response.data.message) {
-            Message.error('用户名或密码有误')
+            Message.error(response.data.message)
           } else {
             Message.error(response.data.msg)
           }

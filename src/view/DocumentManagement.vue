@@ -88,7 +88,7 @@
         </el-col>
       </el-row>
 
-      <el-table :data="docManagementTable">
+      <el-table v-loading="loading" :data="docManagementTable">
         <el-table-column label="单据编号" align="center">
           <template slot-scope="scope">
             <router-link to="/ConsumptionOrder/DocumentDetails">

@@ -43,7 +43,7 @@
         <div slot="header" class="clearfix">
           <span>收款方式</span>
         </div>
-        <el-table :data="amountMethodsTable">
+        <el-table v-loading="loading" :data="amountMethodsTable">
           <el-table-column property="crash" label="现金" align="center"/>
           <el-table-column property="swipe" label="刷卡" align="center"/>
           <el-table-column property="easyPay" label="易付宝" align="center"/>
@@ -61,7 +61,7 @@
           <span>项目类别</span>
         </div>
         <div>项目类别饼状图</div>
-        <el-table :data="itemCategoryTable">
+        <el-table v-loading="loading" :data="itemCategoryTable">
           <el-table-column property="itemName" label="项目类别" align="center"/>
           <el-table-column property="itemNumber" label="数量" align="center"/>
           <el-table-column property="itemProportion" label="占比" align="center"/>

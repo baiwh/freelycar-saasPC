@@ -22,7 +22,7 @@
 
     <!--表格-->
     <el-table ref="multipleTable" :data="tableData" tooltip-effect="dark" border
-              @selection-change="handleSelectionChange">
+              @selection-change="handleSelectionChange" v-loading="loading">
       <el-table-column type="selection"></el-table-column>
       <el-table-column label="序号" type="index"></el-table-column>
       <el-table-column prop="name" label="券名"></el-table-column>

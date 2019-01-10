@@ -3,7 +3,7 @@
     <!--查询框-->
     <el-row :gutter="30">
       <el-col :span="10">卡类名称：
-        <el-input v-model="input" placeholder="请输入内容"></el-input>
+        <el-input v-model="cardName" placeholder="请输入内容"></el-input>
       </el-col>
       <el-col :span="5">
         <el-button type="primary">查询</el-button>
@@ -22,26 +22,26 @@
 
     <!--表格-->
     <el-table ref="multipleTable" :data="tableData" tooltip-effect="dark" border
-              @selection-change="handleSelectionChange">
+              @selection-change="handleSelectionChange" v-loading="loading">
       <el-table-column type="selection"></el-table-column>
       <el-table-column label="序号" type="index"></el-table-column>
       <el-table-column prop="name" label="卡类名称"></el-table-column>
       <el-table-column prop="price" label="售卡金额"></el-table-column>
-      <el-table-column prop="actualAmount" label="实际金额"></el-table-column>
-      <el-table-column prop="validityPeriod" label="有效期（年）"></el-table-column>
-      <el-table-column prop="creationTime" label="创建时间"></el-table-column>
-      <el-table-column prop="remarks" label="备注" show-overflow-tooltip></el-table-column>
+      <el-table-column prop="actualPrice" label="实际金额"></el-table-column>
+      <el-table-column prop="validTime" label="有效期（年）"></el-table-column>
+      <el-table-column prop="createTime" label="创建时间"></el-table-column>
+      <el-table-column prop="comment" label="备注" show-overflow-tooltip></el-table-column>
       <el-table-column label="操作" width="150">
         <template slot-scope="scope">
-          <el-button size="mini" type="primary" @click="handleDelete(scope.$index, scope.row)">修改</el-button>
-          <el-button size="mini" type="danger" @click="handleDelete(scope.$index, scope.row)">删除</el-button>
+          <el-button size="mini" type="primary" @click="handleDelete(scope.row)">修改</el-button>
+          <el-button size="mini" type="danger" @click="handleDelete(scope.row)">删除</el-button>
         </template>
       </el-table-column>
       <el-table-column prop="up" label="上架/下架">
         <template slot-scope="scope">
-          <el-button size="mini" @click="handleEdit(scope.$index, scope.row)"
-                     :type="scope.row.up===0?'success':'info'">
-            {{ scope.row.up===0?'上架':'下架'}}
+          <el-button size="mini" @click="handleEdit(scope.row)"
+                     :type="scope.row.bookOnline?'info':'success'">
+            {{ scope.row.bookOnline?'下架':'上架'}}
           </el-button>
         </template>
       </el-table-column>
@@ -61,27 +61,9 @@
     name: 'CardManagement',
     data() {
       return {
-        input: '',
-        tableData: [
-          {
-            name: 'a',
-            price: 1,
-            actualAmount: 1,
-            validityPeriod: 1,
-            creationTime: '2018-1-1',
-            remarks: 'aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa',
-            up: 0
-          },
-          {
-            name: 'a',
-            price: 2,
-            actualAmount: 2,
-            validityPeriod: 2,
-            creationTime: '2018-1-1',
-            remarks: 'bbbbbbbbbbbbbbbbba',
-            up: 1
-          }
-        ],
+        loading: true,
+        cardName: '',
+        tableData: [],
         multipleSelection: [],
         pageData: {
           currentPage: 1,
@@ -92,14 +74,18 @@
     },
     methods: {
       // 获取卡类列表
-      getDataList(){
-        this.$get('/api/cardService/list',{
-          storeId:1,
-          currentPage:0,
-          pageSize:10,
-          name:''
-        }).then((res)=>{
-          console.log(res)
+      getDataList() {
+        this.$get('/cardService/list', {
+          storeId: 1,
+          currentPage: this.pageData.currentPage,
+          pageSize: this.pageData.pageSize,
+          name: this.cardName
+        }).then((res) => {
+          this.loading = false
+          this.tableData = res.data
+          this.pageData.currentPage = res.currentPage
+          this.pageData.pageSize = res.pageSize
+          this.pageData.pageTotal = res.total
         })
       },
 
@@ -109,7 +95,16 @@
       },
 
       // 上架下架
-      handleEdit() {
+      handleEdit(row) {
+        console.log(row)
+        if (!row.bookOnline) {
+          // 上架
+          this.$get('/cardService/upperShelf', {
+            id: row.id
+          })
+        } else {
+          // 下架
+        }
 
       },
 
