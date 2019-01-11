@@ -82,7 +82,17 @@
         <el-table-column prop="staffName" label="施工人员"></el-table-column>
         <el-table-column label="操作">
           <template slot-scope="scope">
-            <el-button size="mini" type="danger" @click="handleDelete(scope.$index, scope.row)">删除</el-button>
+            <el-popover
+              placement="top"
+              width="160"
+              v-model="visible2">
+              <p>确定删除？</p>
+              <div style="text-align: right; margin: 0">
+                <el-button size="mini" type="text" @click="visible2 = false">取消</el-button>
+                <el-button type="primary" size="mini" @click="handleDelete(scope.row)">确定</el-button>
+              </div>
+              <el-button slot="reference" size="mini" type="danger">删除</el-button>
+            </el-popover>
           </template>
         </el-table-column>
       </el-table>
@@ -105,7 +115,17 @@
         </el-table-column>
         <el-table-column label="操作">
           <template slot-scope="scope">
-            <el-button size="mini" type="danger" @click="handleDelete(scope.$index, scope.row)">删除</el-button>
+            <el-popover
+              placement="top"
+              width="160"
+              v-model="visible2">
+              <p>确定删除？</p>
+              <div style="text-align: right; margin: 0">
+                <el-button size="mini" type="text" @click="visible2 = false">取消</el-button>
+                <el-button type="primary" size="mini" @click="handleDelete(scope.row)">确定</el-button>
+              </div>
+              <el-button slot="reference" size="mini" type="danger">删除</el-button>
+            </el-popover>
           </template>
         </el-table-column>
       </el-table>
