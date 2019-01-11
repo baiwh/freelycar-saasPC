@@ -3,10 +3,10 @@
     <!--查询框-->
     <el-row :gutter="30">
       <el-col :span="10">卡类名称：
-        <el-input v-model="cardName" placeholder="请输入内容"></el-input>
+        <el-input v-model="cardName" placeholder="请输入卡类名称"></el-input>
       </el-col>
       <el-col :span="5">
-        <el-button type="primary">查询</el-button>
+        <el-button type="primary" @click="getDataList">查询</el-button>
       </el-col>
     </el-row>
 
