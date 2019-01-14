@@ -176,7 +176,7 @@
         </el-col>
         <el-col :span="4">备注：</el-col>
         <el-col :span="8">
-          <el-input  type="textarea" :rows="2" placeholder="请输入内容" v-model="input" style="width:80%"></el-input>
+          <el-input  type="textarea" placeholder="请输入内容" v-model="input" style="width:80%"></el-input>
         </el-col>
       </el-row>
 

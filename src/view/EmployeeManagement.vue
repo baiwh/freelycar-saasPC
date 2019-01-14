@@ -15,10 +15,10 @@
 
     <!--两个按钮-->
     <el-row :gutter="10">
-      <el-col :span="2">
-        <el-button type="primary" plain>新增员工</el-button>
+      <el-col :span="4">
+        <el-button type="primary" plain @click="handleAdd(true)">新增员工</el-button>
       </el-col>
-      <el-col :span="2">
+      <el-col :span="4">
         <el-button type="primary" plain>删除员工</el-button>
       </el-col>
     </el-row>
@@ -37,18 +37,18 @@
       <el-table-column prop="remarks" label="备注" show-overflow-tooltip></el-table-column>
       <el-table-column label="操作" width="150">
         <template slot-scope="scope">
-          <el-button size="mini" type="primary" @click="handleDelete(scope.$index, scope.row)">修改</el-button>
+          <el-button size="mini" type="primary" @click="handleAdd(false)">修改</el-button>
           <el-popover
             placement="top"
             width="160"
-            v-model="visible2">
+            :ref="scope.$index">
             <p>确定删除？</p>
             <div style="text-align: right; margin: 0">
-              <el-button size="mini" type="text" @click="visible2 = false">取消</el-button>
-              <el-button type="primary" size="mini" @click="handleDelete(scope.row)">确定</el-button>
+              <el-button size="mini" type="text" @click="handleClose(scope.$index)">取消</el-button>
+              <el-button type="primary" size="mini" @click="handleDelete(scope.$index,scope.row)">确定</el-button>
             </div>
-            <el-button size="mini" slot="reference" type="danger">删除</el-button>
           </el-popover>
+          <el-button size="mini" v-popover="scope.$index" type="danger" slot="reference">删除</el-button>
         </template>
       </el-table-column>
       <el-table-column prop="opening" label="智能柜技师功能">
@@ -65,6 +65,78 @@
     <pagingDevice
       :pageData.sync="pageData"
       @changePage="changePage"></pagingDevice>
+
+    <!--新增员工、修改员工模态框-->
+    <el-dialog :title="dialogOneTitle" :visible.sync="dialogVisible1">
+      <el-row>
+        <el-col :span="4" :offset="2">员工姓名：</el-col>
+        <el-col :span="18">
+          <el-input v-model="input" placeholder="请输入内容" style="width: 80%" size="small"></el-input>
+        </el-col>
+      </el-row>
+      <el-row>
+        <el-col :span="4" :offset="2">性别：</el-col>
+        <el-col :span="18">
+          <el-radio-group v-model="gender" style="width: 80%">
+            <el-radio label="男"></el-radio>
+            <el-radio label="女"></el-radio>
+          </el-radio-group>
+        </el-col>
+      </el-row>
+      <el-row>
+        <el-col :span="4" :offset="2">手机号码：</el-col>
+        <el-col :span="18">
+          <el-input v-model="input" placeholder="请输入内容" style="width: 80%" size="small"></el-input>
+        </el-col>
+      </el-row>
+      <el-row>
+        <el-col :span="4" :offset="2">职位：</el-col>
+        <el-col :span="18">
+          <el-select v-model="selectValue" placeholder="请选择" style="width: 80%" size="small">
+            <el-option v-for="item in selectOptions1" :key="item.value" :label="item.label" :value="item.value"></el-option>
+          </el-select>
+        </el-col>
+      </el-row>
+      <el-row>
+        <el-col :span="4" :offset="2">级别：</el-col>
+        <el-col :span="18">
+          <el-select v-model="selectValue" placeholder="请选择" style="width: 80%" size="small">
+            <el-option v-for="item in selectOptions2" :key="item.value" :label="item.label" :value="item.value"></el-option>
+          </el-select>
+        </el-col>
+      </el-row>
+      <el-row>
+        <el-col :span="4" :offset="2">备注：</el-col>
+        <el-col :span="18">
+          <el-input  type="textarea" placeholder="请输入内容" v-model="input" style="width:80%"></el-input>
+        </el-col>
+      </el-row>
+      <div slot="footer" class="dialog-footer">
+        <el-button @click="dialogVisible1 = false">取 消</el-button>
+        <el-button type="primary" @click="dialogVisible1 = false">确 定</el-button>
+      </div>
+    </el-dialog>
+
+    <!--技师模态框-->
+    <el-dialog title="开通技师端账号" :visible.sync="dialogVisible2">
+      <el-row>
+        <el-col :span="6" :offset="2">技师登录账号：</el-col>
+        <el-col :span="16">
+          <el-input v-model="input" placeholder="请输入内容" style="width: 80%" size="small"></el-input>
+        </el-col>
+      </el-row>
+      <el-row>
+        <el-col :span="6" :offset="2">技师登录密码：</el-col>
+        <el-col :span="16">
+          <el-input v-model="input" placeholder="请输入内容" style="width: 80%" size="small"></el-input>
+        </el-col>
+      </el-row>
+
+      <div slot="footer" class="dialog-footer">
+        <el-button @click="dialogVisible2 = false">取 消</el-button>
+        <el-button type="primary" @click="dialogVisible2 = false">确 定</el-button>
+      </div>
+    </el-dialog>
   </div>
 </template>
 
@@ -73,6 +145,8 @@
     name: 'EmployeeManagement',
     data() {
       return {
+        loading: '',
+        input: '',
         inputNumber: '',
         inputName:'',
         tableData: [
@@ -103,6 +177,19 @@
           pageSize: 10,
           pageTotal: 1000
         },
+        gender: '',
+        selectValue: '',
+        selectOptions1: [{
+          label: '1',
+          value: '1'
+        }],
+        selectOptions2: [{
+          label: '2',
+          value: '2'
+        }],
+        dialogOneTitle: '',
+        dialogVisible1: false,
+        dialogVisible2: false
       }
     },
     methods: {
@@ -111,14 +198,28 @@
         this.multipleSelection = val;
       },
 
-      // 上架下架
-      handleEdit() {
+      //对话框
+      handleAdd(type){
+        if(type){
+          this.dialogOneTitle = '新增员工',
+          this.dialogVisible1 = true
+        }else {
+          this.dialogOneTitle = '修改员工',
+          this.dialogVisible1 = true
+        }
+      },
 
+      // 智能柜技师功能
+      handleEdit(index, row) {
+        this.dialogVisible2 = true
       },
 
       // 删除当前行
-      handleDelete() {
-        this.visible2 = false
+      handleClose(id){
+        this.$refs[id].doClose()
+      },
+      handleDelete(id, row) {
+        this.handleClose(id)
       },
 
       // 页码发生改变时调用
