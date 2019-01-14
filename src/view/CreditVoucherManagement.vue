@@ -12,10 +12,10 @@
 
     <!--两个按钮-->
     <el-row :gutter="30">
-      <el-col :span="3">
+      <el-col :span="4">
         <el-button type="primary" plain @click="handleModify(false)">新增抵用券</el-button>
       </el-col>
-      <el-col :span="3">
+      <el-col :span="4">
         <el-button type="primary" plain @click="allDelete">删除抵用券</el-button>
       </el-col>
     </el-row>
@@ -37,20 +37,30 @@
           <el-popover
             placement="top"
             width="160"
-            v-model="isDelate">
-            <p>确定删除本条抵用券？</p>
+            :ref="scope.$index">
+            <p>确定删除本条数据？</p>
             <div style="text-align: right; margin: 0">
-              <el-button size="mini" type="text" @click="isDelate = false">取消</el-button>
+              <el-button size="mini" type="text" @click="handleClose(scope.$index)">取消</el-button>
               <el-button type="primary" size="mini" @click="handleDelete(scope.row)">确定</el-button>
             </div>
-            <el-button size="mini" slot="reference" type="danger">删除</el-button>
           </el-popover>
+          <el-button size="mini" v-popover="scope.$index" type="danger">删除</el-button>
         </template>
       </el-table-column>
       <el-table-column prop="up" label="上架/下架">
         <template slot-scope="scope">
-          <el-button size="mini" @click="handleEdit(scope.row)"
-                     :type="scope.row.bookOnline?'success':'info'">
+          <el-popover
+            placement="top"
+            width="160"
+            :ref="scope.row.id"
+           >
+            <p>确定进行{{scope.row.bookOnline? '下架' : '上架'}}？</p>
+            <div style="text-align: right; margin: 0">
+              <el-button size="mini" type="text" @click="handleClose(scope.row.id)">取消</el-button>
+              <el-button type="primary" size="mini" @click="handleEdit(scope.row.id,scope.row)">确定</el-button>
+            </div>
+          </el-popover>
+          <el-button size="mini" :type="scope.row.bookOnline?'success':'info'" v-popover="scope.row.id">
             {{ scope.row.bookOnline?'下架':'上架'}}
           </el-button>
         </template>
@@ -62,7 +72,48 @@
       :pageData.sync="pageData"
       @changePage="getDataList"></pagingDevice>
 
+    <!--抵用券弹窗-->
+    <el-dialog :title="newOrChange" :visible.sync="isShow">
+      <el-row>
+        <el-col :span="5" :offset="2">抵用券名称：</el-col>
+        <el-col :span="17">
+          <el-input v-model="dialog.creditVoucherName" style="width: 80%" size="small"></el-input>
+        </el-col>
+      </el-row>
+      <el-row>
+        <el-col :span="5" :offset="2">金额：</el-col>
+        <el-col :span="17">
+          <el-input v-model="dialog.creditVoucherPrice" style="width: 80%" size="small"></el-input>
+        </el-col>
+      </el-row>
+      <el-row>
+        <el-col :span="5" :offset="2">项目：</el-col>
+        <el-col :span="17">
+          <el-select v-model="dialog.selectValue" placeholder="请选择" style="width: 80%">
+            <el-option v-for="item in selectOptions1" :key="item.value" :label="item.label" :value="item.value"></el-option>
+          </el-select>
+        </el-col>
+      </el-row>
+      <el-row>
+        <el-col :span="5" :offset="2">有效期（月）：</el-col>
+        <el-col :span="17">
+          <el-select v-model="dialog.selectValue" placeholder="请选择" style="width: 80%">
+            <el-option v-for="item in selectOptions2" :key="item.value" :label="item.label" :value="item.value"></el-option>
+          </el-select>
+        </el-col>
+      </el-row>
+      <el-row>
+        <el-col :span="5" :offset="2">备注：</el-col>
+        <el-col :span="17">
+          <el-input  type="textarea" :rows="2" placeholder="请输入内容" v-model="input" style="width:80%"></el-input>
+        </el-col>
+      </el-row>
 
+      <div slot="footer" class="dialog-footer">
+        <el-button @click="isShow = false">取 消</el-button>
+        <el-button type="primary" @click="isShow = false">确 定</el-button>
+      </div>
+    </el-dialog>
   </div>
 </template>
 
@@ -73,7 +124,6 @@
       return {
         loading: true,
         input: '',
-        isDelate: false,
         tableData: [],
         multipleSelection: [],
         pageData: {
@@ -81,6 +131,21 @@
           pageSize: 10,
           pageTotal: 1000
         },
+        newOrChange: '',
+        isShow: false,
+        dialog: {
+          creditVoucherName: '',
+          creditVoucherPrice: '',
+          selectValue: '',
+        },
+        selectOptions1: [{
+          label: '1',
+          value: '1'
+        }],
+        selectOptions2: [{
+          label: '2',
+          value: '2'
+        }]
       }
     },
     methods: {
@@ -106,16 +171,19 @@
       },
 
       // 上架下架
-      handleEdit(row) {
+      handleClose(id) {
+        this.$refs[id].doClose()
+      },
+      handleEdit(id,row) {
         if (!row.bookOnline) {
           // 上架
           this.$get('', {
             id: row.id
           }).then(res => {
-            this.$message({
-              message: '上架成功',
-              type: 'success'
-            })
+            // this.$message({
+            //   message: '上架成功',
+            //   type: 'success'
+            // })
             this.getDataList()
           })
         } else {
@@ -123,13 +191,14 @@
           this.$get('', {
             id: row.id
           }).then(res => {
-            this.$message({
-              message: '下架成功',
-              type: 'success'
-            })
+            // this.$message({
+            //   message: '下架成功',
+            //   type: 'success'
+            // })
             this.getDataList()
           })
         }
+        this.handleClose(id);
       },
 
       // 行内删除
@@ -138,10 +207,10 @@
         this.$get('/couponService/delete', {
           id: row.id
         }).then(res => {
-          this.$message({
-            message: '删除成功',
-            type: 'success'
-          })
+          // this.$message({
+          //   message: '删除成功',
+          //   type: 'success'
+          // })
           this.getDataList()
         })
       },
@@ -153,10 +222,13 @@
 
       // 新增、修改
       handleModify(type, row) {
+        this.isShow = true;
         if (type) {
           // 修改
+          this.newOrChange = '修改抵用券'
         } else {
           // 新增
+          this.newOrChange = '新增抵用券'
         }
       }
     },

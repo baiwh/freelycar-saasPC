@@ -37,14 +37,14 @@
           <el-popover
             placement="top"
             width="160"
-            v-model="isDelate">
+            :ref="scope.$index">
             <p>确定删除本条抵用券？</p>
             <div style="text-align: right; margin: 0">
-              <el-button size="mini" type="text" @click="isDelate = false">取消</el-button>
+              <el-button size="mini" type="text" @click="handleClose(scope.$index)">取消</el-button>
               <el-button type="primary" size="mini" @click="handleDelete(scope.row)">确定</el-button>
             </div>
-            <el-button size="mini" slot="reference" type="danger">删除</el-button>
           </el-popover>
+          <el-button size="mini" v-popover="scope.$index" type="danger">删除</el-button>
         </template>
       </el-table-column>
       <el-table-column prop="up" label="上架/下架">
@@ -52,18 +52,16 @@
           <el-popover
             placement="top"
             width="160"
-            v-model="isUp">
-            <p>确定删除本条抵用券？</p>
+            :ref="scope.row.id">
+            <p>确定进行{{scope.row.bookOnline? '下架' : '上架'}}？</p>
             <div style="text-align: right; margin: 0">
-              <el-button size="mini" type="text" @click="isUp = false">取消</el-button>
-              <el-button type="primary" size="mini" @click="handleUp(scope.row)">确定</el-button>
+              <el-button size="mini" type="text" @click="handleClose(scope.row.id)">取消</el-button>
+              <el-button type="primary" size="mini" @click="handleEdit(scope.row.id,scope.row)">确定</el-button>
             </div>
-            <el-button size="mini" @click="handleEdit(scope.row)"
-                       :type="scope.row.bookOnline?'success':'info'" slot="reference">
-              {{ scope.row.bookOnline?'下架':'上架'}}
-            </el-button>
           </el-popover>
-
+          <el-button size="mini" :type="scope.row.bookOnline?'success':'info'" v-popover="scope.row.id">
+            {{ scope.row.bookOnline?'下架':'上架'}}
+          </el-button>
         </template>
       </el-table-column>
     </el-table>
@@ -144,8 +142,7 @@
         selectOptions: [{
           label: '1年',
           value: 'oneYear'
-        }],
-        isUp: false
+        }]
       }
     },
     methods: {
@@ -171,10 +168,10 @@
       },
 
       // 上架下架
-      handleUp(row) {
-
+      handleClose(id) {
+        this.$refs[id].doClose()
       },
-      handleEdit(row) {
+      handleEdit(id,row) {
         if (!row.bookOnline) {
           // 上架
           this.$get('/cardService/upperShelf', {
@@ -198,6 +195,7 @@
             this.getDataList()
           })
         }
+        this.handleClose(id)
       },
 
       // 行内删除

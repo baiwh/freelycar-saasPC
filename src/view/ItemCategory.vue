@@ -80,29 +80,47 @@
           <el-table-column label="操作" width="150">
             <template slot-scope="scope">
               <el-button size="mini" type="primary" @click="handleModify2(true,scope.row)">修改</el-button>
-              <el-popover placement="top" width="160" v-model="isDelete">
+              <el-popover placement="top" width="160" :ref="scope.$index">
                 <p>确定删除？</p>
                 <div style="text-align: right; margin: 0">
-                  <el-button size="mini" type="text" @click="isDelete = false">取消</el-button>
+                  <el-button size="mini" type="text" @click="handleClose(scope.$index)">取消</el-button>
                   <el-button type="primary" size="mini" @click="handleDelete(scope.row)">确定</el-button>
                 </div>
-                <el-button slot="reference" size="mini" type="danger">删除</el-button>
               </el-popover>
+              <el-button slot="reference" size="mini" type="danger" v-popover="scope.$index">删除</el-button>
             </template>
           </el-table-column>
           <el-table-column prop="service" label="智能柜服务">
             <template slot-scope="scope">
-              <el-button size="mini" :type="scope.row.service==0? 'success': 'info'"
-                         @click="handleEdit(true, scope.row)">
-                {{scope.row.up === 0 ? '智能柜服务':'取消'}}
+              <el-popover
+                placement="top"
+                width="160"
+                :ref="scope.row.name">
+                <p>确定{{scope.row.service? '开通智能柜服务' : '取消智能柜服务'}}？</p>
+                <div style="text-align: right; margin: 0">
+                  <el-button size="mini" type="text" @click="handleClose(scope.row.name)">取消</el-button>
+                  <el-button type="primary" size="mini" @click="handleEdit(scope.row.name,scope.row)">确定</el-button>
+                </div>
+              </el-popover>
+              <el-button size="mini" :type="scope.row.service==0? 'success': 'info'" v-popover="scope.row.name">
+                {{scope.row.service === 0 ? '智能柜服务':'取消'}}
               </el-button>
             </template>
           </el-table-column>
           <el-table-column prop="up" label="上架/下架">
             <template slot-scope="scope">
-              <el-button size="mini" @click="handleEdit(false, scope.row)"
-                         :type="scope.row.up===0?'success':'info'">
-                {{ scope.row.up===0?'上架':'下架'}}
+              <el-popover
+                placement="top"
+                width="160"
+                :ref="scope.row.id">
+                <p>确定进行{{scope.row.bookOnline? '下架' : '上架'}}？</p>
+                <div style="text-align: right; margin: 0">
+                  <el-button size="mini" type="text" @click="handleClose(scope.row.id)">取消</el-button>
+                  <el-button type="primary" size="mini" @click="handleEdit(scope.row.id,scope.row)">确定</el-button>
+                </div>
+              </el-popover>
+              <el-button size="mini" :type="scope.row.bookOnline?'success':'info'" v-popover="scope.row.id">
+                {{ scope.row.bookOnline?'下架':'上架'}}
               </el-button>
             </template>
           </el-table-column>
@@ -168,15 +186,6 @@
       </div>
     </el-dialog>
 
-    <!--智能柜服务和上下架模态框-->
-    <el-dialog :title="contentTitle" :visible.sync="dialogVisible" width="30%" center>
-      <span>{{dialogContent}}</span>
-      <div slot="footer" class="dialog-footer">
-        <el-button @click="dialogVisible = false">取 消</el-button>
-        <el-button type="primary" @click="dialogVisible =false">确 定</el-button>
-      </div>
-    </el-dialog>
-
   </div>
 </template>
 
@@ -191,7 +200,6 @@
         itemName: '',
         itemCategory: '',
         multipleSelection: [],
-        isDelete: false,
         tableData1: [],
         pageData1: {
           currentPage: 1,
@@ -212,10 +220,7 @@
         selectOptions: [{
           label: '项目一',
           value: 'one',
-        }],
-        contentTitle: '',
-        dialogVisible: false,
-        dialogContent: ''
+        }]
       }
     },
     methods: {
@@ -340,26 +345,8 @@
 
       // 智能柜服务
       // 上架下架
-      handleEdit(type, row) {
-        this.dialogVisible = true;
-        console.log(type,row);
-        if(type == 1){
-          if(row.service == 0){
-            this.contentTitle = '开通智能柜服务提示';
-            this.dialogContent = '确认开通智能柜服务'
-          }else {
-            this.contentTitle = '取消智能柜服务提示';
-            this.dialogContent = '确认取消智能柜服务'
-          }
-        }else {
-          if(row.up == 0){
-            this.contentTitle = '上架提示';
-            this.dialogContent = '确认进行上架'
-          }else {
-            this.contentTitle = '下架提示';
-            this.dialogContent = '确认进行下架'
-          }
-        }
+      handleEdit(id, row) {
+        this.handleClose(id)
       },
 
 
@@ -367,6 +354,11 @@
       handleSelectionChange(val) {
         this.multipleSelection = val;
       },
+
+      //项目管理行内删除
+      handleClose(id){
+        this.$refs[id].doClose()
+      }
     },
     mounted: function () {
       this.getTableData1()
