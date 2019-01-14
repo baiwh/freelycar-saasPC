@@ -49,10 +49,21 @@
       </el-table-column>
       <el-table-column prop="up" label="上架/下架">
         <template slot-scope="scope">
-          <el-button size="mini" @click="handleEdit(scope.row)"
-                     :type="scope.row.bookOnline?'success':'info'">
-            {{ scope.row.bookOnline?'下架':'上架'}}
-          </el-button>
+          <el-popover
+            placement="top"
+            width="160"
+            v-model="isUp">
+            <p>确定删除本条抵用券？</p>
+            <div style="text-align: right; margin: 0">
+              <el-button size="mini" type="text" @click="isUp = false">取消</el-button>
+              <el-button type="primary" size="mini" @click="handleUp(scope.row)">确定</el-button>
+            </div>
+            <el-button size="mini" @click="handleEdit(scope.row)"
+                       :type="scope.row.bookOnline?'success':'info'" slot="reference">
+              {{ scope.row.bookOnline?'下架':'上架'}}
+            </el-button>
+          </el-popover>
+
         </template>
       </el-table-column>
     </el-table>
@@ -62,6 +73,46 @@
       :pageData.sync="pageData"
       @changePage="getDataList"></pagingDevice>
 
+    <!--新增卡类弹框-->
+    <el-dialog :title="newOrChange" :visible.sync="isShow">
+      <el-row>
+        <el-col :span="4" :offset="2">卡名称：</el-col>
+        <el-col :span="18">
+          <el-input v-model="dialog.cardName" style="width: 80%" size="small"></el-input>
+        </el-col>
+      </el-row>
+      <el-row>
+        <el-col :span="4" :offset="2">售卡金额：</el-col>
+        <el-col :span="18">
+          <el-input v-model="dialog.sellPrice" style="width: 80%" size="small"></el-input>
+        </el-col>
+      </el-row>
+      <el-row>
+        <el-col :span="4" :offset="2">卡面金额：</el-col>
+        <el-col :span="18">
+          <el-input v-model="dialog.cardPrice" style="width: 80%" size="small"></el-input>
+        </el-col>
+      </el-row>
+      <el-row>
+        <el-col :span="4" :offset="2">有效期（年）：</el-col>
+        <el-col :span="18">
+          <el-select v-model="dialog.selectValue" placeholder="请选择" style="width: 80%">
+            <el-option v-for="item in selectOptions" :key="item.value" :label="item.label" :value="item.value"></el-option>
+          </el-select>
+        </el-col>
+      </el-row>
+      <el-row>
+        <el-col :span="4" :offset="2">备注：</el-col>
+        <el-col :span="18">
+          <el-input  type="textarea" :rows="2" placeholder="请输入内容" v-model="input" style="width:80%"></el-input>
+        </el-col>
+      </el-row>
+
+      <div slot="footer" class="dialog-footer">
+        <el-button @click="isShow = false">取 消</el-button>
+        <el-button type="primary" @click="isShow = false">确 定</el-button>
+      </div>
+    </el-dialog>
 
   </div>
 </template>
@@ -72,6 +123,7 @@
     data() {
       return {
         loading: true,
+        input: '',
         cardName: '',
         tableData: [],
         isDelate: false,
@@ -81,6 +133,19 @@
           pageSize: 10,
           pageTotal: 1000
         },
+        newOrChange: '',
+        isShow: false,
+        dialog: {
+          cardName: '',
+          sellPrice: '',
+          cardPrice: '',
+          selectValue: ''
+        },
+        selectOptions: [{
+          label: '1年',
+          value: 'oneYear'
+        }],
+        isUp: false
       }
     },
     methods: {
@@ -106,16 +171,19 @@
       },
 
       // 上架下架
+      handleUp(row) {
+
+      },
       handleEdit(row) {
         if (!row.bookOnline) {
           // 上架
           this.$get('/cardService/upperShelf', {
             id: row.id
           }).then(res => {
-            this.$message({
-              message: '上架成功',
-              type: 'success'
-            })
+            // this.$message({
+            //   message: '上架成功',
+            //   type: 'success'
+            // })
             this.getDataList()
           })
         } else {
@@ -123,10 +191,10 @@
           this.$get('/cardService/lowerShelf', {
             id: row.id
           }).then(res => {
-            this.$message({
-              message: '下架成功',
-              type: 'success'
-            })
+            // this.$message({
+            //   message: '下架成功',
+            //   type: 'success'
+            // })
             this.getDataList()
           })
         }
@@ -153,10 +221,15 @@
 
       // 新增、修改
       handleModify(type, row) {
+        this.isShow = true;
         if (type) {
           // 修改
+          //弹框标题为“修改卡类”
+          this.newOrChange = '修改卡类';
         } else {
           // 新增
+          //弹框标题为“修改卡类”
+          this.newOrChange = '新增卡类';
         }
       }
     },

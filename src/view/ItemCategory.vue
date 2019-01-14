@@ -191,22 +191,14 @@
         itemName: '',
         itemCategory: '',
         multipleSelection: [],
-        isDelete: true,
+        isDelete: false,
         tableData1: [],
         pageData1: {
           currentPage: 1,
           pageSize: 10,
           pageTotal: 100
         },
-        tableData2: [{
-          deleteVisible: false,
-          service: 1,
-          up: 1
-        }, {
-          deleteVisible: false,
-          service: 0,
-          up: 0
-        }],
+        tableData2: [],
         pageData2: {
           currentPage: 1,
           pageSize: 10,
