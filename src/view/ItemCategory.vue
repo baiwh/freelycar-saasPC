@@ -93,14 +93,14 @@
           <el-table-column prop="service" label="智能柜服务">
             <template slot-scope="scope">
               <el-button size="mini" :type="scope.row.service==0? 'success': 'info'"
-                         @click="handleEdit(scope.$index, scope.row)">
+                         @click="handleEdit(true, scope.row)">
                 {{scope.row.up === 0 ? '智能柜服务':'取消'}}
               </el-button>
             </template>
           </el-table-column>
           <el-table-column prop="up" label="上架/下架">
             <template slot-scope="scope">
-              <el-button size="mini" @click="handleEdit(scope.$index, scope.row)"
+              <el-button size="mini" @click="handleEdit(false, scope.row)"
                          :type="scope.row.up===0?'success':'info'">
                 {{ scope.row.up===0?'上架':'下架'}}
               </el-button>
@@ -186,11 +186,12 @@
     data() {
       return {
         loading: true,
+        input: '',
         item: 'first',
         itemName: '',
         itemCategory: '',
         multipleSelection: [],
-        isDelete: false,
+        isDelete: true,
         tableData1: [],
         pageData1: {
           currentPage: 1,
@@ -253,6 +254,7 @@
             id: ""
           }).then((res) => {
             //打开弹框，更改弹框标题为“修改类别”
+            console.log("项目类别：",'修改');
             this.addCategoryVisible = true;
             this.dialogTitle = '修改类别'
           })
@@ -346,9 +348,10 @@
 
       // 智能柜服务
       // 上架下架
-      handleEdit(index, row) {
+      handleEdit(type, row) {
         this.dialogVisible = true;
-        if(index == 8){
+        console.log(type,row);
+        if(type == 1){
           if(row.service == 0){
             this.contentTitle = '开通智能柜服务提示';
             this.dialogContent = '确认开通智能柜服务'
