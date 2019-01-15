@@ -20,7 +20,7 @@
           </el-col>
           <el-col :span="7" :offset="1">
             <span>车辆状态：</span>
-            <el-radio-group v-model="form.carState" size="small">
+            <el-radio-group v-model="form.carState" size="small" class="circle">
               <el-radio-button label="接"></el-radio-button>
               <el-radio-button label="完"></el-radio-button>
               <el-radio-button label="交"></el-radio-button>
@@ -130,10 +130,12 @@
         </el-table-column>
       </el-table>
 
-      <!--分页器-->
-      <pagingDevice
-        :pageData.sync="pageData"
-        @changePage="changePage"></pagingDevice>
+      <el-row style="height: 100px;">
+        <!--分页器-->
+        <pagingDevice
+          :pageData.sync="pageData"
+          @changePage="changePage"></pagingDevice>
+      </el-row>
 
     </el-card>
 
@@ -312,23 +314,16 @@
     width: 20vw;
   }
 
-  /*.el-table .cell a {*/
-    /*color: #409EFF;*/
-    /*text-decoration: none;*/
-  /*}*/
+  .el-table .cell > a {
+    color: #409EFF;
+    text-decoration: none;
+  }
 
-  /*.el-date-editor--daterange.el-input__inner {*/
-    /*width: 80%;*/
-  /*}*/
-
-  /*.el-radio-button--small .el-radio-button__inner {*/
-    /*padding: 9px;*/
-    /*margin-right: 10px;*/
-  /*}*/
-
-  /*.el-radio-button--small .el-radio-button__inner {*/
-    /*border-radius: 21px !important;*/
-  /*}*/
+  .circle /deep/ .el-radio-button__inner {
+    padding: 9px;
+    margin-right: 10px;
+    border-radius: 21px;
+  }
 
   .marginLeft {
     margin-left: 0px !important;
