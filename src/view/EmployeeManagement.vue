@@ -9,17 +9,17 @@
         <el-input v-model="inputName" placeholder="请输入内容"></el-input>
       </el-col>
       <el-col :span="4">
-        <el-button type="primary">查询</el-button>
+        <el-button size="small" type="primary">查询</el-button>
       </el-col>
     </el-row>
 
     <!--两个按钮-->
     <el-row :gutter="10">
       <el-col :span="4">
-        <el-button type="primary" plain @click="handleAdd(true)">新增员工</el-button>
+        <el-button type="primary" size="small" plain @click="handleAdd(true)">新增员工</el-button>
       </el-col>
       <el-col :span="4">
-        <el-button type="primary" plain>删除员工</el-button>
+        <el-button type="primary" size="small" plain>删除员工</el-button>
       </el-col>
     </el-row>
 

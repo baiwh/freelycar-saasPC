@@ -6,19 +6,6 @@
 
 <script>
   export default {
-    name: 'MembershipManagement',
-    data() {
-      return {
-        msg: ''
-      }
-    },
-    methods: {},
-    mounted: function () {
-
-    }
+    name: 'MembershipManagement'
   }
 </script>
-
-<style lang="less">
-
-</style>

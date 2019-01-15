@@ -22,8 +22,7 @@
                 range-separator="~"
                 start-placeholder="开始时间"
                 end-placeholder="结束时间"
-                placeholder="请选择时间"
-                class="timePickerWidth">
+                placeholder="请选择时间">
               </el-time-picker>
             </el-form-item>
             <el-form-item label="客服电话：" prop="servicePhone">
@@ -120,9 +119,6 @@
 </script>
 
 <style lang="less" scoped>
-  .timePickerWidth{
-    width: 99%;
-  }
   .imgWidth /deep/ .el-upload--picture-card {
     width: 60px;
     height: 60px;
@@ -139,5 +135,8 @@
     left: 50%;
     font-size: 20px;
     transform: translate(-50%,-50%);
+  }
+  .el-input,.el-date-editor{
+    width: 30vw;
   }
 </style>

@@ -6,17 +6,17 @@
         <el-input v-model="cardName" placeholder="请输入卡类名称"></el-input>
       </el-col>
       <el-col :span="5">
-        <el-button type="primary" @click="getDataList">查询</el-button>
+        <el-button type="primary" size="small" @click="getDataList">查询</el-button>
       </el-col>
     </el-row>
 
     <!--两个按钮-->
     <el-row :gutter="30">
       <el-col :span="4">
-        <el-button type="primary" plain @click="handleModify(false)">新增储值卡</el-button>
+        <el-button type="primary" size="small" plain @click="handleModify(false)">新增储值卡</el-button>
       </el-col>
       <el-col :span="4">
-        <el-button type="primary" plain @click="allDelete">删除储值卡</el-button>
+        <el-button type="primary" size="small" plain @click="allDelete">删除储值卡</el-button>
       </el-col>
     </el-row>
 
