@@ -6,19 +6,6 @@
 
 <script>
   export default {
-    name: 'FinancialManagement',
-    data() {
-      return {
-        msg: ''
-      }
-    },
-    methods: {},
-    mounted: function () {
-
-    }
+    name: 'FinancialManagement'
   }
 </script>
-
-<style lang="less">
-
-</style>

@@ -6,19 +6,6 @@
 
 <script>
   export default {
-    name: 'SystemSetup',
-    data() {
-      return {
-        msg: ''
-      }
-    },
-    methods: {},
-    mounted: function () {
-
-    }
+    name: 'SystemSetup'
   }
 </script>
-
-<style lang="less">
-
-</style>

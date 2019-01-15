@@ -4,19 +4,6 @@
 
 <script>
   export default {
-    name: 'ProcurementExpenditure',
-    data() {
-      return {
-        msg: ''
-      }
-    },
-    methods: {},
-    mounted: function () {
-
-    }
+    name: 'ProcurementExpenditure'
   }
 </script>
-
-<style lang="less">
-
-</style>

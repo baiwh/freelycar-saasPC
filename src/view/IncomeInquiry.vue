@@ -21,7 +21,7 @@
         </el-date-picker>
       </el-col>
       <el-col :span="4" :offset="num">
-        <el-button type="primary" icon="el-icon-download">导出Excel</el-button>
+        <el-button type="primary" size="small" icon="el-icon-download">导出Excel</el-button>
       </el-col>
     </el-row>
 

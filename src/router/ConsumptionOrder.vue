@@ -6,19 +6,6 @@
 
 <script>
   export default {
-    name: 'ConsumptionOrder',
-    data() {
-      return {
-        msg: ''
-      }
-    },
-    methods: {},
-    mounted: function () {
-
-    }
+    name: 'ConsumptionOrder'
   }
 </script>
-
-<style lang="less">
-
-</style>

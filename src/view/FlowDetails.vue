@@ -23,8 +23,10 @@
 
     <!--合计金额-->
     <el-row>
-      <span>合计金额：</span>
-      <el-input :value="sumAmounts" size="small" disabled></el-input>
+      <el-col>
+        <span>合计金额：</span><el-input :value="sumAmounts" size="small" disabled></el-input>
+      </el-col>
+
     </el-row>
 
     <el-table v-loading="loading" :data="flowDetailsTable" border>
@@ -83,7 +85,7 @@
   }
 </script>
 
-<style lang="less">
+<style lang="less" scoped>
 .el-date-picker {
   width: 70%;
 }

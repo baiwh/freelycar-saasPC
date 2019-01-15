@@ -4,19 +4,7 @@
 
 <script>
   export default {
-    name: 'home',
-    data() {
-      return {
-        msg: ''
-      }
-    },
-    methods: {},
-    mounted: function () {
-
-    }
+    name: 'home'
   }
 </script>
 
-<style lang="less">
-
-</style>
