@@ -55,6 +55,11 @@
       </el-table-column>
     </el-table>
 
+    <!--分页器-->
+    <pagingDevice
+      :pageData.sync="pageData"
+      @changePage="getDataList"></pagingDevice>
+
     <!--增加、修改对话框-->
     <el-dialog :title="addOrChange" :visible.sync="isShow">
       <el-row style="margin-top: 20px">
@@ -117,7 +122,12 @@
         tableData: [{}],
         loading: '',
         addOrChange: '',
-        isShow: false
+        isShow: false,
+        pageData: {
+          currentPage: 1,
+          pageSize: 10,
+          pageTotal: 1000
+        }
       }
     },
     methods: {
@@ -132,7 +142,8 @@
           this.addOrChange = '增加支出'
         }
       }
-    }
+    },
+    getDataList() {}
   }
 </script>
 
