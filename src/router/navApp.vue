@@ -13,7 +13,7 @@
                 <span class="user-name">{{userName}}<i class="el-icon-arrow-down el-icon--right"></i></span>
               </span>
               <el-dropdown-menu slot="dropdown">
-                <el-dropdown-item>退出登录</el-dropdown-item>
+                <el-dropdown-item @click="logOut">退出登录</el-dropdown-item>
               </el-dropdown-menu>
             </el-dropdown>
           </el-col>
@@ -145,12 +145,17 @@
       }
     },
     methods: {
+      // 退出登录
+      logOut(){
+
+      },
       // 收起/打开左侧导航
       modifyNav() {
         this.isCollapse = !this.isCollapse
       }
     },
     computed: {
+      // 获取导航面包屑数据
       getNavPath: function () {
         let router = this.$route.matched
         let path = router.map(item => item.name)

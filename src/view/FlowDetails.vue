@@ -52,6 +52,7 @@
     name: 'FlowDetails',
     data() {
       return {
+        loading: true,
         datePickerValue: '',
         sumAmounts: '',
         flowDetailsTable: [{

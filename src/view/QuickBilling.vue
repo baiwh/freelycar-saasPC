@@ -248,6 +248,7 @@
     name: 'QuickBilling',
     data() {
       return {
+        visible2:false,
         input: '',
         radio: '否',
         datetime: '',

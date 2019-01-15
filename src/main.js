@@ -7,8 +7,8 @@ import axios from 'axios'
 import ElementUI from 'element-ui';
 import 'element-ui/lib/theme-chalk/index.css';
 import {get, post} from "./components/axiosHttp";
-import addNewButton from '@/components/addNewButton'
-import pagingDevice from '@/components/pagingDevice'
+import addNewButton from './components/addNewButton'
+import pagingDevice from './components/pagingDevice'
 
 
 // 引入elementUI
@@ -37,15 +37,15 @@ Vue.prototype.$post = post
 Vue.config.productionTip = false
 
 router.beforeEach((to, from, next) => {
-  let login = document.cookie
+  let jwt = document.cookie
   if (to.path === '/login') {
     next()
     return
   }
-  if (login!=='') {
+  if (jwt!=='') {
     if (to.path === '/') {
       next({
-        path: '/'
+        path: '/home'
       })
     } else {
       next()

@@ -77,6 +77,7 @@
     name: 'IncomeInquiry',
     data() {
       return {
+        loading: true,
         tabPosition: 'today',
         datePickerValue: '',
         dataReportCard: [{

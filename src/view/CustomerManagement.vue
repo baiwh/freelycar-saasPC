@@ -79,7 +79,7 @@
       @changePage="changePage"></pagingDevice>
 
     <!--会员统计模态框-->
-    <el-dialog title="交车" :visible.sync="statisticsVisible" width="30%">
+    <el-dialog title="会员统计" :visible.sync="statisticsVisible" width="30%">
       <el-row>会员总数：{{memberCount}}</el-row>
       <el-row>本月新增：{{newMemberCount}}</el-row>
       <el-row>今日新增：{{todayNewCount}}</el-row>

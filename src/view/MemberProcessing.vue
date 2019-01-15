@@ -91,7 +91,9 @@
               </el-select>
             </el-form-item>
           </el-col>
-          <addNewButton></addNewButton>
+          <el-col :span="1">
+            <addNewButton></addNewButton>
+          </el-col>
         </el-row>
 
         <el-row>
@@ -245,5 +247,8 @@
 <style lang="less" scoped>
   .el-card {
     margin-bottom: 40px;
+  }
+  .el-select,.el-input{
+    width: 20vw;
   }
 </style>

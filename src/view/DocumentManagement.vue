@@ -56,6 +56,7 @@
           <el-col :span="8" v-show="visible">
             <el-form-item>
               <el-date-picker
+                style="width: 20vw;"
                 v-model="form.dateValue"
                 type="daterange"
                 size="small"
@@ -70,10 +71,10 @@
 
       <!--两个按钮-->
       <el-row :gutter="30">
-        <el-col :span="3">
+        <el-col :span="2" :offset="1">
           <el-button type="primary" plain size="small">查询</el-button>
         </el-col>
-        <el-col :span="3">
+        <el-col :span="2">
           <el-button type="primary" plain size="small">清空</el-button>
         </el-col>
       </el-row>
@@ -110,14 +111,20 @@
         <el-table-column property="state" label="结算状态" align="center"></el-table-column>
         <el-table-column label="操作" width="150" align="center">
           <template slot-scope="scope">
-            <el-button size="mini" type="primary" v-show="scope.row.car === '已接'" @click="completedVisible = true">完工</el-button>
+            <el-button size="mini" type="primary" v-show="scope.row.car === '已接'" @click="completedVisible = true">完工
+            </el-button>
             <router-link to="/ConsumptionOrder/DocumentDetails">
-              <el-button size="mini" type="primary" v-show="scope.row.car === '已接' && scope.row.state === '未结算'">修改</el-button>
-              <el-button size="mini" type="primary" v-show="scope.row.car === '已交' && scope.row.state === '已结算'" class="marginLeft">查看</el-button>
+              <el-button size="mini" type="primary" v-show="scope.row.car === '已接' && scope.row.state === '未结算'">修改
+              </el-button>
+              <el-button size="mini" type="primary" v-show="scope.row.car === '已交' && scope.row.state === '已结算'"
+                         class="marginLeft">查看
+              </el-button>
             </router-link>
-            <el-button size="mini" type="primary" v-show="scope.row.car === '已完'" @click="deliveryVisible = true">交车</el-button>
+            <el-button size="mini" type="primary" v-show="scope.row.car === '已完'" @click="deliveryVisible = true">交车
+            </el-button>
             <router-link to="/ConsumptionOrder/SettlementCenter">
-              <el-button size="mini" type="primary" v-show="scope.row.car !== '已接' && scope.row.state === '未结算'">结算</el-button>
+              <el-button size="mini" type="primary" v-show="scope.row.car !== '已接' && scope.row.state === '未结算'">结算
+              </el-button>
             </router-link>
           </template>
         </el-table-column>
@@ -157,7 +164,7 @@
           <el-col :span="4">
             备注：
           </el-col>
-          <el-input  type="textarea" :rows="2" placeholder="请输入内容" v-model="input" style="width: 80%">
+          <el-input type="textarea" :rows="2" placeholder="请输入内容" v-model="input" style="width: 80%">
           </el-input>
         </el-row>
       </div>
@@ -189,7 +196,7 @@
           <el-col :span="4">
             备注：
           </el-col>
-          <el-input  type="textarea" :rows="2" placeholder="请输入内容" v-model="input" style="width: 80%">
+          <el-input type="textarea" :rows="2" placeholder="请输入内容" v-model="input" style="width: 80%">
           </el-input>
         </el-row>
       </div>
@@ -206,6 +213,7 @@
     name: 'DocumentManagement',
     data() {
       return {
+        loading: false,
         input: '',
         visible: 'true',
         form: {
@@ -286,28 +294,43 @@
   }
 </script>
 
-<style lang="less">
+<style lang="less" scoped>
+  .el-row{
+    margin: 0;
+  }
   .el-card {
     margin-bottom: 40px;
   }
+
   .el-table {
     margin-top: 40px;
   }
-  .el-table .cell a {
-    color: #409EFF;
-    text-decoration: none;
+  .el-select,.el-input{
+    width: 15vw;
   }
-  .el-date-editor--daterange.el-input__inner {
-    width: 80%;
+  .el-date-picker{
+    width: 20vw;
   }
-  .el-radio-button--small .el-radio-button__inner {
-    padding: 9px;
-    margin-right: 10px;
-  }
-  .el-radio-button--small .el-radio-button__inner {
-    border-radius: 21px!important;
-  }
+
+  /*.el-table .cell a {*/
+    /*color: #409EFF;*/
+    /*text-decoration: none;*/
+  /*}*/
+
+  /*.el-date-editor--daterange.el-input__inner {*/
+    /*width: 80%;*/
+  /*}*/
+
+  /*.el-radio-button--small .el-radio-button__inner {*/
+    /*padding: 9px;*/
+    /*margin-right: 10px;*/
+  /*}*/
+
+  /*.el-radio-button--small .el-radio-button__inner {*/
+    /*border-radius: 21px !important;*/
+  /*}*/
+
   .marginLeft {
-    margin-left: 0px!important;
+    margin-left: 0px !important;
   }
 </style>
