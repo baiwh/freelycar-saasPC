@@ -56,16 +56,16 @@
           <el-popover
             placement="top"
             width="160"
-            :ref="scope.row.id">
+            :ref="scope.row.name">
             <p>确定关闭技师端账号吗？</p>
             <div style="text-align: right; margin: 0">
-              <el-button size="mini" type="text" @click="handleClose(scope.row.id)">取消</el-button>
-              <el-button type="primary" size="mini" @click="handleOk(scope.row.id,scope.row)">确定</el-button>
+              <el-button size="mini" type="text" @click="handleClose(scope.row.name)">取消</el-button>
+              <el-button type="primary" size="mini" @click="handleOk(scope.row.name,scope.row)">确定</el-button>
             </div>
           </el-popover>
-          <el-button size="mini" v-popover="scope.row.id" type="info" v-show="scope.row.opening !== 0">关闭</el-button>
+          <el-button size="mini" v-popover="scope.row.name" type="info" v-show="scope.row.opening !== 0">关闭</el-button>
           <el-button size="mini" @click="handleEdit(scope.$index, scope.row)" type="success"
-                     v-show="scope.row.opening === 0">开通</el-button>
+                     v-show="scope.row.opening === 0" style="margin-left: 0;">开通</el-button>
         </template>
       </el-table-column>
     </el-table>
@@ -170,7 +170,7 @@
             opening:0,
           },
           {
-            name:'1',
+            name:'2',
             sex:'1',
             phone:'1',
             position:'1',
