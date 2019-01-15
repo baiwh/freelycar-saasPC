@@ -89,6 +89,9 @@
               <el-menu-item index="/FinancialManagement/FlowDetails"
                             class="el-submenu-margin">流水明细
               </el-menu-item>
+              <el-menu-item index="/FinancialManagement/ProcurementExpenditure"
+                            class="el-submenu-margin">采购支出
+              </el-menu-item>
             </el-submenu>
 
             <el-submenu index="系统设置">
