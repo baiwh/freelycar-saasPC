@@ -48,15 +48,24 @@
               <el-button type="primary" size="mini" @click="handleDelete(scope.$index,scope.row)">确定</el-button>
             </div>
           </el-popover>
-          <el-button size="mini" v-popover="scope.$index" type="danger" slot="reference">删除</el-button>
+          <el-button size="mini" v-popover="scope.$index" type="danger">删除</el-button>
         </template>
       </el-table-column>
       <el-table-column prop="opening" label="智能柜技师功能">
         <template slot-scope="scope">
-          <el-button size="mini" @click="handleEdit(scope.$index, scope.row)"
-                     :type="scope.row.opening===0?'success':'info'">
-            {{ scope.row.opening===0?'开通':'关闭'}}
-          </el-button>
+          <el-popover
+            placement="top"
+            width="160"
+            :ref="scope.row.id">
+            <p>确定关闭技师端账号吗？</p>
+            <div style="text-align: right; margin: 0">
+              <el-button size="mini" type="text" @click="handleClose(scope.row.id)">取消</el-button>
+              <el-button type="primary" size="mini" @click="handleOk(scope.row.id,scope.row)">确定</el-button>
+            </div>
+          </el-popover>
+          <el-button size="mini" v-popover="scope.row.id" type="info" v-show="scope.row.opening !== 0">关闭</el-button>
+          <el-button size="mini" @click="handleEdit(scope.$index, scope.row)" type="success"
+                     v-show="scope.row.opening === 0">开通</el-button>
         </template>
       </el-table-column>
     </el-table>
@@ -92,7 +101,7 @@
       <el-row>
         <el-col :span="4" :offset="2">职位：</el-col>
         <el-col :span="18">
-          <el-select v-model="selectValue" placeholder="请选择" style="width: 80%" size="small">
+          <el-select v-model="selectValue" placeholder="请选择" size="small">
             <el-option v-for="item in selectOptions1" :key="item.value" :label="item.label" :value="item.value"></el-option>
           </el-select>
         </el-col>
@@ -100,7 +109,7 @@
       <el-row>
         <el-col :span="4" :offset="2">级别：</el-col>
         <el-col :span="18">
-          <el-select v-model="selectValue" placeholder="请选择" style="width: 80%" size="small">
+          <el-select v-model="selectValue" placeholder="请选择" size="small">
             <el-option v-for="item in selectOptions2" :key="item.value" :label="item.label" :value="item.value"></el-option>
           </el-select>
         </el-col>
@@ -211,7 +220,11 @@
 
       // 智能柜技师功能
       handleEdit(index, row) {
-        this.dialogVisible2 = true
+        if(row.opening === 0) {
+          this.dialogVisible2 = true
+        }else {
+
+        }
       },
 
       // 删除当前行
@@ -225,6 +238,10 @@
       // 页码发生改变时调用
       changePage() {
         //可以获取列表用。也可以直接换成获取列表的方法
+      },
+
+      handleOk(id, row) {
+
       }
     },
     mounted: function () {
