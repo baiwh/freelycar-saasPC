@@ -1,9 +1,14 @@
 <template>
-  <el-button round type="primary" plain icon="el-icon-plus" size="small"></el-button>
+  <el-button round type="primary" plain icon="el-icon-plus" size="small" @click="handleClick"></el-button>
 </template>
 
 <script>
   export default {
-    name: 'addNewButton'
+    name: 'addNewButton',
+    methods: {
+      handleClick() {
+        this.$emit('newButtonClick')
+      }
+    }
   }
 </script>

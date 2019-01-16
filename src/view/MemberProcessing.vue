@@ -92,7 +92,7 @@
             </el-form-item>
           </el-col>
           <el-col :span="1">
-            <addNewButton></addNewButton>
+            <addNewButton @newButtonClick="handleShow"></addNewButton>
           </el-col>
         </el-row>
 
@@ -150,6 +150,45 @@
         </el-col>
       </el-row>
     </el-card>
+
+    <!--新增会员卡-->
+    <el-dialog title="新增会员卡" :visible.sync="isShow">
+      <el-row>
+        <el-col :span="3" :offset="3">卡类名称：</el-col>
+        <el-col :span="18">
+          <el-input v-model="input" style="width: 80%" size="small"></el-input>
+        </el-col>
+      </el-row>
+      <el-row style="margin-top: 20px;">
+        <el-col :span="3" :offset="3">售卡金额：</el-col>
+        <el-col :span="18">
+          <el-input v-model="input" style="width: 80%" size="small"></el-input>
+        </el-col>
+      </el-row>
+      <el-row style="margin-top: 20px;">
+        <el-col :span="3" :offset="3">卡面金额：</el-col>
+        <el-col :span="18">
+          <el-input v-model="input" style="width: 80%" size="small"></el-input>
+        </el-col>
+      </el-row>
+      <el-row style="margin-top: 20px;">
+        <el-col :span="3" :offset="3">有效期：</el-col>
+        <el-col :span="18">
+          <el-input v-model="input" style="width: 80%" size="small"></el-input>
+        </el-col>
+      </el-row>
+      <el-row style="margin-top: 20px;">
+        <el-col :span="3" :offset="3">备注：</el-col>
+        <el-col :span="18">
+          <el-input  type="textarea" placeholder="请输入内容" v-model="input" style="width:80%"></el-input>
+        </el-col>
+      </el-row>
+
+      <div slot="footer" class="dialog-footer">
+        <el-button @click="isShow = false">取 消</el-button>
+        <el-button type="primary" @click="isShow = false">确 定</el-button>
+      </div>
+    </el-dialog>
   </div>
 </template>
 
@@ -159,6 +198,8 @@
     name: 'MemberProcessing',
     data() {
       return {
+        isShow: false,
+        input: '',
         //客户信息表单
         clientForm: {
           clientName: '',
@@ -237,7 +278,11 @@
         }]
       }
     },
-    methods: {},
+    methods: {
+      handleShow(){
+        this.isShow = true;
+      }
+    },
     mounted: function () {
 
     }
