@@ -123,17 +123,14 @@
       return {
         loading: true,
         dialogLoading: false,
-        input: '',
         cardName: '',
         tableData: [],
-        isDelate: false,
         multipleSelection: [],
         pageData: {
           currentPage: 1,
           pageSize: 10,
           pageTotal: 1000
         },
-        newOrChange: '',
         isShow: false,
         dialog: {
           name: '',
@@ -207,7 +204,6 @@
 
       // 行内删除
       handleDelete(row) {
-        this.isDelate = false
         this.$get('/cardService/delete', {
           id: row.id
         }).then(res => {

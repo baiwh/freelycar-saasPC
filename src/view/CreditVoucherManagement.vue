@@ -13,7 +13,7 @@
     <!--两个按钮-->
     <el-row :gutter="30">
       <el-col :span="4">
-        <el-button type="primary" size="small" plain @click="handleModify(false)">新增抵用券</el-button>
+        <el-button type="primary" size="small" plain @click="addNewCard">新增抵用券</el-button>
       </el-col>
       <el-col :span="4">
         <el-button type="primary" size="small" plain @click="allDelete">删除抵用券</el-button>
@@ -25,15 +25,15 @@
               @selection-change="handleSelectionChange" v-loading="loading">
       <el-table-column type="selection"></el-table-column>
       <el-table-column label="序号" type="index"></el-table-column>
-      <el-table-column prop="name" label="券名"></el-table-column>
-      <el-table-column prop="validTime" label="有效期（年）"></el-table-column>
-      <el-table-column prop="" label="项目"></el-table-column>
-      <el-table-column prop="price" label="价格"></el-table-column>
+      <el-table-column prop="name" label="抵用券名称"></el-table-column>
+      <el-table-column prop="price" label="售券金额"></el-table-column>
+      <el-table-column prop="project" label="关联项目名称"></el-table-column>
+      <el-table-column prop="validTime" label="有效期（月）"></el-table-column>
       <el-table-column prop="createTime" label="创建时间"></el-table-column>
       <el-table-column prop="content" label="备注" show-overflow-tooltip></el-table-column>
       <el-table-column label="操作" width="150">
         <template slot-scope="scope">
-          <el-button size="mini" type="primary" @click="handleModify(true, scope.row)">修改</el-button>
+          <el-button size="mini" type="primary" @click="modifyCard(scope.row)">修改</el-button>
           <el-popover
             placement="top"
             width="160"
@@ -53,11 +53,11 @@
             placement="top"
             width="160"
             :ref="scope.row.id"
-           >
+          >
             <p>确定进行{{scope.row.bookOnline? '下架' : '上架'}}？</p>
             <div style="text-align: right; margin: 0">
               <el-button size="mini" type="text" @click="handleClose(scope.row.id)">取消</el-button>
-              <el-button type="primary" size="mini" @click="handleEdit(scope.row.id,scope.row)">确定</el-button>
+              <el-button type="primary" size="mini" @click="upperShelf(scope.row.id,scope.row)">确定</el-button>
             </div>
           </el-popover>
           <el-button size="mini" :type="scope.row.bookOnline?'success':'info'" v-popover="scope.row.id">
@@ -73,45 +73,47 @@
       @changePage="getDataList"></pagingDevice>
 
     <!--抵用券弹窗-->
-    <el-dialog :title="newOrChange" :visible.sync="isShow">
+    <el-dialog :title="isModify?'修改抵用券':'新增抵用券'" :visible.sync="isShow">
       <el-row>
         <el-col :span="5" :offset="2">抵用券名称：</el-col>
         <el-col :span="17">
-          <el-input v-model="dialog.creditVoucherName" style="width: 80%" size="small"></el-input>
+          <el-input v-model="dialog.name" style="width: 80%" size="small"></el-input>
         </el-col>
       </el-row>
       <el-row>
         <el-col :span="5" :offset="2">金额：</el-col>
         <el-col :span="17">
-          <el-input v-model="dialog.creditVoucherPrice" style="width: 80%" size="small"></el-input>
+          <el-input v-model="dialog.price" style="width: 80%" size="small"></el-input>
         </el-col>
       </el-row>
       <el-row>
         <el-col :span="5" :offset="2">项目：</el-col>
         <el-col :span="17">
-          <el-select v-model="dialog.selectValue" placeholder="请选择" style="width: 80%">
-            <el-option v-for="item in selectOptions1" :key="item.value" :label="item.label" :value="item.value"></el-option>
+          <el-select v-model="dialog.project" placeholder="请选择" style="width: 80%">
+            <el-option v-for="item in selectOptions1" :key="item.value" :label="item.label"
+                       :value="item.value"></el-option>
           </el-select>
         </el-col>
       </el-row>
       <el-row>
         <el-col :span="5" :offset="2">有效期（月）：</el-col>
         <el-col :span="17">
-          <el-select v-model="dialog.selectValue" placeholder="请选择" style="width: 80%">
-            <el-option v-for="item in selectOptions2" :key="item.value" :label="item.label" :value="item.value"></el-option>
+          <el-select v-model="dialog.validTime" placeholder="请选择" style="width: 80%">
+            <el-option v-for="item in selectOptions2" :key="item.value" :label="item.label"
+                       :value="item.value"></el-option>
           </el-select>
         </el-col>
       </el-row>
       <el-row>
         <el-col :span="5" :offset="2">备注：</el-col>
         <el-col :span="17">
-          <el-input  type="textarea" :rows="2" placeholder="请输入内容" v-model="input" style="width:80%"></el-input>
+          <el-input type="textarea" :rows="2" placeholder="请输入内容" v-model="dialog.content" style="width:80%"></el-input>
         </el-col>
       </el-row>
 
       <div slot="footer" class="dialog-footer">
         <el-button @click="isShow = false">取 消</el-button>
-        <el-button type="primary" @click="isShow = false">确 定</el-button>
+        <el-button type="primary" @click="submit">确 定</el-button>
       </div>
     </el-dialog>
   </div>
@@ -123,6 +125,7 @@
     data() {
       return {
         loading: true,
+        dialogLoading: false,
         input: '',
         tableData: [],
         multipleSelection: [],
@@ -134,9 +137,11 @@
         newOrChange: '',
         isShow: false,
         dialog: {
-          creditVoucherName: '',
-          creditVoucherPrice: '',
-          selectValue: '',
+          name: '',
+          price: '',
+          project: '',
+          validTime: '',
+          content: '',
         },
         selectOptions1: [{
           label: '1',
@@ -145,7 +150,8 @@
         selectOptions2: [{
           label: '2',
           value: '2'
-        }]
+        }],
+        isModify: false,
       }
     },
     methods: {
@@ -170,31 +176,33 @@
         this.multipleSelection = val;
       },
 
-      // 上架下架
+      // 关闭再次确认的小窗口
       handleClose(id) {
         this.$refs[id].doClose()
       },
-      handleEdit(id,row) {
+
+      // 上架下架
+      upperShelf(id, row) {
         if (!row.bookOnline) {
           // 上架
-          this.$get('', {
+          this.$get('/couponService/upperShelf', {
             id: row.id
           }).then(res => {
-            // this.$message({
-            //   message: '上架成功',
-            //   type: 'success'
-            // })
+            this.$message({
+              message: '上架成功',
+              type: 'success'
+            })
             this.getDataList()
           })
         } else {
           // 下架
-          this.$get('', {
+          this.$get('/couponService/lowerShelf', {
             id: row.id
           }).then(res => {
-            // this.$message({
-            //   message: '下架成功',
-            //   type: 'success'
-            // })
+            this.$message({
+              message: '下架成功',
+              type: 'success'
+            })
             this.getDataList()
           })
         }
@@ -203,14 +211,13 @@
 
       // 行内删除
       handleDelete(row) {
-        this.isDelate = false
         this.$get('/couponService/delete', {
           id: row.id
         }).then(res => {
-          // this.$message({
-          //   message: '删除成功',
-          //   type: 'success'
-          // })
+          this.$message({
+            message: '删除成功',
+            type: 'success'
+          })
           this.getDataList()
         })
       },
@@ -220,16 +227,55 @@
 
       },
 
-      // 新增、修改
-      handleModify(type, row) {
-        this.isShow = true;
-        if (type) {
-          // 修改
-          this.newOrChange = '修改抵用券'
-        } else {
-          // 新增
-          this.newOrChange = '新增抵用券'
-        }
+      // 新增抵用券
+      addNewCard() {
+        this.isModify = false
+        this.dialog = {
+          name: '',
+          price: '',
+          project: '',
+          validTime: '',
+          content: '',
+          id:'',
+          projectId:''
+        },
+          this.isShow = true
+      },
+
+      // 修改抵用券
+      modifyCard(row) {
+        this.isModify = true
+        this.dialogLoading = true
+        this.isShow = true
+        // 获取详细信息
+        this.$get('/couponService/detail', {
+          id: row.id
+        }).then((res) => {
+          this.dialog = res
+          this.dialogLoading = false
+        })
+      },
+
+      // 模态框的保存按钮
+      submit() {
+        this.dialogLoading = true
+        this.$post('/couponService/modify', {
+          id: this.dialog.id,
+          storeId: 1,
+          content: this.dialog.content,
+          name: this.dialog.name,
+          validTime: this.dialog.validTime,
+          price: this.dialog.price,
+          projectId: this.dialog.projectId
+        }).then(res => {
+          this.dialogLoading = false
+          this.$message({
+            message: '保存成功',
+            type: 'success'
+          })
+          this.isShow = false
+          this.getDataList()
+        })
       }
     },
     mounted: function () {
