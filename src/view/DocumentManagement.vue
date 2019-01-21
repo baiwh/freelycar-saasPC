@@ -162,13 +162,6 @@
           </el-col>
           <el-input v-model="input" placeholder="请输入内容" style="width: 80%" size="small"></el-input>
         </el-row>
-        <el-row style="margin-top: 20px">
-          <el-col :span="4">
-            备注：
-          </el-col>
-          <el-input type="textarea" :rows="2" placeholder="请输入内容" v-model="input" style="width: 80%">
-          </el-input>
-        </el-row>
       </div>
 
       <div slot="footer" class="dialog-footer">
@@ -186,20 +179,9 @@
           </el-col>
           <el-date-picker
             v-model="datePickerValue"
-            type="daterange"
-            size="small"
-            range-separator="~"
-            start-placeholder="开始日期"
-            end-placeholder="结束日期"
-            style="width:80%">
+            type="datetime"
+            placeholder="选择日期时间">
           </el-date-picker>
-        </el-row>
-        <el-row style="margin-top: 20px">
-          <el-col :span="4">
-            备注：
-          </el-col>
-          <el-input type="textarea" :rows="2" placeholder="请输入内容" v-model="input" style="width: 80%">
-          </el-input>
         </el-row>
       </div>
       <div slot="footer" class="dialog-footer">

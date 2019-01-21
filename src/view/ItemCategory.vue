@@ -246,14 +246,15 @@
       // 新增类别、修改按钮（打开弹框、要获取项目详情）
       handleModify1(type, row) {
         if (type) {
-          // 修改
+          //
+          // 修改类别，打开弹框，更改弹框标题为“修改类别”
+          console.log("项目类别：",'修改');
+          this.addCategoryVisible = true;
+          this.dialogTitle = '修改类别'
           this.$get('/projectType/detail', {
-            id: ""
+            id: row.id
           }).then((res) => {
-            //打开弹框，更改弹框标题为“修改类别”
-            console.log("项目类别：",'修改');
-            this.addCategoryVisible = true;
-            this.dialogTitle = '修改类别'
+
           })
         } else {
           // 新增
