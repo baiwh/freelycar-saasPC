@@ -8,7 +8,7 @@
 
         <!--新增类别按钮-->
         <el-row>
-          <el-button type="primary" @click="handleModify1(false)" plain size="small">新增类别</el-button>
+          <el-button type="primary" @click="addProject" plain size="small">新增类别</el-button>
         </el-row>
 
         <!--表格-->
@@ -19,7 +19,7 @@
           <el-table-column prop="comment" label="备注" align="center"></el-table-column>
           <el-table-column label="操作" align="center">
             <template slot-scope="scope">
-              <el-button size="mini" type="primary" @click="handleModify1(true,scope.row)">修改</el-button>
+              <el-button size="mini" type="primary" @click="modifyProject(scope.row)">修改</el-button>
             </template>
           </el-table-column>
         </el-table>
@@ -44,7 +44,10 @@
           </el-col>
           <el-col :span="10" :offset="1">
             <span>项目类别：</span>
-            <el-input v-model="itemCategory" size="small"></el-input>
+            <el-select size="small" v-model="itemCategory" placeholder="请选择" style="width: 80%">
+              <el-option v-for="item in tableData1" :key="item.id" :label="item.name"
+                         :value="item.id"></el-option>
+            </el-select>
           </el-col>
           <el-col :span="2" :offset="1">
             <el-button type="primary" size="small" @click="getTableData2">查询</el-button>
@@ -54,32 +57,33 @@
         <!--按钮-->
         <el-row :gutter="30">
           <el-col :span="3">
-            <el-button type="primary" plain size="small" @click="handleModify1(false)">新增项目</el-button>
+            <el-button type="primary" plain size="small" @click="addProject2(false)">新增项目</el-button>
           </el-col>
           <el-col :span="3">
-            <el-button type="primary" plain size="small">删除项目</el-button>
+            <el-button type="primary" plain size="small" @click="allDelete">删除项目</el-button>
           </el-col>
           <el-col :span="4">
-            <el-button type="primary" plain size="small">上传导入文件</el-button>
+            <el-button type="primary" plain size="small" @click="uploadFile">上传导入文件</el-button>
           </el-col>
           <el-col :span="4">
-            <el-button type="primary" plain size="small">下载导入模板</el-button>
+            <el-button type="primary" plain size="small" @click="downloadFile">下载导入模板</el-button>
           </el-col>
         </el-row>
 
         <!--表格-->
         <el-table ref="multipleTable" :data="tableData2" tooltip-effect="dark" border
                   @selection-change="handleSelectionChange">
-          <el-table-column type="selection"></el-table-column>
-          <el-table-column label="序号" type="index"></el-table-column>
-          <el-table-column prop="name" label="项目名称"></el-table-column>
-          <el-table-column prop="" label="项目类别"></el-table-column>
-          <el-table-column prop="price" label="项目价格"></el-table-column>
-          <el-table-column prop="createTime" label="创建时间"></el-table-column>
-          <el-table-column prop="comment" label="备注" show-overflow-tooltip></el-table-column>
-          <el-table-column label="操作" width="150">
+          <el-table-column align="center" type="selection"></el-table-column>
+          <el-table-column align="center" label="序号" type="index"></el-table-column>
+          <el-table-column align="center" prop="name" label="项目名称"></el-table-column>
+          <el-table-column align="center" prop="projectType" label="项目类别"></el-table-column>
+          <el-table-column align="center" prop="price" label="项目价格"></el-table-column>
+          <el-table-column align="center" prop="createTime" label="创建时间"></el-table-column>
+          <el-table-column align="center" prop="comment" label="备注" show-overflow-tooltip></el-table-column>
+
+          <el-table-column align="center" label="操作" width="150">
             <template slot-scope="scope">
-              <el-button size="mini" type="primary" @click="handleModify2(true,scope.row)">修改</el-button>
+              <el-button size="mini" type="primary" @click="modifyProject2(scope.row)">修改</el-button>
               <el-popover placement="top" width="160" :ref="scope.$index">
                 <p>确定删除？</p>
                 <div style="text-align: right; margin: 0">
@@ -90,24 +94,26 @@
               <el-button slot="reference" size="mini" type="danger" v-popover="scope.$index">删除</el-button>
             </template>
           </el-table-column>
-          <el-table-column prop="service" label="智能柜服务">
+
+          <el-table-column align="center" prop="saleStatus" label="智能柜服务">
             <template slot-scope="scope">
               <el-popover
                 placement="top"
                 width="160"
                 :ref="scope.row.name">
-                <p>确定{{scope.row.service? '开通智能柜服务' : '取消智能柜服务'}}？</p>
+                <p>确定{{scope.row.saleStatus ? '开通智能柜服务' : '取消智能柜服务'}}？</p>
                 <div style="text-align: right; margin: 0">
                   <el-button size="mini" type="text" @click="handleClose(scope.row.name)">取消</el-button>
-                  <el-button type="primary" size="mini" @click="handleEdit(scope.row.name,scope.row)">确定</el-button>
+                  <el-button type="primary" size="mini" @click="openService(scope.row)">确定</el-button>
                 </div>
               </el-popover>
-              <el-button size="mini" :type="scope.row.service==0? 'success': 'info'" v-popover="scope.row.name">
-                {{scope.row.service === 0 ? '智能柜服务':'取消'}}
+              <el-button size="mini" :type="scope.row.saleStatus ? 'success': 'info'" v-popover="scope.row.name">
+                {{scope.row.saleStatus ? '智能柜服务':'取消'}}
               </el-button>
             </template>
           </el-table-column>
-          <el-table-column prop="up" label="上架/下架">
+
+          <el-table-column align="center" prop="bookOnline" label="上架/下架">
             <template slot-scope="scope">
               <el-popover
                 placement="top"
@@ -116,7 +122,7 @@
                 <p>确定进行{{scope.row.bookOnline? '下架' : '上架'}}？</p>
                 <div style="text-align: right; margin: 0">
                   <el-button size="mini" type="text" @click="handleClose(scope.row.id)">取消</el-button>
-                  <el-button type="primary" size="mini" @click="handleEdit(scope.row.id,scope.row)">确定</el-button>
+                  <el-button type="primary" size="mini" @click="upperShelf(scope.row)">确定</el-button>
                 </div>
               </el-popover>
               <el-button size="mini" :type="scope.row.bookOnline?'success':'info'" v-popover="scope.row.id">
@@ -137,52 +143,55 @@
     </el-tabs>
 
     <!--项目类别模态框-->
-    <el-dialog :title="dialogTitle" :visible.sync="addCategoryVisible" width="50%">
+    <el-dialog v-loading="dialogLoading1" :title="projectIsModify?'修改项目类别':'新增项目类别'"
+               :visible.sync="addCategoryVisible" width="50%">
       <div>
         <el-row style="margin-top: 20px">
           <el-col :span="4">类别名称：</el-col>
-          <el-input v-model="input" placeholder="请输入内容" style="width: 80%" size="small"></el-input>
+          <el-input v-model="dialog1.name" placeholder="请输入内容" style="width: 80%" size="small"></el-input>
         </el-row>
         <el-row style="margin-top: 20px">
           <el-col :span="4">备注：</el-col>
-          <el-input  type="textarea" :rows="2" placeholder="请输入内容" v-model="input" style="width:80%"></el-input>
+          <el-input type="textarea" :rows="2" placeholder="请输入内容" v-model="dialog1.comment"
+                    style="width:80%"></el-input>
         </el-row>
       </div>
 
       <div slot="footer" class="dialog-footer">
         <el-button @click="addCategoryVisible = false">取 消</el-button>
-        <el-button type="primary" @click="addCategoryVisible = false">确 定</el-button>
+        <el-button type="primary" @click="submitData1">确 定</el-button>
       </div>
     </el-dialog>
 
     <!--项目管理模态框-->
-    <el-dialog :title="managementDialogTitle" :visible.sync="addManagementVisible">
+    <el-dialog v-loading="dialogLoading2" :title="projectIsModify2?'修改项目':'新增项目'" :visible.sync="addManagementVisible">
       <el-row>
         <el-col :span="4">项目名称：</el-col>
         <el-col :span="8">
-          <el-input v-model="input" placeholder="请输入内容" style="width: 80%" size="small"></el-input>
+          <el-input v-model="dialog2.name" placeholder="请输入内容" style="width: 80%" size="small"></el-input>
         </el-col>
         <el-col :span="4">项目类别：</el-col>
         <el-col :span="8">
-          <el-select v-model="selectValue" placeholder="请选择" style="width: 80%">
-            <el-option v-for="item in selectOptions" :key="item.value" :label="item.label" :value="item.value"></el-option>
+          <el-select v-model="dialog2.projectTypeId" placeholder="请选择" style="width: 80%">
+            <el-option v-for="item in tableData1" :key="item.id" :label="item.name"
+                       :value="item.id"></el-option>
           </el-select>
         </el-col>
       </el-row>
       <el-row>
         <el-col :span="4">项目价格：</el-col>
         <el-col :span="8">
-          <el-input v-model="input" placeholder="请输入内容" style="width: 80%" size="small"></el-input>
+          <el-input v-model="dialog2.price" placeholder="请输入内容" style="width: 80%" size="small"></el-input>
         </el-col>
         <el-col :span="4">备注：</el-col>
         <el-col :span="8">
-          <el-input  type="textarea" placeholder="请输入内容" v-model="input" style="width:80%"></el-input>
+          <el-input type="textarea" placeholder="请输入内容" v-model="dialog2.comment" style="width:80%"></el-input>
         </el-col>
       </el-row>
 
       <div slot="footer" class="dialog-footer">
         <el-button @click="addManagementVisible =false">取 消</el-button>
-        <el-button type="primary" @click="addManagementVisible = false">确 定</el-button>
+        <el-button type="primary" @click="submitData2">确 定</el-button>
       </div>
     </el-dialog>
 
@@ -201,21 +210,25 @@
         itemCategory: '',
         multipleSelection: [],
         tableData1: [],
+        tableData2: [],
         pageData1: {
           currentPage: 1,
           pageSize: 10,
           pageTotal: 100
         },
-        tableData2: [],
         pageData2: {
           currentPage: 1,
           pageSize: 10,
           pageTotal: 100
         },
+        dialog1: {},
+        dialog2: {},
+        dialogLoading1: false,
+        dialogLoading2: false,
+        projectIsModify: false,
+        projectIsModify2: false,
         addCategoryVisible: false,
-        dialogTitle: '',
         addManagementVisible: false,
-        managementDialogTitle: '',
         selectValue: '',
         selectOptions: [{
           label: '项目一',
@@ -243,36 +256,47 @@
         })
       },
 
-      // 新增类别、修改按钮（打开弹框、要获取项目详情）
-      handleModify1(type, row) {
-        if (type) {
-          //
-          // 修改类别，打开弹框，更改弹框标题为“修改类别”
-          console.log("项目类别：",'修改');
-          this.addCategoryVisible = true;
-          this.dialogTitle = '修改类别'
-          this.$get('/projectType/detail', {
-            id: row.id
-          }).then((res) => {
-
-          })
-        } else {
-          // 新增
-          //打开弹框，更改弹框标题为“新增类别”
-          this.addCategoryVisible = true;
-          this.dialogTitle = '新增类别'
+      // 新增类别
+      addProject() {
+        this.addCategoryVisible = true
+        this.projectIsModify = false
+        this.dialog1 = {
+          id: '',
+          name: '',
+          comment: '',
+          storeId: 1
         }
+      },
+
+      // 修改按钮（打开弹框、要获取项目详情）
+      modifyProject(row) {
+        this.addCategoryVisible = true
+        this.dialogLoading1 = true
+        this.projectIsModify = true
+        this.$get('/projectType/detail', {
+          id: row.id
+        }).then((res) => {
+          this.dialog1 = res
+          this.dialogLoading1 = false
+        })
       },
 
       // 保存按钮（提交）
       submitData1() {
+        this.dialogLoading1 = true
         this.$post('/projectType/modify', {
-          id: "",
-          name: "美容",
-          comment: "车辆美容类",
+          id: this.dialog1.id,
+          name: this.dialog1.name,
+          comment: this.dialog1.comment,
           storeId: 1
         }).then((res) => {
-
+          this.dialogLoading1 = false
+          this.$message({
+            message: '保存成功',
+            type: 'success'
+          })
+          this.addCategoryVisible = false
+          this.getTableData1()
         })
       },
 
@@ -287,7 +311,7 @@
           currentPage: this.pageData2.currentPage,
           pageSize: this.pageData2.pageSize,
           name: this.itemName,
-          projectTypeId: ''
+          projectTypeId: this.itemCategory
         }).then((res) => {
           this.loading = false
           this.tableData2 = res.data
@@ -297,41 +321,71 @@
         })
       },
 
-      // 新增、修改（打开弹框、获取详情）
-      handleModify2(type, row) {
-        if (type) {
-          // 修改
-          this.$get('/project/detail', {
-            id: ""
-          }).then((res) => {
-            //打开弹框，修改弹框标题为“修改项目”
-            this.addManagementVisible = true;
-            this.managementDialogTitle = '修改项目'
-          })
-        } else {
-          // 新增
-          //打开弹框，修改弹框标题为“新增项目”
-          this.addManagementVisible = true;
-          this.managementDialogTitle = '新增项目'
+      // 新增类别
+      addProject2() {
+        this.addManagementVisible = true
+        this.projectIsModify2 = false
+        this.dialog2 = {
+          id: '',
+          name: '',
+          projectType: '',
+          projectTypeId: '',
+          price: null,
+          comment: '',
+          storeId: 1
         }
+      },
+
+      // 修改按钮（打开弹框、要获取项目详情）
+      modifyProject2(row) {
+        this.addManagementVisible = true
+        this.dialogLoading2 = true
+        this.projectIsModify2 = true
+        this.$get('/project/detail', {
+          id: row.id
+        }).then((res) => {
+          this.dialog2 = res
+          this.dialogLoading2 = false
+        })
       },
 
       // 保存按钮（提交）
       submitData2() {
+        this.dialogLoading2 = true
         this.$post('/project/modify', {
-          id: "",
-          name: "美容",
-          comment: "车辆美容类",
+          id: this.dialog2.id,
+          name: this.dialog2.name,
+          projectTypeId: this.dialog2.projectTypeId,
+          price: this.dialog2.price,
+          comment: this.dialog2.comment,
           storeId: 1
         }).then((res) => {
-
+          this.dialogLoading2 = false
+          this.$message({
+            message: '保存成功',
+            type: 'success'
+          })
+          this.addManagementVisible = false
+          this.getTableData2()
         })
       },
 
       // 批量删除项目
+      allDelete() {
+
+      },
+
       // 上传导入文件
+      uploadFile() {
+
+      },
+
       // 下载导入模板
-      // 删除单个项目
+      downloadFile() {
+
+      },
+
+      // 项目管理行内删除单个项目
       handleDelete(row) {
         this.$get('/project/delete', {
           id: row.id
@@ -340,24 +394,73 @@
             message: '删除成功',
             type: 'success'
           })
-          this.getDataList()
+          this.getTableData2()
         })
       },
 
       // 智能柜服务
-      // 上架下架
-      handleEdit(id, row) {
-        this.handleClose(id)
+      openService(row) {
+        if (!row.saleStatus) {
+          // 上架
+          this.$get('/project/upperArk', {
+            id: row.id
+          }).then(res => {
+            this.$message({
+              message: '开通智能柜成功',
+              type: 'success'
+            })
+            this.getTableData2()
+          })
+        } else {
+          // 下架
+          this.$get('/project/lowerArk', {
+            id: row.id
+          }).then(res => {
+            this.$message({
+              message: '关闭智能柜成功',
+              type: 'success'
+            })
+            this.getTableData2()
+          })
+        }
+        this.handleClose(row.id);
       },
 
+      // 上架下架
+      upperShelf(row) {
+        if (!row.bookOnline) {
+          // 上架
+          this.$get('/project/upperShelf', {
+            id: row.id
+          }).then(res => {
+            this.$message({
+              message: '上架成功',
+              type: 'success'
+            })
+            this.getTableData2()
+          })
+        } else {
+          // 下架
+          this.$get('/project/lowerShelf', {
+            id: row.id
+          }).then(res => {
+            this.$message({
+              message: '下架成功',
+              type: 'success'
+            })
+            this.getTableData2()
+          })
+        }
+        this.handleClose(row.id);
+      },
 
       // table多选功能
       handleSelectionChange(val) {
         this.multipleSelection = val;
       },
 
-      //项目管理行内删除
-      handleClose(id){
+      //关闭二次确认提示框
+      handleClose(id) {
         this.$refs[id].doClose()
       }
     },

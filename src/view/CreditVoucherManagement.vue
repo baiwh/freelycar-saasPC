@@ -57,7 +57,7 @@
             <p>确定进行{{scope.row.bookOnline? '下架' : '上架'}}？</p>
             <div style="text-align: right; margin: 0">
               <el-button size="mini" type="text" @click="handleClose(scope.row.id)">取消</el-button>
-              <el-button type="primary" size="mini" @click="upperShelf(scope.row.id,scope.row)">确定</el-button>
+              <el-button type="primary" size="mini" @click="upperShelf(scope.row)">确定</el-button>
             </div>
           </el-popover>
           <el-button size="mini" :type="scope.row.bookOnline?'success':'info'" v-popover="scope.row.id">
@@ -182,7 +182,7 @@
       },
 
       // 上架下架
-      upperShelf(id, row) {
+      upperShelf(row) {
         if (!row.bookOnline) {
           // 上架
           this.$get('/couponService/upperShelf', {
@@ -206,7 +206,7 @@
             this.getDataList()
           })
         }
-        this.handleClose(id);
+        this.handleClose(row.id);
       },
 
       // 行内删除
@@ -238,7 +238,7 @@
           content: '',
           id:'',
           projectId:''
-        },
+        }
           this.isShow = true
       },
 
