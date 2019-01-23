@@ -154,12 +154,24 @@
     <!--按钮-->
     <el-row>
       <el-col :span="2" :offset="8">
-        <el-button type="primary">保存</el-button>
+        <el-button type="primary" @click="submit">保存</el-button>
       </el-col>
       <el-col :span="2" :offset="2">
         <el-button type="primary">取消</el-button>
       </el-col>
     </el-row>
+
+    <!--会员办理提示框-->
+    <el-dialog :visible.sync="dialogVisible" width="30%">
+      <p align="center">保存成功！是否进行会员卡办理?</p>
+      <div slot="footer" class="dialog-footer">
+        <el-button @click="dialogVisible = false">取 消</el-button>
+        <router-link to="/MembershipManagement/MemberProcessing">
+          <el-button type="primary">确 定</el-button>
+        </router-link>
+      </div>
+    </el-dialog>
+
   </div>
 </template>
 
@@ -202,10 +214,17 @@
           boardingDate: '',
           frameNumber: '',
           engineNumber: ''
-        }
+        },
+        dialogVisible: false
       }
     },
-    methods: {},
+    methods: {
+      submit() {
+        //保存信息
+
+        this.dialogVisible = true
+      }
+    },
     mounted: function () {
 
     }
