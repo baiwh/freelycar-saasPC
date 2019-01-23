@@ -92,8 +92,9 @@
           <el-table-column property="isNewCar" label="是否新车" align="center"/>
           <el-table-column property="insuranceAmount" label="保险金额" align="center"/>
           <el-table-column property="insuranceValidity" label="保险有效期" align="center"/>
-          <el-table-column label="操作" align="center">
+          <el-table-column label="操作" align="center" width="150">
             <template slot-scope="scope">
+              <el-button type="primary" size="mini" @click="modify(scope.row)">修改</el-button>
               <el-popover
                 ref="popover{{$index}}"
                 placement="top"
@@ -217,7 +218,7 @@
     </el-dialog>
 
     <!--新增车辆对话框-->
-    <el-dialog title="新增车辆" :visible.sync="addNewCarVisible" width="70%">
+    <el-dialog :title="isModify ? '新增车辆' : '修改车辆信息'" :visible.sync="addNewCarVisible" width="70%">
       <el-form :model="addNewCarForm" label-width="120px">
         <el-row :gutter="20">
           <el-col :span="11">
@@ -227,7 +228,10 @@
           </el-col>
           <el-col :span="11">
             <el-form-item label="车辆品牌：" prop="carBrand">
-              <el-input v-model="addNewCarForm.carBrand" size="mini"/>
+              <el-select v-model="addNewCarForm.carBrand" placeholder="请选择" size="small">
+                <el-option v-for="item in selectOptions" :key="item.value" :label="item.label"
+                           :value="item.value"></el-option>
+              </el-select>
             </el-form-item>
           </el-col>
         </el-row>
@@ -253,7 +257,7 @@
         <el-row>
           <el-col :span="11">
             <el-form-item label="是否二手车：" prop="isNewCar">
-              <el-select v-model="addNewCarForm.isNewCar" placeholder="请选择储值卡">
+              <el-select v-model="addNewCarForm.isNewCar" placeholder="请选择储值卡" size="small">
                 <el-option label="是" value="yes"/>
                 <el-option label="否" value="no"/>
               </el-select>
@@ -291,7 +295,7 @@
         </el-row>
       </el-form>
       <div slot="footer" class="dialog-footer">
-        <el-button type="primary" @click="addNewCarVisible = false">保存</el-button>
+        <el-button type="primary" @click="submit">保存</el-button>
         <el-button @click="addNewCarVisible = false">取消</el-button>
       </div>
     </el-dialog>
@@ -350,6 +354,7 @@
           staffName: '小易'
         }],
         detailsVisible: false,
+        isModify: false,
         addNewCarVisible: false,
         addNewCarForm: {
           carNumber: '',
@@ -361,6 +366,10 @@
           insuranceAmount: '',
           addLicenseTime: ''
         },
+        selectOptions: [{
+          label: '沃尔沃',
+          value: 'wow'
+        }],
         datePickerValue: '',
         index: 4,
       }
@@ -374,8 +383,34 @@
       onDetail(row) {
         this.detailsVisible = true
       },
+      //新增车辆信息
       addNewCar() {
+        this.isModify = true
+        this.addNewCarForm = {
+          carNumber: '',
+          carBrand: '',
+          vehicleModel: '',
+          mileage: '',
+          engineNumber: '',
+          isNewCar: '',
+          insuranceAmount: '',
+          addLicenseTime: ''
+        }
         this.addNewCarVisible = true
+      },
+
+      //修改车辆信息
+      modify(row) {
+        this.isModify = false
+        this.addNewCarVisible = true
+        //获取详细信息
+      },
+
+      //新增车辆信息弹框中的保存按钮
+      submit() {
+        //提交弹框中的信息
+        this.addNewCarVisible = false
+        //调用方法重新获取表格信息
       },
       onDeletePop(index,deletePopVisible) {
         this.carInfoTable.splice(index,1)
