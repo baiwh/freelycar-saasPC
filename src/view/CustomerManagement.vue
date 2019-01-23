@@ -19,7 +19,7 @@
         <el-button circle :type="buttonType" size="small" @click="onVipButton">是</el-button>
       </el-col>
       <el-col :span="1">
-        <el-button type="primary" size="small">查询</el-button>
+        <el-button type="primary" size="small" @click="getDataList">查询</el-button>
       </el-col>
     </el-row>
 
@@ -39,16 +39,16 @@
     </el-row>
 
     <!--客户表格-->
-    <el-table :data="tableData" border>
+    <el-table :data="tableData" border v-loading="loading">
       <el-table-column label="序号" type="index" align="center"></el-table-column>
       <el-table-column prop="name" label="姓名" align="center"></el-table-column>
-      <el-table-column prop="price" label="手机号码" align="center"></el-table-column>
-      <el-table-column prop="actualAmount" label="车牌号码" align="center"></el-table-column>
-      <el-table-column prop="validityPeriod" label="品牌" align="center"></el-table-column>
-      <el-table-column prop="creationTime" label="是否会员" align="center"></el-table-column>
-      <el-table-column prop="creationTime" label="总消费次数" align="center"></el-table-column>
-      <el-table-column prop="creationTime" label="最近到店时间" align="center"></el-table-column>
-      <el-table-column prop="creationTime" label="卡内未消费金额" align="center"></el-table-column>
+      <el-table-column prop="phone" label="手机号码" align="center"></el-table-column>
+      <el-table-column prop="plates" label="车牌号码" align="center"></el-table-column>
+      <el-table-column prop="brands" label="品牌" align="center"></el-table-column>
+      <el-table-column prop="isMember" label="是否会员" align="center"></el-table-column>
+      <el-table-column prop="totalCount" label="总消费次数" align="center"></el-table-column>
+      <el-table-column prop="lastVisit" label="最近到店时间" align="center"></el-table-column>
+      <el-table-column prop="totalBalance" label="卡内未消费金额" align="center"></el-table-column>
       <el-table-column label="操作" width="220" align="center">
         <template slot-scope="scope">
           <router-link to="/MembershipManagement/MemberProcessing">
@@ -58,17 +58,16 @@
             <el-button size="mini" type="primary">修改</el-button>
           </router-link>
           <el-popover
-            ref="popover{{$index}}"
             placement="top"
             width="160"
-            v-model="scope.row.deleteVisible">
-            <p>确定删除吗？</p>
+            :ref="scope.$index">
+            <p>确定删除？</p>
             <div style="text-align: right; margin: 0">
-              <el-button size="mini" type="text" @click="scope.row.deleteVisible = false">取消</el-button>
-              <el-button type="primary" size="mini" @click="scope.row.deleteVisible = false">确定</el-button>
+              <el-button size="mini" type="text" @click="handleClose(scope.$index)">取消</el-button>
+              <el-button type="primary" size="mini" @click="handleDelete(scope.row)">确定</el-button>
             </div>
-            <el-button size="mini" type="danger" slot="reference">删除</el-button>
           </el-popover>
+          <el-button size="mini" v-popover="scope.$index" type="danger">删除</el-button>
         </template>
       </el-table-column>
     </el-table>
@@ -76,7 +75,7 @@
     <!--分页器-->
     <pagingDevice
       :pageData.sync="pageData"
-      @changePage="changePage"></pagingDevice>
+      @changePage="getDataList"></pagingDevice>
 
     <!--会员统计模态框-->
     <el-dialog title="会员统计" :visible.sync="statisticsVisible" width="30%">
@@ -98,15 +97,12 @@
     name: 'CustomerManagement',
     data() {
       return {
+        loading: true,
         buttonType: '',
         name: '',
         phone: '',
         carNumber: '',
-        tableData: [{
-          deleteVisible: false
-        }, {
-          deleteVisible: false
-        }],
+        tableData: [],
         pageData: {
           currentPage: 1,
           pageSize: 10,
@@ -119,13 +115,65 @@
       }
     },
     methods: {
+      // 获取列表
+      getDataList() {
+        this.$get('/client/list', {
+          name: '',
+          phone: '',
+          isMember: '',
+          currentPage: this.pageData.currentPage,
+          pageSize: this.pageData.pageSize,
+          storeId: 1
+        }).then((res) => {
+          this.loading = false
+          this.tableData = res.data
+          this.pageData.currentPage = res.currentPage
+          this.pageData.pageSize = res.pageSize
+          this.pageData.pageTotal = res.total
+          this.getMemberStatistics()
+        })
+      },
+
+      // 获取门店统计信息
+      getMemberStatistics() {
+        this.$get('/client/memberStatistics', {
+          storeId: 1
+        }).then((res) => {
+          this.memberCount = res.total
+          this.newMemberCount = res.month_new
+          this.todayNewCount = res.today_new
+        })
+      },
+
+      // 关闭再次确认的小窗口
+      handleClose(id) {
+        this.$refs[id].doClose()
+      },
+
+      // 删除当前行的会员
+      handleDelete() {
+
+      },
+
+      // 修改按钮
+      customerModify(){
+
+      },
+
+      // 开卡按钮
+      openCard(){
+
+      },
+
+      // 导出表单
+
+      // 是否会员
       onVipButton() {
         this.buttonType = this.buttonType === '' ? 'primary' : ''
-      },
-      changePage() {}
+      }
     },
     mounted: function () {
-
+      this.getDataList()
     }
   }
 </script>
@@ -134,6 +182,7 @@
   .el-input {
     width: 60%;
   }
+
   .el-row {
     margin-bottom: 40px;
   }
