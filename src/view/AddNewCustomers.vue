@@ -160,6 +160,17 @@
         <el-button type="primary" @click="concelSubmit">取消</el-button>
       </el-col>
     </el-row>
+
+    <!--会员办理提示框-->
+    <el-dialog :visible.sync="dialogVisible" width="30%">
+      <p align="center">保存成功！是否进行会员卡办理?</p>
+      <div slot="footer" class="dialog-footer">
+        <el-button @click="dialogVisible = false">取 消</el-button>
+        <router-link to="/MembershipManagement/MemberProcessing">
+          <el-button type="primary">确 定</el-button>
+        </router-link>
+      </div>
+    </el-dialog>
   </div>
 </template>
 
@@ -208,7 +219,8 @@
           licensePlate:[
             {required: true, message: '请输入手机号码', trigger: 'blur'}
           ]
-        }
+        },
+        dialogVisible: false
       }
     },
     methods: {
@@ -218,7 +230,8 @@
           client: this.clientForm,
           car: this.carInfoForm
         }).then(res=>{
-          this.$router.go(-1)
+          this.dialogVisible = true
+          // this.$router.go(-1)
         })
       },
 
