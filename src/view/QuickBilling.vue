@@ -73,7 +73,8 @@
     <el-card shadow="hover">
       <div slot="header">
         <span>服务项目</span>
-        <el-button type="primary" class="addButton" icon="el-icon-plus" plain @click="projectAddVisible = true">添加</el-button>
+        <el-button type="primary" class="addButton" icon="el-icon-plus" plain @click="projectAddVisible = true">添加
+        </el-button>
       </div>
       <el-table :data="tableData1" show-summary :summary-method="getSummaries" style="width: 100%">
         <el-table-column type="index" label="序号"></el-table-column>
@@ -102,7 +103,8 @@
     <el-card shadow="hover">
       <div slot="header">
         <span>使用配件</span>
-        <el-button type="primary" class="addButton" icon="el-icon-plus" plain @click="fittingAddVisible = true">添加</el-button>
+        <el-button type="primary" class="addButton" icon="el-icon-plus" plain @click="fittingAddVisible = true">添加
+        </el-button>
       </div>
       <el-table :data="tableData2" show-summary :summary-method="getFittingSummaries" style="width: 100%">
         <el-table-column type="index" label="序号"></el-table-column>
@@ -184,9 +186,9 @@
       <!--分页器-->
       <el-row style="height: 80px">
 
-          <pagingDevice
-            :pageData.sync="pageData"
-            @changePage="changePage"></pagingDevice>
+        <pagingDevice
+          :pageData.sync="pageData"
+          @changePage="changePage"></pagingDevice>
       </el-row>
 
 
@@ -248,41 +250,47 @@
     name: 'QuickBilling',
     data() {
       return {
-        visible2:false,
+        visible2: false,
         input: '',
         radio: '否',
         datetime: '',
-        selectOptions: [{
-          value: '选项1',
-          label: '111'
-        }, {
-          value: '选项2',
-          label: '222'
-        }],
+        selectOptions: [
+          {
+            value: '选项1',
+            label: '111'
+          }, {
+            value: '选项2',
+            label: '222'
+          }
+        ],
         selectValue: '',
         faultDescription: '',
-        tableData1: [{
-          projectName: 'a',
-          price: 1,
-          staffName: 'a'
-        }, {
-          projectName: 'b',
-          price: 2,
-          staffName: 'b'
-        }],
-        tableData2: [{
-          type: 'a',
-          name: 'a',
-          people: 'a',
-          count: 2,
-          unitPrice: 5
-        }, {
-          type: 'b',
-          name: 'b',
-          people: 'b',
-          count: 2,
-          unitPrice: 3
-        }],
+        tableData1: [
+          {
+            projectName: 'a',
+            price: 1,
+            staffName: 'a'
+          }, {
+            projectName: 'b',
+            price: 2,
+            staffName: 'b'
+          }
+        ],
+        tableData2: [
+          {
+            type: 'a',
+            name: 'a',
+            people: 'a',
+            count: 2,
+            unitPrice: 5
+          }, {
+            type: 'b',
+            name: 'b',
+            people: 'b',
+            count: 2,
+            unitPrice: 3
+          }
+        ],
         projectAddVisible: false,
         projectAddTable: [{}],
         pageData: {
@@ -291,9 +299,11 @@
           pageTotal: 100
         },
         fittingAddVisible: false,
-        fittingAddTable: [{
-          item: 'yuio'
-        }]
+        fittingAddTable: [
+          {
+            item: 'yuio'
+          }
+        ]
       }
     },
     methods: {
@@ -325,7 +335,8 @@
       getFittingSummaries(param) {
         return this.sum(param, 0, 5, true)
       },
-      changePage() {}
+      changePage() {
+      }
     },
     mounted: function () {
 
