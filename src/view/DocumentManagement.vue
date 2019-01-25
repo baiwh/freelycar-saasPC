@@ -103,7 +103,7 @@
 
         <el-table-column label="单据编号" align="center" show-overflow-tooltip>
           <template slot-scope="scope">
-            <router-link to="/ConsumptionOrder/DocumentDetails">
+            <router-link :to="{path:'/ConsumptionOrder/DocumentDetails',query:{id:scope.row.id}}">
               {{scope.row.id}}
             </router-link>
           </template>

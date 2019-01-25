@@ -2,108 +2,68 @@
   <div>
     <!--接完交状态-->
     <el-card shadow="hover">
-      <div slot="header" class="clearfix">
+      <div slot="header">
         <span>当前状态</span>
       </div>
-      <el-steps process-status="finish" :active="stepActive" finish-status="success">
+      <el-steps process-status="finish" :active="consumerOrder.state" finish-status="success">
         <el-step title="接车"></el-step>
         <el-step title="完成"></el-step>
         <el-step title="交车"></el-step>
       </el-steps>
     </el-card>
 
-    <!--表单模块-->
+    <!--用户信息-->
     <el-card shadow="hover">
-      <el-form :data="carInfoForm" label-width="100px">
-
         <el-row :gutter="20">
-          <el-col :span="8">
-            <el-form-item label="车牌号码：" prop="carNumber">
-              <el-input v-model="carInfoForm.carNumber" disabled size="small"/>
-            </el-form-item>
-          </el-col>
-          <el-col :span="8">
-            <el-form-item label="客户姓名：" prop="clientName">
-              <el-input v-model="carInfoForm.clientName" disabled size="small"/>
-            </el-form-item>
-          </el-col>
-          <el-col :span="8">
-            <el-form-item label="完工时间：" prop="completionTime">
-              <el-input v-model="carInfoForm.completionTime" disabled size="small"/>
-            </el-form-item>
-          </el-col>
+          <el-col :span="8">客户姓名：{{consumerOrder.clientName}}</el-col>
+          <el-col :span="8">手机号码：{{consumerOrder.phone}}</el-col>
+          <el-col :span="8">接车时间：{{consumerOrder.pickTime}}</el-col>
         </el-row>
-
         <el-row :gutter="20">
-          <el-col :span="8">
-            <el-form-item label="车牌型号：" prop="carModel">
-              <el-input v-model="carInfoForm.carModel" disabled size="small"/>
-            </el-form-item>
-          </el-col>
-          <el-col :span="8">
-            <el-form-item label="手机号码：" prop="clientPhone">
-              <el-input v-model="carInfoForm.clientPhone" disabled size="small"/>
-            </el-form-item>
-          </el-col>
-          <el-col :span="8">
-            <el-form-item label="交车时间：" prop="deliveryTime">
-              <el-input v-model="carInfoForm.deliveryTime" disabled size="small"/>
-            </el-form-item>
-          </el-col>
+          <el-col :span="8">车牌号码：{{consumerOrder.licensePlate}}</el-col>
+          <el-col :span="8">上次里程：{{consumerOrder.lastMiles}}km</el-col>
+          <el-col :span="8">完工时间：{{consumerOrder.finishTime}}</el-col>
         </el-row>
-
         <el-row :gutter="20">
-          <el-col :span="8">
-            <el-form-item label="上次里程：" prop="lastMileage">
-              <el-input v-model="carInfoForm.carNumber" disabled size="small"/>
-            </el-form-item>
-          </el-col>
-          <el-col :span="8">
-            <el-form-item label="停车位置：" prop="parkPlace">
-              <el-input v-model="carInfoForm.parkPlace" disabled size="small"/>
-            </el-form-item>
-          </el-col>
+          <el-col :span="8">车牌型号：{{consumerOrder.carBrand}}</el-col>
+          <el-col :span="8">本次里程：{{consumerOrder.miles}}km</el-col>
+          <el-col :span="8">交车时间：{{consumerOrder.deliverTime}}</el-col>
         </el-row>
-
         <el-row :gutter="20">
-          <el-col :span="8">
-            <el-form-item label="本次里程：" prop="thisMileage">
-              <el-input v-model="carInfoForm.carNumber" disabled size="small"/>
-            </el-form-item>
-          </el-col>
-          <el-col :span="8">
-            <el-form-item label="接车时间：" prop="pickUpTime">
-              <el-input v-model="carInfoForm.pickUpTime" disabled size="small"/>
-            </el-form-item>
-          </el-col>
+          <el-col :span="24">停车位置：{{consumerOrder.parkingLocation}}</el-col>
         </el-row>
-
-      </el-form>
-
     </el-card>
 
-    <!--服务项目模块-->
+    <!--故障-->
     <el-card shadow="hover">
-      <div slot="header" class="clearfix">
+      <div slot="header">
+        <span>故障描述</span>
+      </div>
+      <el-row :gutter="20">
+        <el-col :span="24">{{consumerOrder.faultDescription}}</el-col>
+      </el-row>
+    </el-card>
+
+    <!--服务项目-->
+    <el-card shadow="hover">
+      <div slot="header">
         <span>服务项目</span>
       </div>
-      <el-table :data="documentDetailProjectTable" show-summary :summary-method="getProjectSummaries">
+      <el-table :data="consumerProjectInfos" show-summary :summary-method="getProjectSummaries">
         <el-table-column type="index" width="50" label="序号" align="center"/>
-        <el-table-column width="50" align="center"/>
-        <el-table-column property="project" label="项目" align="center"/>
+        <el-table-column property="projectName" label="项目" align="center"/>
         <el-table-column property="price" label="项目价格" align="center"/>
-        <el-table-column property="staff" label="施工人员" align="center"/>
+        <el-table-column property="staffName" label="施工人员" align="center"/>
       </el-table>
     </el-card>
 
-    <!--配件明细模块-->
+    <!--配件明细-->
     <el-card shadow="hover">
-      <div slot="header" class="clearfix">
+      <div slot="header">
         <span>配件明细</span>
       </div>
-      <el-table :data="fittingDetailsTable" show-summary :summary-method="getFittingSummaries">
+      <el-table :data="autoParts" show-summary :summary-method="getFittingSummaries">
         <el-table-column type="index" width="50" label="序号" align="center"/>
-        <el-table-column width="70" align="center"/>
         <el-table-column property="fittingCategory" label="配件类别" align="center"/>
         <el-table-column property="fittingName" label="配件名称" align="center"/>
         <el-table-column property="number" label="数量" align="center"/>
@@ -116,12 +76,10 @@
     <el-card shadow="hover">
       <el-row>
         <el-col :span="6" :offset="18">
-          订单金额：
-          <el-input :value="wholeAmount" size="small" class="inputWidth red" disabled/>
+          订单金额：<span class="red">{{consumerOrder.totalPrice}}</span>
         </el-col>
-        <el-col :span="6" :offset="18" class="marginTop">
-          支付金额：
-          <el-input :value="payAmounts" size="small" class="inputWidth red" disabled/>
+        <el-col :span="6" :offset="18">
+          支付金额：<span class="red">{{consumerOrder.actualPrice}}</span>
         </el-col>
       </el-row>
     </el-card>
@@ -129,7 +87,7 @@
     <!--确定按钮-->
     <el-row>
       <el-col :span="6" :offset="18">
-        <el-button type="primary" class="buttonStyle">返回</el-button>
+        <el-button type="primary" class="buttonStyle" @click="$router.go(-1)">返回</el-button>
       </el-col>
     </el-row>
   </div>
@@ -140,58 +98,45 @@
     name: 'DocumentDetails',
     data() {
       return {
-        carInfoForm: {
-          carNumber: '',
-          carModel: '',
-          lastMileage: '',
-          thisMileage: '',
+        consumerOrder: {
+          licensePlate: '',
           clientName: '',
-          clientPhone: '',
-          parkPlace: '',
-          pickUpTime: '',
-          completionTime: '',
-          deliveryTime: ''
+          finishTime: '',
+          carBrand: '',
+          phone: '',
+          deliverTime: '',
+          lastMiles: '',
+          parkingLocation: '',
+          miles: '',
+          pickTime: ''
         },
-        documentDetailProjectTable: [{
-          project: '维修维修维修',
-          price: '554',
-          staff: '张三'
-        }, {
-          project: '洗车',
-          price: '20',
-          staff: '李四'
-        }, {
-          project: '维修',
-          price: '123',
-          staff: '王五'
-        }, {
-          project: '维修',
-          price: '11',
-          staff: '赵六'
-        }],
-        fittingDetailsTable: [{
-          fittingCategory: '机油',
-          fittingName: '嘉实多机油',
-          number: '20',
-          perPrice: '1',
-          sumPrice: '20.00'
-        }],
-        wholeAmount: '25',
-        payAmounts: '0',
-        stepActive: 1,
+        consumerProjectInfos: [],
+        autoParts: [],
         stepStatus: 'wait'
       }
     },
     methods: {
+      // 获取订单详情
+      getOrderDetail(id){
+        this.$get('/order/detail',{
+          id: id
+        }).then(res=>{
+          console.log(res)
+          this.consumerOrder = res.consumerOrder
+          this.consumerProjectInfos = res.consumerProjectInfos
+          this.autoParts = res.autoParts
+        })
+      },
+
+      // 计算服务项目的总价
       getProjectSummaries(param) {
-        // 计算服务项目的总价
         const {columns, data} = param
         const sums = []
         columns.forEach((column, index) => {
-          if (index === 1) {
+          if (index === 0) {
             sums[index] = '合计'
             return
-          } else if (index === 3) {
+          } else if (index === 2) {
             const values = data.map(item => Number(item.price))
             sums[index] = values.reduce((prev, curr) => prev + curr)
           }
@@ -199,12 +144,13 @@
         console.log('sums:', sums)
         return sums
       },
+
+      // 计算配件明细的总价
       getFittingSummaries(param) {
-        // 计算配件明细的总价
         const {columns, data} = param
         const sums = []
         columns.forEach((column, index) => {
-          if (index === 1) {
+          if (index === 0) {
             sums[index] = '合计'
             return
           } else if (index === columns.length - 1) {
@@ -216,7 +162,7 @@
       }
     },
     mounted: function () {
-
+      this.getOrderDetail(this.$route.query.id)
     }
   }
 </script>
@@ -226,27 +172,13 @@
     margin-bottom: 40px;
   }
 
-  .marginTop {
-    margin-top: 20px;
+  .el-row{
+    margin: 20px 0;
   }
 
-  .clearfix:before,
-  .clearfix:after {
-    display: table;
-    content: "";
-  }
-
-  .clearfix:after {
-    clear: both
-  }
-
-  .inputWidth {
-    width: 50%;
-  }
-
-  .red /deep/ .el-input__inner {
+  .red {
     color: red !important;
-    font-size: 18px;
+    font-size: 30px;
     font-weight: 700;
   }
 
