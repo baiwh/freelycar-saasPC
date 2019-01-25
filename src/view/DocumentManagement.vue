@@ -20,7 +20,7 @@
           </el-col>
           <el-col :span="7" :offset="1">
             <span>车辆状态：</span>
-            <el-radio-group v-model="form.orderState" size="small" class="circle">
+            <el-radio-group v-model="form.orderState" size="small" class="circle" @change="getDataList">
               <el-radio-button v-for="item in orderStateOption" :key="item.label"
                                :label="item.label">{{item.value}}
               </el-radio-button>
