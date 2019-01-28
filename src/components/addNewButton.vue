@@ -1,5 +1,5 @@
 <template>
-  <el-button round type="primary" plain icon="el-icon-plus" size="small" @click="handleClick"></el-button>
+  <el-button circle type="primary" plain icon="el-icon-plus" size="small" @click="handleClick"></el-button>
 </template>
 
 <script>

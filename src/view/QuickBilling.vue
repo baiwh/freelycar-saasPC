@@ -4,45 +4,45 @@
     <el-card shadow="hover">
       <el-row :gutter="60">
         <el-col :span="8">车牌号码：
-          <el-input v-model="input" placeholder="请输入内容"></el-input>
+          <el-input v-model="consumerOrder.licensePlate" size="small" placeholder="请输入内容"></el-input>
           <router-link to="/MembershipManagement/AddNewCustomers">
             <addNewButton></addNewButton>
           </router-link>
         </el-col>
         <el-col :span="8">客户管理：
-          <el-input v-model="input" disabled></el-input>
+          <el-input v-model="consumerOrder.clientName" size="small" disabled></el-input>
           <router-link to="/MembershipManagement/AddNewCustomers">
             <addNewButton></addNewButton>
           </router-link>
         </el-col>
         <el-col :span="8">是否会员：
-          <el-radio disabled v-model="radio" label="是">会员</el-radio>
-          <el-radio disabled v-model="radio" label="否">非会员</el-radio>
+          <el-radio disabled v-model="consumerOrder.isMember" label="true">会员</el-radio>
+          <el-radio disabled v-model="consumerOrder.isMember" label="false">非会员</el-radio>
         </el-col>
       </el-row>
       <el-row :gutter="60">
         <el-col :span="8">品牌型号：
-          <el-input v-model="input" disabled></el-input>
+          <el-input v-model="consumerOrder.carBrand" size="small" disabled></el-input>
         </el-col>
         <el-col :span="8">手机号码：
-          <el-input v-model="input" disabled></el-input>
+          <el-input v-model="consumerOrder.phone" size="small" disabled></el-input>
         </el-col>
         <el-col :span="8">接车时间：
-          <el-date-picker v-model="datetime" type="datetime"
+          <el-date-picker size="small" v-model="consumerOrder.pickTime" type="datetime"
                           placeholder="选择日期时间"></el-date-picker>
         </el-col>
       </el-row>
       <el-row :gutter="60">
         <el-col :span="8">上次里程：
-          <el-input v-model="input" disabled></el-input>
+          <el-input size="small" v-model="consumerOrder.lastMiles" disabled></el-input>
           /km
         </el-col>
         <el-col :span="8">历史消费：
-          <el-input v-model="input" disabled></el-input>
+          <el-input size="small" v-model="consumerOrder.a" disabled></el-input>
           /元
         </el-col>
         <el-col :span="8">接车人员：
-          <el-select v-model="selectValue" placeholder="请选择">
+          <el-select size="small" v-model="consumerOrder.b" placeholder="请选择">
             <el-option v-for="item in selectOptions" :key="item.value" :label="item.label"
                        :value="item.value"></el-option>
           </el-select>
@@ -50,11 +50,11 @@
       </el-row>
       <el-row :gutter="60">
         <el-col :span="8">本次里程：
-          <el-input v-model="input" placeholder="请输入内容"></el-input>
+          <el-input size="small" v-model="consumerOrder.miles" placeholder="请输入内容"></el-input>
           /km
         </el-col>
         <el-col :span="8">剩余金额：
-          <el-input v-model="input" disabled></el-input>
+          <el-input size="small" v-model="consumerOrder.c" disabled></el-input>
           /元
         </el-col>
       </el-row>
@@ -73,7 +73,8 @@
     <el-card shadow="hover">
       <div slot="header">
         <span>服务项目</span>
-        <el-button type="primary" class="addButton" icon="el-icon-plus" plain @click="projectAddVisible = true">添加
+        <el-button type="primary" size="small" class="addButton" icon="el-icon-plus"
+                   plain @click="projectAddVisible = true">添加
         </el-button>
       </div>
       <el-table :data="tableData1" show-summary :summary-method="getSummaries" style="width: 100%">
@@ -103,7 +104,8 @@
     <el-card shadow="hover">
       <div slot="header">
         <span>使用配件</span>
-        <el-button type="primary" class="addButton" icon="el-icon-plus" plain @click="fittingAddVisible = true">添加
+        <el-button type="primary" size="small" class="addButton" icon="el-icon-plus"
+                   plain @click="fittingAddVisible = true">添加
         </el-button>
       </div>
       <el-table :data="tableData2" show-summary :summary-method="getFittingSummaries" style="width: 100%">
@@ -154,7 +156,7 @@
       <el-row>
         <el-col :span="10">
           <span>项目名称：</span>
-          <el-input v-model="input"></el-input>
+          <el-input v-model="itemName"></el-input>
         </el-col>
         <el-col :span="10">
           <span>项目类别：</span>
@@ -172,23 +174,21 @@
         </el-col>
       </el-row>
 
-      <el-table :data="projectAddTable">
+      <el-table :data="serviceList">
         <el-table-column type="selection"></el-table-column>
         <el-table-column type="index" label="序号"></el-table-column>
-        <el-table-column prop="projectName" label="项目名称"></el-table-column>
-        <el-table-column prop="item" label="项目类别"></el-table-column>
+        <el-table-column prop="name" label="项目名称"></el-table-column>
+        <el-table-column prop="projectType" label="项目类别"></el-table-column>
         <el-table-column prop="price" label="项目价格"></el-table-column>
-        <el-table-column prop="reference" label="参考"></el-table-column>
-        <el-table-column prop="hour" label="工时"></el-table-column>
-        <el-table-column prop="tips" label="备注"></el-table-column>
+        <el-table-column prop="referWorkTime" label="参考工时"></el-table-column>
+        <el-table-column prop="pricePerUnit" label="工时单价"></el-table-column>
+        <el-table-column prop="comment" label="备注" show-overflow-tooltip></el-table-column>
       </el-table>
 
       <!--分页器-->
       <el-row style="height: 80px">
-
         <pagingDevice
-          :pageData.sync="pageData"
-          @changePage="changePage"></pagingDevice>
+          :pageData.sync="pageData" @changePage="getServiceList"></pagingDevice>
       </el-row>
 
 
@@ -197,7 +197,6 @@
         <el-button type="primary" @click="projectAddVisible = false">确 定</el-button>
       </div>
     </el-dialog>
-
 
     <!--适用配件-添加模态框-->
     <el-dialog title="配件添加" :visible.sync="fittingAddVisible" width="80%">
@@ -251,7 +250,46 @@
     data() {
       return {
         visible2: false,
+        loading: false,
         input: '',
+        itemName:'',
+        selectValue:'',
+        consumerOrder: {
+          licensePlate: "牛B74DSB",
+          carBrand: "别克凯越",
+          lastMiles: 2222,
+          miles: 3333,
+          clientName: "李四",
+          phone: "18918907788",
+          isMember: true,
+          pickTime: "2019-01-04T09:39:16.170+0000",
+          a: '',
+          b: '',
+          c: '',
+          carType: "2016自动挡",
+          storeId: "1",
+          carId: "4028802767e9302a0167e935f2c40003",
+          clientId: "4028802767e9302a0167e935f2ab0002",
+          pickCarStaffId: "4028a18167ce66590167ce683ac60000",
+          faultDescription: ""
+        },
+        consumerProjectInfos: [
+          {
+            projectId: "4028a18167aac8410167aacec2010004",
+            projectName: "打蜡1",
+            staffId: "4028a18167ce66590167ce6881300001",
+            staffName: "张四"
+          }
+        ],
+        autoParts: [
+          {
+            type: "耗材",
+            name: "xx车蜡",
+            count: 2,
+            unitPrice: 25.5,
+            totalPrice: 51
+          }
+        ],
         radio: '否',
         datetime: '',
         selectOptions: [
@@ -263,7 +301,6 @@
             label: '222'
           }
         ],
-        selectValue: '',
         faultDescription: '',
         tableData1: [
           {
@@ -292,7 +329,7 @@
           }
         ],
         projectAddVisible: false,
-        projectAddTable: [{}],
+        serviceList: [],
         pageData: {
           currentPage: 1,
           pageSize: 10,
@@ -307,6 +344,23 @@
       }
     },
     methods: {
+      // 获取项目管理列表
+      getServiceList() {
+        this.$get('/project/list?', {
+          storeId: 1,
+          currentPage: this.pageData.currentPage,
+          pageSize: this.pageData.pageSize,
+          name: this.itemName,
+          projectTypeId: this.selectValue
+        }).then((res) => {
+          this.loading = false
+          this.serviceList = res.data
+          this.pageData.currentPage = res.currentPage
+          this.pageData.pageSize = res.pageSize
+          this.pageData.pageTotal = res.total
+        })
+      },
+
       handleDelete() {
         console.log('this', this.radio)
       },
@@ -339,7 +393,7 @@
       }
     },
     mounted: function () {
-
+      this.getServiceList()
     }
   }
 </script>
