@@ -43,7 +43,7 @@
         </el-col>
         <el-col :span="8">接车人员：
           <el-select size="small" v-model="consumerOrder.b" placeholder="请选择">
-            <el-option v-for="item in selectOptions" :key="item.value" :label="item.label"
+            <el-option v-for="item in staffName" :key="item.value" :label="item.label"
                        :value="item.value"></el-option>
           </el-select>
         </el-col>
@@ -77,7 +77,7 @@
                    plain @click="projectAddVisible = true">添加
         </el-button>
       </div>
-      <el-table :data="tableData1" show-summary :summary-method="getSummaries" style="width: 100%">
+      <el-table :data="consumerProjectInfos" show-summary :summary-method="getSummaries" style="width: 100%">
         <el-table-column type="index" label="序号"></el-table-column>
         <el-table-column prop="projectName" label="项目名称"></el-table-column>
         <el-table-column prop="price" label="项目价格"></el-table-column>
@@ -101,14 +101,14 @@
     </el-card>
 
     <!--第四部分。使用配件-->
-    <el-card shadow="hover">
+    <el-card shadow="hover" v-show="consumerProjectInfos.length>0">
       <div slot="header">
         <span>使用配件</span>
         <el-button type="primary" size="small" class="addButton" icon="el-icon-plus"
                    plain @click="fittingAddVisible = true">添加
         </el-button>
       </div>
-      <el-table :data="tableData2" show-summary :summary-method="getFittingSummaries" style="width: 100%">
+      <el-table :data="accessoriesList" show-summary :summary-method="getFittingSummaries" style="width: 100%">
         <el-table-column type="index" label="序号"></el-table-column>
         <el-table-column prop="type" label="配件类别"></el-table-column>
         <el-table-column prop="name" label="配件名称"></el-table-column>
@@ -160,25 +160,25 @@
         </el-col>
         <el-col :span="10">
           <span>项目类别：</span>
-          <el-select v-model="selectValue" placeholder="请选择项目类别">
+          <el-select v-model="selectValue" clearable  placeholder="请选择项目类别">
             <el-option
-              v-for="item in selectOptions"
-              :key="item.value"
-              :label="item.label"
-              :value="item.value">
+              v-for="item in projectType"
+              :key="item.id"
+              :label="item.name"
+              :value="item.id">
             </el-option>
           </el-select>
         </el-col>
         <el-col :span="4">
-          <el-button type="primary">查询</el-button>
+          <el-button type="primary" @click="getServiceList">查询</el-button>
         </el-col>
       </el-row>
 
-      <el-table :data="serviceList">
+      <el-table :data="serviceList" @selection-change="handleSelectionChange">>
         <el-table-column type="selection"></el-table-column>
         <el-table-column type="index" label="序号"></el-table-column>
         <el-table-column prop="name" label="项目名称"></el-table-column>
-        <el-table-column prop="projectType" label="项目类别"></el-table-column>
+        <el-table-column prop="projectTypeId" label="项目类别" :formatter="projectTypeFormat"></el-table-column>
         <el-table-column prop="price" label="项目价格"></el-table-column>
         <el-table-column prop="referWorkTime" label="参考工时"></el-table-column>
         <el-table-column prop="pricePerUnit" label="工时单价"></el-table-column>
@@ -215,7 +215,7 @@
           <template slot-scope="scope">
             <el-select v-model="scope.row[scope.column.property]" placeholder="请选择数量">
               <el-option
-                v-for="item in selectOptions"
+                v-for="item in projectType"
                 :key="item.value"
                 :label="item.label"
                 :value="item.value">
@@ -278,7 +278,8 @@
             projectId: "4028a18167aac8410167aacec2010004",
             projectName: "打蜡1",
             staffId: "4028a18167ce66590167ce6881300001",
-            staffName: "张四"
+            staffName: "张四",
+            price:10
           }
         ],
         autoParts: [
@@ -290,44 +291,12 @@
             totalPrice: 51
           }
         ],
+        accessoriesList:[],
         radio: '否',
         datetime: '',
-        selectOptions: [
-          {
-            value: '选项1',
-            label: '111'
-          }, {
-            value: '选项2',
-            label: '222'
-          }
-        ],
+        projectType: [],
+        staffName:[],
         faultDescription: '',
-        tableData1: [
-          {
-            projectName: 'a',
-            price: 1,
-            staffName: 'a'
-          }, {
-            projectName: 'b',
-            price: 2,
-            staffName: 'b'
-          }
-        ],
-        tableData2: [
-          {
-            type: 'a',
-            name: 'a',
-            people: 'a',
-            count: 2,
-            unitPrice: 5
-          }, {
-            type: 'b',
-            name: 'b',
-            people: 'b',
-            count: 2,
-            unitPrice: 3
-          }
-        ],
         projectAddVisible: false,
         serviceList: [],
         pageData: {
@@ -340,11 +309,23 @@
           {
             item: 'yuio'
           }
-        ]
+        ],
+        multipleSelection:[]
       }
     },
     methods: {
-      // 获取项目管理列表
+      // 获取项目类别列表
+      getProjectType() {
+        this.$get('/projectType/list', {
+          storeId: 1,
+          currentPage: 1,
+          pageSize: 1000
+        }).then((res) => {
+          this.projectType = res.data
+        })
+      },
+
+      // 获取项目列表
       getServiceList() {
         this.$get('/project/list?', {
           storeId: 1,
@@ -360,6 +341,66 @@
           this.pageData.pageTotal = res.total
         })
       },
+
+      // 项目名称过滤器
+      projectTypeFormat(row){
+        let name = ''
+        this.projectType.filter(v=>{
+          if(v.id===row.projectTypeId){
+            name = v.name
+          }
+        })
+        return name
+      },
+
+      // 多选
+      handleSelectionChange(val) {
+        this.multipleSelection = val
+        console.log(val)
+      },
+
+      // 保存快速开单
+      submitOrder(){
+        this.$post('/order/handleOrder',{
+          consumerOrder: {
+            licensePlate: "牛B74DSB",
+            carBrand: "别克凯越",
+            carType: "2016自动挡",
+            storeId: "1",
+            carId: "4028802767e9302a0167e935f2c40003",
+            lastMiles: 2222,
+            miles: 3333,
+            clientId: "4028802767e9302a0167e935f2ab0002",
+            clientName: "李四",
+            phone: "18918907788",
+            isMember: true,
+            pickTime: "2019-01-04T09:39:16.170+0000",
+            pickCarStaffId: "4028a18167ce66590167ce683ac60000",
+            faultDescription: ""
+          },
+          consumerProjectInfos: [
+            {
+              projectId: "4028a18167aac8410167aade77980009",
+              projectName: "普洗",
+              staffId: "297ede6067e3520b0167e3539eb70000",
+              staffName: "张五"
+            }
+          ],
+          autoParts: [
+            {
+              type: "耗材",
+              name: "xx车蜡",
+              count: 2,
+              unitPrice: 25.5,
+              totalPrice: 51
+            }
+          ]
+        }).then(res=>{
+
+        })
+      },
+
+
 
       handleDelete() {
         console.log('this', this.radio)
@@ -394,6 +435,7 @@
     },
     mounted: function () {
       this.getServiceList()
+      this.getProjectType()
     }
   }
 </script>
