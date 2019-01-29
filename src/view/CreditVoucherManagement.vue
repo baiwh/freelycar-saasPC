@@ -90,8 +90,8 @@
         <el-col :span="5" :offset="2">项目：</el-col>
         <el-col :span="17">
           <el-select v-model="dialog.project" placeholder="请选择" style="width: 80%">
-            <el-option v-for="item in selectOptions1" :key="item.value" :label="item.label"
-                       :value="item.value"></el-option>
+            <el-option v-for="item in serviceList" :key="item.id" :label="item.name"
+                       :value="item.id"></el-option>
           </el-select>
         </el-col>
       </el-row>
@@ -116,6 +116,55 @@
         <el-button type="primary" @click="submit">确 定</el-button>
       </div>
     </el-dialog>
+
+    <!--服务项目-添加模态框-->
+    <el-dialog title="项目查询" :visible.sync="projectShow" width="80%">
+      <!--条件查询-->
+      <el-row>
+        <el-col :span="10">
+          <span>项目名称：</span>
+          <el-input v-model="itemName"></el-input>
+        </el-col>
+        <el-col :span="10">
+          <span>项目类别：</span>
+          <el-select v-model="selectValue" clearable placeholder="请选择项目类别">
+            <el-option
+              v-for="item in projectType"
+              :key="item.id"
+              :label="item.name"
+              :value="item.id">
+            </el-option>
+          </el-select>
+        </el-col>
+        <el-col :span="4">
+          <el-button type="primary" @click="getServiceList">查询</el-button>
+        </el-col>
+      </el-row>
+
+      <el-table :data="serviceList" @selection-change="ServiceListChange">>
+        <el-table-column type="selection"></el-table-column>
+        <el-table-column type="index" label="序号"></el-table-column>
+        <el-table-column prop="name" label="项目名称"></el-table-column>
+        <el-table-column prop="projectTypeId" label="项目类别" :formatter="projectTypeFormat"></el-table-column>
+        <el-table-column prop="price" label="项目价格"></el-table-column>
+        <el-table-column prop="referWorkTime" label="参考工时"></el-table-column>
+        <el-table-column prop="pricePerUnit" label="工时单价"></el-table-column>
+        <el-table-column prop="comment" label="备注" show-overflow-tooltip></el-table-column>
+      </el-table>
+
+      <!--分页器-->
+      <el-row style="height: 80px">
+        <pagingDevice
+          :pageData.sync="pageData2" @changePage="getServiceList"></pagingDevice>
+      </el-row>
+
+
+      <div slot="footer" class="dialog-footer">
+        <el-button @click="projectAddVisible = false">取 消</el-button>
+        <el-button type="primary" @click="projectAddVisible = false">确 定</el-button>
+      </div>
+    </el-dialog>
+
   </div>
 </template>
 
@@ -134,6 +183,11 @@
           pageSize: 10,
           pageTotal: 1000
         },
+        pageData2: {
+          currentPage: 1,
+          pageSize: 10,
+          pageTotal: 10
+        },
         newOrChange: '',
         isShow: false,
         dialog: {
@@ -147,11 +201,39 @@
           label: '1',
           value: '1'
         }],
-        selectOptions2: [{
-          label: '2',
-          value: '2'
-        }],
+        selectOptions2: [
+          {
+            label: '1',
+            value: '1'
+          },
+          {
+            label: '2',
+            value: '2'
+          },
+          {
+            label: '3',
+            value: '3'
+          },
+          {
+            label: '4',
+            value: '4'
+          },
+          {
+            label: '12',
+            value: '12'
+          },
+          {
+            label: '永久',
+            value: '0'
+          }
+        ],
         isModify: false,
+        projectType: [],
+        serviceList: [],
+        itemName: '',
+        selectValue: '',
+        projectShow: false,
+        ServiceSelection: []
       }
     },
     methods: {
@@ -169,6 +251,50 @@
           this.pageData.pageSize = res.pageSize
           this.pageData.pageTotal = res.total
         })
+      },
+
+      // 获取项目类别列表
+      getProjectType() {
+        this.$get('/projectType/list', {
+          storeId: 1,
+          currentPage: 1,
+          pageSize: 1000
+        }).then((res) => {
+          this.projectType = res.data
+        })
+      },
+
+      // 获取项目列表
+      getServiceList() {
+        this.$get('/project/list?', {
+          storeId: 1,
+          currentPage: this.pageData2.currentPage,
+          pageSize: this.pageData2.pageSize,
+          name: this.itemName,
+          projectTypeId: this.selectValue
+        }).then((res) => {
+          this.loading = false
+          this.serviceList = res.data
+          this.pageData2.currentPage = res.currentPage
+          this.pageData2.pageSize = res.pageSize
+          this.pageData2.pageTotal = res.total
+        })
+      },
+
+      // 关联项目多选
+      ServiceListChange(val) {
+        this.ServiceSelection = val;
+      },
+
+      // 项目名称过滤器
+      projectTypeFormat(row){
+        let name = ''
+        this.projectType.filter(v=>{
+          if(v.id===row.projectTypeId){
+            name = v.name
+          }
+        })
+        return name
       },
 
       // table多选功能
@@ -224,7 +350,19 @@
 
       // 批量删除
       allDelete() {
-
+        let ids = []
+        this.multipleSelection.filter(v => {
+          ids.push(v.id)
+        })
+        this.$post('/couponService/batchDelete',{
+          ids:ids.join(',')
+        }).then(res=>{
+          this.$message({
+            message: '批量删除成功',
+            type: 'success'
+          })
+          this.getDataList()
+        })
       },
 
       // 新增抵用券
@@ -236,13 +374,13 @@
           project: '',
           validTime: '',
           content: '',
-          id:'',
-          projectId:''
+          id: '',
+          projectId: ''
         }
-          this.isShow = true
+        this.isShow = true
       },
 
-      // 修改抵用券
+      // 修改抵用券打开弹框
       modifyCard(row) {
         this.isModify = true
         this.dialogLoading = true
@@ -280,6 +418,8 @@
     },
     mounted: function () {
       this.getDataList()
+      this.getProjectType()
+      this.getServiceList()
     }
   }
 </script>
