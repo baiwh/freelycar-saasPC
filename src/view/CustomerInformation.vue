@@ -129,7 +129,7 @@
       </el-table>
       <el-row>
         <el-col :span="2" :offset="22">
-          <el-button type="text">更多</el-button>
+          <el-button type="text" @click="$router.push({path:'/MembershipManagement/ExpensesRecord',query:{id:$route.query.id}})">更多</el-button>
         </el-col>
       </el-row>
     </el-card>
@@ -418,7 +418,7 @@
       }
     },
     mounted: function () {
-
+      console.log(this.$route.query.id)
     }
   }
 </script>

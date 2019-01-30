@@ -58,11 +58,12 @@
             <el-option v-for="item in usableCardOptions" :key="item.value" :label="item.label" :value="item.value"/>
           </el-select>
         </el-col>
-        <el-col :span="8">
+        <el-col :span="7">
           <span class="fontSize">扣除金额：</span>
           <el-input v-model="deductionAmounts" size="small" class="inputWidth red"/>
-          <el-button round type="primary" plain icon="el-icon-plus"
-                     @click="handlePlusIconClick" size="small"></el-button>
+        </el-col>
+        <el-col :span="1">
+          <add-new-button @click="handlePlusIconClick"></add-new-button>
         </el-col>
       </el-row>
 
@@ -79,15 +80,24 @@
             <span class="fontSize">支付金额：</span>
             <el-input v-model="payAmounts" size="small" class="inputWidth red"/>
           </el-col>
-          <el-col :span="2" :offset="6">
-            <i class="el-icon-remove-outline" @click="handleRemoveIconClick"></i>
+          <el-col :span="1" :offset="7">
+            <add-new-button :minus="true" @click="handleRemoveIconClick"></add-new-button>
           </el-col>
         </el-row>
       </div>
 
       <!--确定按钮-->
-      <div class="buttonStyle">
-        <el-button type="primary" size="small" style="margin: 40px">确定</el-button>
+      <el-row>
+        <el-col :span="5" :offset="8">
+          <el-button type="primary" size="small" @click="orderPayment">确定</el-button>
+        </el-col>
+        <el-col :span="5">
+          <el-button type="primary" size="small" @click="pendingOrder">结算</el-button>
+        </el-col>
+      </el-row>
+      <div>
+
+
       </div>
     </el-card>
 
@@ -161,6 +171,22 @@
       }
     },
     methods: {
+      // 挂单
+      pendingOrder() {
+        this.$post('/order/pendingOrder',{
+
+        }).then(res=>{
+
+        })
+      },
+      // 结算
+      orderPayment() {
+        this.$post('/order/payment',{
+
+        }).then(res=>{
+
+        })
+      },
       getProjectSummaries(param) {
         // 计算服务项目的总价
         const {columns, data} = param
@@ -225,6 +251,10 @@
     margin-bottom: 40px;
   }
 
+  .el-row {
+    margin: 30px 0;
+  }
+
   .fontSize {
     font-size: 14px;
   }
@@ -235,12 +265,6 @@
 
   .paymentInput {
     margin-bottom: 40px;
-  }
-
-  .buttonStyle {
-    width: 200px;
-    text-align: center;
-    margin: 0 auto;
   }
 
   .red /deep/ .el-input__inner {

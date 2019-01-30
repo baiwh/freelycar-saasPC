@@ -92,7 +92,7 @@
             </el-form-item>
           </el-col>
           <el-col :span="1">
-            <addNewButton @newButtonClick="handleShow"></addNewButton>
+            <addNewButton @click="handleShow"></addNewButton>
           </el-col>
         </el-row>
 

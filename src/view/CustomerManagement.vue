@@ -41,7 +41,13 @@
     <!--客户表格-->
     <el-table :data="tableData" border v-loading="loading">
       <el-table-column label="序号" type="index" align="center"></el-table-column>
-      <el-table-column prop="name" label="姓名" align="center"></el-table-column>
+      <el-table-column prop="name" label="姓名" align="center">
+        <template slot-scope="scope">
+          <router-link :to="{path:'/MembershipManagement/CustomerInformation',query:{id:scope.row.id}}">
+            {{scope.row.name}}
+          </router-link>
+        </template>
+      </el-table-column>
       <el-table-column prop="phone" label="手机号码" align="center"></el-table-column>
       <el-table-column prop="plates" label="车牌号码" align="center"></el-table-column>
       <el-table-column prop="brands" label="品牌" align="center"></el-table-column>
@@ -54,7 +60,7 @@
           <router-link to="/MembershipManagement/MemberProcessing">
             <el-button size="mini" type="primary">开卡</el-button>
           </router-link>
-          <router-link to="/MembershipManagement/AddNewCustomers">
+          <router-link to="/MembershipManagement/ModifyCustomers">
             <el-button size="mini" type="primary">修改</el-button>
           </router-link>
           <el-popover
@@ -179,6 +185,10 @@
 </script>
 
 <style lang="less" scoped>
+  a{
+    color: #409EFF;
+    text-decoration: none;
+  }
   .el-input {
     width: 60%;
   }

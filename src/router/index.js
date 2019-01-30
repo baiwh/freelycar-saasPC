@@ -18,6 +18,7 @@ import DocumentDetails from '@/view/DocumentDetails'
 // 会员管理
 import CustomerManagement from '@/view/CustomerManagement'
 import AddNewCustomers from '@/view/AddNewCustomers'
+import ModifyCustomers from '@/view/ModifyCustomers'
 import CustomerInformation from '@/view/CustomerInformation'
 import ExpensesRecord from '@/view/ExpensesRecord'
 import MemberProcessing from '@/view/MemberProcessing'
@@ -93,6 +94,11 @@ export default new Router({
               path: 'AddNewCustomers',
               name: '新增客户',
               component:AddNewCustomers
+            },
+            {
+              path: 'ModifyCustomers',
+              name: '修改客户信息',
+              component:ModifyCustomers
             },
             {
               path: 'CustomerInformation',
