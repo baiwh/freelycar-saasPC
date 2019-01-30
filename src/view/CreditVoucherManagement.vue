@@ -34,10 +34,7 @@
       <el-table-column label="操作" width="150">
         <template slot-scope="scope">
           <el-button size="mini" type="primary" @click="modifyCard(scope.row)">修改</el-button>
-          <el-popover
-            placement="top"
-            width="160"
-            :ref="scope.$index">
+          <el-popover placement="top" width="160" :ref="scope.$index">
             <p>确定删除本条数据？</p>
             <div style="text-align: right; margin: 0">
               <el-button size="mini" type="text" @click="handleClose(scope.$index)">取消</el-button>
@@ -49,11 +46,7 @@
       </el-table-column>
       <el-table-column prop="up" label="上架/下架">
         <template slot-scope="scope">
-          <el-popover
-            placement="top"
-            width="160"
-            :ref="scope.row.id"
-          >
+          <el-popover placement="top" width="160" :ref="scope.row.id">
             <p>确定进行{{scope.row.bookOnline? '下架' : '上架'}}？</p>
             <div style="text-align: right; margin: 0">
               <el-button size="mini" type="text" @click="handleClose(scope.row.id)">取消</el-button>
