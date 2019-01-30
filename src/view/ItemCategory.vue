@@ -372,7 +372,19 @@
 
       // 批量删除项目
       allDelete() {
-
+        let ids = []
+        this.multipleSelection.filter(v => {
+          ids.push(v.id)
+        })
+        this.$post('/project/batchDelete',{
+          ids:ids.join(',')
+        }).then(res=>{
+          this.$message({
+            message: '批量删除成功',
+            type: 'success'
+          })
+          this.getDataList()
+        })
       },
 
       // 上传导入文件
