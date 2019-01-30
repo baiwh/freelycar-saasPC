@@ -1,13 +1,16 @@
 <template>
-  <el-button circle type="primary" plain icon="el-icon-plus" size="small" @click="handleClick"></el-button>
+  <el-button circle type="primary" plain :icon="minus?'el-icon-minus':'el-icon-plus'" size="small" @click="fatherClick"></el-button>
 </template>
 
 <script>
   export default {
     name: 'addNewButton',
+    props:{
+      minus:false
+    },
     methods: {
-      handleClick() {
-        this.$emit('newButtonClick')
+      fatherClick() {
+        this.$emit('click')
       }
     }
   }
