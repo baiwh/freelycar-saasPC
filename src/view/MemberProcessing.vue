@@ -41,7 +41,8 @@
         <el-row>
           <el-col>
             <el-form-item label="品牌车系：" prop="clientBrandCar">
-              <addNewButton></addNewButton>
+              <el-input v-model="clientForm.clientBrandCar" disabled></el-input>
+              <addNewButton @click="carBrandShow = true"></addNewButton>
             </el-form-item>
           </el-col>
         </el-row>
@@ -50,8 +51,8 @@
           <el-col :span="11">
             <el-form-item label="车辆型号：">
               <el-select v-model="clientForm.clientVehicleModel" placeholder="请选择车辆型号">
-                <el-option v-for="item in vehicleModelOptions" :key="item.index" :label="item.vehicleModel"
-                           :value="item.vehicleModel"/>
+                <el-option v-for="item in carTypeList" :key="item.type" :label="item.type"
+                           :value="item.type"/>
               </el-select>
             </el-form-item>
           </el-col>
@@ -151,8 +152,35 @@
       </el-row>
     </el-card>
 
+    <!--添加车型-->
+    <el-dialog title="品牌车系" v-loading="dialogLoading" :visible.sync="carBrandShow">
+
+      <!--拼音首字母-->
+      <div class="pinyin">
+        <span :class="pinyinZimu===item?'pinyin-zimu choose-pinyin':'pinyin-zimu'"
+              v-for="(item,index) in pinyin"
+              @click="getCarBrandByPinyin(item)">{{item}}</span>
+      </div>
+
+      <!--品牌-->
+      <div class="brand-list" v-show="carBrandList.length>0">
+        <div v-for="(item,index) in carBrandList"
+             :class="carBrandId===item.id?'brand-list-item choose-brand':'brand-list-item'"
+             @click="getCarBrand(item)">
+          <img :src="'/static/images/'+item.brand+'.jpg'" :alt="item.brand">
+          <span>{{item.brand}}</span>
+        </div>
+      </div>
+
+      <!--具体型号-->
+      <div class="car-type" v-show="carTypeList.length>0">
+        <span v-for="(item,index) in carTypeList" @click="chooseCarType(item)">{{item.type}}</span>
+      </div>
+
+    </el-dialog>
+
     <!--新增会员卡-->
-    <el-dialog title="新增会员卡" :visible.sync="isShow">
+    <el-dialog title="新增会员卡" v-loading="dialogLoading" :visible.sync="isShow">
       <el-row>
         <el-col :span="3" :offset="3">卡类名称：</el-col>
         <el-col :span="18">
@@ -180,7 +208,7 @@
       <el-row style="margin-top: 20px;">
         <el-col :span="3" :offset="3">备注：</el-col>
         <el-col :span="18">
-          <el-input  type="textarea" placeholder="请输入内容" v-model="input" style="width:80%"></el-input>
+          <el-input type="textarea" placeholder="请输入内容" v-model="input" style="width:80%"></el-input>
         </el-col>
       </el-row>
 
@@ -200,6 +228,9 @@
       return {
         isShow: false,
         input: '',
+        carBrandShow: false,
+        dialogLoading: false,
+        pinyinZimu: 'A',
         //客户信息表单
         clientForm: {
           clientName: '',
@@ -210,16 +241,17 @@
           clientVehicleModel: ''
         },
         //车牌型号选项
-        vehicleModelOptions: [{
-          index: '1',
-          vehicleModel: '沃尔沃'
-        }, {
-          index: '2',
-          vehicleModel: '悍马'
-        }, {
-          index: '3',
-          vehicleModel: '吉普'
-        }],
+        vehicleModelOptions: [
+          {
+            index: '1',
+            vehicleModel: '沃尔沃'
+          }, {
+            index: '2',
+            vehicleModel: '悍马'
+          }, {
+            index: '3',
+            vehicleModel: '吉普'
+          }],
         //客户表单验证，非自定义验证，若自定义验证，待修改
         clientFormRules: {
           clientName: [
@@ -248,43 +280,86 @@
           handlingStaff: ''
         },
         //支付手段选项
-        payMethodsOptions: [{
-          index: '1',
-          payMethods: '现金'
-        }, {
-          index: '2',
-          payMethods: '刷卡'
-        }, {
-          index: '3',
-          payMethods: '支付宝'
-        }, {
-          index: '4',
-          payMethods: '易付宝'
-        }, {
-          index: '5',
-          payMethods: '微信'
-        }],
+        payMethodsOptions: [
+          {
+            index: '1',
+            payMethods: '现金'
+          }, {
+            index: '2',
+            payMethods: '刷卡'
+          }, {
+            index: '3',
+            payMethods: '支付宝'
+          }, {
+            index: '4',
+            payMethods: '易付宝'
+          }, {
+            index: '5',
+            payMethods: '微信'
+          }
+        ],
         //会员卡类选项
-        memberCardKindOptions: [{
-          index: '1',
-          memberCardKind: '3000储值卡'
-        }],
-        handlingStaffOptions: [{
-          index: '1',
-          handlingStaff: '小易'
-        }, {
-          index: '2',
-          handlingStaff: '科科'
-        }]
+        memberCardKindOptions: [
+          {
+            index: '1',
+            memberCardKind: '3000储值卡'
+          }
+        ],
+        handlingStaffOptions: [
+          {
+            index: '1',
+            handlingStaff: '小易'
+          }, {
+            index: '2',
+            handlingStaff: '科科'
+          }
+        ],
+        pinyin: ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M',
+          'N', 'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z'],
+        carBrandList: [],
+        carBrandId: null,
+        carTypeList:[]
       }
     },
     methods: {
-      handleShow(){
+      // 通过拼音首字母获取汽车品牌
+      getCarBrandByPinyin(py) {
+        this.dialogLoading = true
+        this.pinyinZimu = py
+        this.$get('/carBrand/getCarBrandByPinyin', {
+          pinyin: py
+        }).then(res => {
+          this.dialogLoading = false
+          this.carTypeList = []
+          this.carBrandList = res
+        })
+      },
+
+      // 通过汽车品牌获取汽车型号
+      getCarBrand(item) {
+        this.dialogLoading = true
+        this.carBrandId = item.id
+        this.$get('/carBrand/getCarTypeByCarBrandId',{
+          carBrandId:item.id
+        }).then(res=>{
+          this.carTypeList = res
+          this.clientForm.clientBrandCar = item.brand
+          this.dialogLoading = false
+        })
+      },
+
+      // 选择车辆型号
+      chooseCarType(item){
+        this.clientForm.clientVehicleModel = item.type
+        this.carBrandShow = false
+      },
+
+      handleShow() {
         this.isShow = true;
       }
     },
     mounted: function () {
-
+      this.getCarBrandByPinyin('a')
     }
   }
 </script>
@@ -293,7 +368,57 @@
   .el-card {
     margin-bottom: 40px;
   }
-  .el-select,.el-input{
+
+  .el-select, .el-input {
     width: 20vw;
+  }
+
+  .pinyin {
+    display: flex;
+    justify-content: space-between;
+    border-bottom: 1px solid #dcdcdc;
+    padding-bottom: 20px;
+  }
+
+  .pinyin-zimu {
+    cursor: pointer;
+  }
+
+  .choose-pinyin {
+    color: #409EFF;
+  }
+
+  .brand-list {
+    display: flex;
+    justify-content: center;
+    border-bottom: 1px solid #dcdcdc;
+    padding: 20px 0;
+    flex-wrap: wrap;
+  }
+
+  .brand-list-item {
+    height: 80px;
+    width: 50px;
+    text-align: center;
+    cursor: pointer;
+    margin: 10px;
+    padding: 10px;
+  }
+
+  .choose-brand {
+    border: 1px solid #409EFF;
+  }
+  .car-type{
+    padding: 20px 0;
+    span{
+      display: inline-block;
+      width: 45%;
+      padding: 1%;
+      cursor: pointer;
+      text-align: center;
+    }
+    span:hover{
+      color: #409EFF;
+    }
   }
 </style>

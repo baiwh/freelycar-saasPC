@@ -4,28 +4,24 @@
     <el-card shadow="hover">
       <el-row :gutter="60">
         <el-col :span="8">车牌号码：
-          <el-input v-model="consumerOrder.licensePlate" size="small" placeholder="请输入内容"></el-input>
+          <el-input @keyup.native="getCarInfo" v-model="consumerOrder.licensePlate" size="small"
+                    placeholder="请输入内容"></el-input>
           <router-link to="/MembershipManagement/AddNewCustomers">
             <addNewButton></addNewButton>
           </router-link>
         </el-col>
-        <el-col :span="8">客户管理：
-          <el-input v-model="consumerOrder.clientName" size="small" disabled></el-input>
+        <el-col :span="8">客户管理：{{consumerOrder.clientName}}
           <router-link to="/MembershipManagement/AddNewCustomers">
             <addNewButton></addNewButton>
           </router-link>
         </el-col>
-        <el-col :span="8">是否会员：
-          <el-radio disabled v-model="consumerOrder.isMember" label="true">会员</el-radio>
-          <el-radio disabled v-model="consumerOrder.isMember" label="false">非会员</el-radio>
+        <el-col :span="8">是否会员： {{consumerOrder.isMember===''?'':consumerOrder.isMember?'是':'否'}}
         </el-col>
       </el-row>
       <el-row :gutter="60">
-        <el-col :span="8">品牌型号：
-          <el-input v-model="consumerOrder.carBrand" size="small" disabled></el-input>
+        <el-col :span="8">品牌型号：{{consumerOrder.carBrand}}{{consumerOrder.carType?'--'+consumerOrder.carType:''}}
         </el-col>
-        <el-col :span="8">手机号码：
-          <el-input v-model="consumerOrder.phone" size="small" disabled></el-input>
+        <el-col :span="8">手机号码：{{consumerOrder.phone}}
         </el-col>
         <el-col :span="8">接车时间：
           <el-date-picker size="small" v-model="consumerOrder.pickTime" type="datetime"
@@ -33,16 +29,12 @@
         </el-col>
       </el-row>
       <el-row :gutter="60">
-        <el-col :span="8">上次里程：
-          <el-input size="small" v-model="consumerOrder.lastMiles" disabled></el-input>
-          /km
+        <el-col :span="8">上次里程：{{consumerOrder.lastMiles?consumerOrder.lastMiles+'/km':''}}
         </el-col>
-        <el-col :span="8">历史消费：
-          <el-input size="small" v-model="consumerOrder.a" disabled></el-input>
-          /元
+        <el-col :span="8">历史消费：{{consumerOrder.historyConsumption?consumerOrder.historyConsumption+'/元':''}}
         </el-col>
         <el-col :span="8">接车人员：
-          <el-select size="small" v-model="consumerOrder.b" placeholder="请选择">
+          <el-select size="small" v-model="consumerOrder.staffName" placeholder="请选择">
             <el-option v-for="item in staffName" :key="item.value" :label="item.label"
                        :value="item.value"></el-option>
           </el-select>
@@ -53,9 +45,7 @@
           <el-input size="small" v-model="consumerOrder.miles" placeholder="请输入内容"></el-input>
           /km
         </el-col>
-        <el-col :span="8">剩余金额：
-          <el-input size="small" v-model="consumerOrder.c" disabled></el-input>
-          /元
+        <el-col :span="8">剩余金额：{{consumerOrder.balance?consumerOrder.balance+'/元':''}}
         </el-col>
       </el-row>
     </el-card>
@@ -143,10 +133,10 @@
     </el-row>
     <el-row>
       <el-col :offset="16" :span="4">
-        <el-button type="primary">保存</el-button>
+        <el-button type="primary" @click="submitOrder">保存</el-button>
       </el-col>
       <el-col :span="4">
-        <el-button type="primary">结算</el-button>
+        <el-button type="primary" @click="submitOrder(true)">结算</el-button>
       </el-col>
     </el-row>
 
@@ -160,7 +150,7 @@
         </el-col>
         <el-col :span="10">
           <span>项目类别：</span>
-          <el-select v-model="selectValue" clearable  placeholder="请选择项目类别">
+          <el-select v-model="selectValue" clearable placeholder="请选择项目类别">
             <el-option
               v-for="item in projectType"
               :key="item.id"
@@ -252,26 +242,24 @@
         visible2: false,
         loading: false,
         input: '',
-        itemName:'',
-        selectValue:'',
+        itemName: '',
+        selectValue: '',
         consumerOrder: {
-          licensePlate: "牛B74DSB",
-          carBrand: "别克凯越",
-          lastMiles: 2222,
-          miles: 3333,
-          clientName: "李四",
-          phone: "18918907788",
-          isMember: true,
-          pickTime: "2019-01-04T09:39:16.170+0000",
-          a: '',
-          b: '',
-          c: '',
-          carType: "2016自动挡",
-          storeId: "1",
-          carId: "4028802767e9302a0167e935f2c40003",
-          clientId: "4028802767e9302a0167e935f2ab0002",
-          pickCarStaffId: "4028a18167ce66590167ce683ac60000",
-          faultDescription: ""
+          licensePlate: '',
+          balance: '',
+          carBrand: '',
+          carId: '',
+          carType: '',
+          clientId: '',
+          clientName: '',
+          historyConsumption: null,
+          isMember: '',
+          lastMiles: '',
+          phone: '',
+          storeId: 1,
+          pickTime: '',
+          staffName: '',
+          miles: '',
         },
         consumerProjectInfos: [
           {
@@ -279,7 +267,7 @@
             projectName: "打蜡1",
             staffId: "4028a18167ce66590167ce6881300001",
             staffName: "张四",
-            price:10
+            price: 10
           }
         ],
         autoParts: [
@@ -291,11 +279,11 @@
             totalPrice: 51
           }
         ],
-        accessoriesList:[],
+        accessoriesList: [],
         radio: '否',
         datetime: '',
         projectType: [],
-        staffName:[],
+        staffName: [],
         faultDescription: '',
         projectAddVisible: false,
         serviceList: [],
@@ -310,7 +298,7 @@
             item: 'yuio'
           }
         ],
-        multipleSelection:[]
+        multipleSelection: []
       }
     },
     methods: {
@@ -343,10 +331,10 @@
       },
 
       // 项目名称过滤器
-      projectTypeFormat(row){
+      projectTypeFormat(row) {
         let name = ''
-        this.projectType.filter(v=>{
-          if(v.id===row.projectTypeId){
+        this.projectType.filter(v => {
+          if (v.id === row.projectTypeId) {
             name = v.name
           }
         })
@@ -359,9 +347,40 @@
         console.log(val)
       },
 
+      // 根据车牌查信息
+      getCarInfo() {
+        if (this.consumerOrder.licensePlate.length === 7) {
+          this.$get('/order/loadClientInfoByLicensePlate', {
+            licensePlate: this.consumerOrder.licensePlate,
+            storeId: 1
+          }).then(res => {
+            console.log(res)
+            this.consumerOrder = res
+          })
+        } else {
+          this.consumerOrder = {
+            licensePlate: this.consumerOrder.licensePlate,
+            balance: '',
+            carBrand: '',
+            carId: '',
+            carType: '',
+            clientId: '',
+            clientName: '',
+            historyConsumption: null,
+            isMember: '',
+            lastMiles: '',
+            phone: '',
+            storeId: 1,
+            pickTime: '',
+            staffName: '',
+            miles: '',
+          }
+        }
+      },
+
       // 保存快速开单
-      submitOrder(){
-        this.$post('/order/handleOrder',{
+      submitOrder(settlement) {
+        this.$post('/order/handleOrder', {
           consumerOrder: {
             licensePlate: "牛B74DSB",
             carBrand: "别克凯越",
@@ -395,12 +414,15 @@
               totalPrice: 51
             }
           ]
-        }).then(res=>{
-
+        }).then(res => {
+          // 结算
+          if(settlement){
+            this.$router.push({path:'/ConsumptionOrder/SettlementCenter',query:{id:res.id}})
+          }else {
+            // 保存
+          }
         })
       },
-
-
 
       handleDelete() {
         console.log('this', this.radio)
