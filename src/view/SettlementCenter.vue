@@ -174,7 +174,24 @@
       // 挂单
       pendingOrder() {
         this.$post('/order/pendingOrder',{
-
+          "consumerOrder": {
+            "id":"S0011901310003",
+            "actualPrice": 100,
+            "firstPayMethod": 0,
+            "firstActualPrice": 22.5,
+            "firstCardId": "4028802767ef13c40167ef1420d40000",
+            "secondPayMethod": 1,
+            "secondActualPrice": 77.5,
+            "secondCardId": ""
+          },
+          "useCoupons": [
+            {
+              "id": "35XJKE"
+            },
+            {
+              "id": "36XJKE"
+            }
+          ]
         }).then(res=>{
 
         })
@@ -182,7 +199,24 @@
       // 结算
       orderPayment() {
         this.$post('/order/payment',{
-
+          "consumerOrder": {
+            "id":"S0011901310003",
+            "actualPrice": 100,
+            "firstPayMethod": 0,
+            "firstActualPrice": 22.5,
+            "firstCardId": "4028802767ef13c40167ef1420d40000",
+            "secondPayMethod": 1,
+            "secondActualPrice": 77.5,
+            "secondCardId": ""
+          },
+          "useCoupons": [
+            {
+              "id": "35XJKE"
+            },
+            {
+              "id": "36XJKE"
+            }
+          ]
         }).then(res=>{
 
         })

@@ -8,6 +8,7 @@ import ElementUI from 'element-ui';
 import 'element-ui/lib/theme-chalk/index.css';
 import {get, post} from "./components/axiosHttp";
 import addNewButton from './components/addNewButton'
+import addCarBrand from './components/addCarBrand'
 import pagingDevice from './components/pagingDevice'
 import Vuex from 'vuex'
 
@@ -21,6 +22,9 @@ Vue.component('addNewButton', addNewButton)
 
 // 分页器组件
 Vue.component('pagingDevice', pagingDevice)
+
+// 选车型组件
+Vue.component('addCarBrand', addCarBrand)
 
 // 引入axios
 Vue.prototype.axios = axios

@@ -14,6 +14,10 @@
 </template>
 
 <script>
+  /**
+   * 在父组件中的用法：
+   *<pagingDevice :pageData.sync="pageData" @changePage="getDataList"></pagingDevice>
+   **/
   export default {
     name: 'changePage',
     props:{

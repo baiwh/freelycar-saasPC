@@ -41,8 +41,8 @@
         <el-row>
           <el-col>
             <el-form-item label="品牌车系：" prop="clientBrandCar">
-              <el-input v-model="clientForm.clientBrandCar" disabled></el-input>
-              <addNewButton @click="carBrandShow = true"></addNewButton>
+              <el-input v-show="clientForm.clientBrandCar" v-model="clientForm.clientBrandCar" disabled></el-input>
+              <addNewButton @click="carBrand.carBrandShow = true"></addNewButton>
             </el-form-item>
           </el-col>
         </el-row>
@@ -51,8 +51,8 @@
           <el-col :span="11">
             <el-form-item label="车辆型号：">
               <el-select v-model="clientForm.clientVehicleModel" placeholder="请选择车辆型号">
-                <el-option v-for="item in carTypeList" :key="item.type" :label="item.type"
-                           :value="item.type"/>
+                <el-option v-for="item in carBrand.carTypeList" :key="item.type" :label="item.type"
+                           :value="item.type"></el-option>
               </el-select>
             </el-form-item>
           </el-col>
@@ -153,31 +153,8 @@
     </el-card>
 
     <!--添加车型-->
-    <el-dialog title="品牌车系" v-loading="dialogLoading" :visible.sync="carBrandShow">
-
-      <!--拼音首字母-->
-      <div class="pinyin">
-        <span :class="pinyinZimu===item?'pinyin-zimu choose-pinyin':'pinyin-zimu'"
-              v-for="(item,index) in pinyin"
-              @click="getCarBrandByPinyin(item)">{{item}}</span>
-      </div>
-
-      <!--品牌-->
-      <div class="brand-list" v-show="carBrandList.length>0">
-        <div v-for="(item,index) in carBrandList"
-             :class="carBrandId===item.id?'brand-list-item choose-brand':'brand-list-item'"
-             @click="getCarBrand(item)">
-          <img :src="'/static/images/'+item.brand+'.jpg'" :alt="item.brand">
-          <span>{{item.brand}}</span>
-        </div>
-      </div>
-
-      <!--具体型号-->
-      <div class="car-type" v-show="carTypeList.length>0">
-        <span v-for="(item,index) in carTypeList" @click="chooseCarType(item)">{{item.type}}</span>
-      </div>
-
-    </el-dialog>
+    <addCarBrand @getCarTypeInfo="getCarTypeInfo"
+                 :carBrandShow.sync="carBrand.carBrandShow"></addCarBrand>
 
     <!--新增会员卡-->
     <el-dialog title="新增会员卡" v-loading="dialogLoading" :visible.sync="isShow">
@@ -314,44 +291,20 @@
             handlingStaff: '科科'
           }
         ],
-        pinyin: ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M',
-          'N', 'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z'],
-        carBrandList: [],
-        carBrandId: null,
-        carTypeList:[]
+        carBrand: {
+          carBrandShow: false,
+          carTypeList: [],//型号列表
+          clientBrandCar: '',//品牌
+          clientVehicleModel: '',//型号
+        }
       }
     },
     methods: {
-      // 通过拼音首字母获取汽车品牌
-      getCarBrandByPinyin(py) {
-        this.dialogLoading = true
-        this.pinyinZimu = py
-        this.$get('/carBrand/getCarBrandByPinyin', {
-          pinyin: py
-        }).then(res => {
-          this.dialogLoading = false
-          this.carTypeList = []
-          this.carBrandList = res
-        })
-      },
-
-      // 通过汽车品牌获取汽车型号
-      getCarBrand(item) {
-        this.dialogLoading = true
-        this.carBrandId = item.id
-        this.$get('/carBrand/getCarTypeByCarBrandId',{
-          carBrandId:item.id
-        }).then(res=>{
-          this.carTypeList = res
-          this.clientForm.clientBrandCar = item.brand
-          this.dialogLoading = false
-        })
-      },
-
-      // 选择车辆型号
-      chooseCarType(item){
-        this.clientForm.clientVehicleModel = item.type
-        this.carBrandShow = false
+      // 从子组件中获取型号信息
+      getCarTypeInfo(list) {
+        this.carBrand = list
+        this.clientForm.clientBrandCar = list.clientBrandCar
+        this.clientForm.clientVehicleModel = list.clientVehicleModel
       },
 
       handleShow() {
@@ -359,7 +312,7 @@
       }
     },
     mounted: function () {
-      this.getCarBrandByPinyin('a')
+
     }
   }
 </script>
@@ -371,54 +324,5 @@
 
   .el-select, .el-input {
     width: 20vw;
-  }
-
-  .pinyin {
-    display: flex;
-    justify-content: space-between;
-    border-bottom: 1px solid #dcdcdc;
-    padding-bottom: 20px;
-  }
-
-  .pinyin-zimu {
-    cursor: pointer;
-  }
-
-  .choose-pinyin {
-    color: #409EFF;
-  }
-
-  .brand-list {
-    display: flex;
-    justify-content: center;
-    border-bottom: 1px solid #dcdcdc;
-    padding: 20px 0;
-    flex-wrap: wrap;
-  }
-
-  .brand-list-item {
-    height: 80px;
-    width: 50px;
-    text-align: center;
-    cursor: pointer;
-    margin: 10px;
-    padding: 10px;
-  }
-
-  .choose-brand {
-    border: 1px solid #409EFF;
-  }
-  .car-type{
-    padding: 20px 0;
-    span{
-      display: inline-block;
-      width: 45%;
-      padding: 1%;
-      cursor: pointer;
-      text-align: center;
-    }
-    span:hover{
-      color: #409EFF;
-    }
   }
 </style>
