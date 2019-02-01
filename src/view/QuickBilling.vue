@@ -34,9 +34,9 @@
         <el-col :span="8">历史消费：{{consumerOrder.historyConsumption?consumerOrder.historyConsumption+'/元':''}}
         </el-col>
         <el-col :span="8">接车人员：
-          <el-select size="small" v-model="consumerOrder.staffName" placeholder="请选择">
-            <el-option v-for="item in staffName" :key="item.value" :label="item.label"
-                       :value="item.value"></el-option>
+          <el-select size="small" v-model="consumerOrder.pickCarStaffId" placeholder="请选择" @change="changeStaff">
+            <el-option v-for="item in staffList" :key="item.id" :label="item.name"
+                       :value="item.id"></el-option>
           </el-select>
         </el-col>
       </el-row>
@@ -56,7 +56,7 @@
         <span>故障描述</span>
       </div>
       <el-input type="textarea" autosize
-                placeholder="请输入故障描述" v-model="faultDescription"></el-input>
+                placeholder="请输入故障描述" v-model="consumerOrder.faultDescription"></el-input>
     </el-card>
 
     <!--第三部分。服务项目-->
@@ -71,7 +71,14 @@
         <el-table-column type="index" label="序号"></el-table-column>
         <el-table-column prop="projectName" label="项目名称"></el-table-column>
         <el-table-column prop="price" label="项目价格"></el-table-column>
-        <el-table-column prop="staffName" label="施工人员"></el-table-column>
+        <el-table-column prop="staffName" label="施工人员">
+          <template slot-scope="scope">
+            <el-select size="small" v-model="consumerOrder.pickCarStaffId" placeholder="请选择" @change="changeStaff">
+              <el-option v-for="item in staffList" :key="item.id" :label="item.name"
+                         :value="item.id"></el-option>
+            </el-select>
+          </template>
+        </el-table-column>
         <el-table-column label="操作">
           <template slot-scope="scope">
             <el-popover
@@ -258,8 +265,11 @@
           phone: '',
           storeId: 1,
           pickTime: '',
-          staffName: '',
+          pickCarStaffId: '',
+          pickCarStaffName: '',
+          totalPrice:null,
           miles: '',
+          faultDescription:''
         },
         consumerProjectInfos: [
           {
@@ -283,8 +293,6 @@
         radio: '否',
         datetime: '',
         projectType: [],
-        staffName: [],
-        faultDescription: '',
         projectAddVisible: false,
         serviceList: [],
         pageData: {
@@ -298,7 +306,8 @@
             item: 'yuio'
           }
         ],
-        multipleSelection: []
+        multipleSelection: [],
+        staffList: []
       }
     },
     methods: {
@@ -324,6 +333,21 @@
         }).then((res) => {
           this.loading = false
           this.serviceList = res.data
+          this.pageData.currentPage = res.currentPage
+          this.pageData.pageSize = res.pageSize
+          this.pageData.pageTotal = res.total
+        })
+      },
+
+      // 获取员工列表
+      getStaffList() {
+        this.$get('/staff/list', {
+          storeId: 1,
+          currentPage: 1,
+          pageSize: 1000
+        }).then((res) => {
+          this.loading = false
+          this.staffList = res.data
           this.pageData.currentPage = res.currentPage
           this.pageData.pageSize = res.pageSize
           this.pageData.pageTotal = res.total
@@ -416,10 +440,19 @@
           ]
         }).then(res => {
           // 结算
-          if(settlement){
-            this.$router.push({path:'/ConsumptionOrder/SettlementCenter',query:{id:res.id}})
-          }else {
+          if (settlement) {
+            this.$router.push({path: '/ConsumptionOrder/SettlementCenter', query: {id: res.id}})
+          } else {
             // 保存
+          }
+        })
+      },
+
+      // 选中员工后的回调，提取员工姓名
+      changeStaff(id) {
+        this.staffList.map(v => {
+          if (v.id === id) {
+            this.consumerOrder.pickCarStaffName = v.name
           }
         })
       },
@@ -458,6 +491,7 @@
     mounted: function () {
       this.getServiceList()
       this.getProjectType()
+      this.getStaffList()
     }
   }
 </script>

@@ -86,7 +86,7 @@
         <el-row>
           <el-col :span="12">
             <el-form-item label="品牌车系：" prop="carBrand">
-              <el-input v-show="carInfoForm.clientBrandCar" v-model="carInfoForm.clientBrandCar" disabled></el-input>
+              <el-input v-show="carInfoForm.carBrand" v-model="carInfoForm.carBrand" disabled></el-input>
               <addNewButton @click="carBrand.carBrandShow=true"></addNewButton>
             </el-form-item>
           </el-col>
@@ -169,10 +169,10 @@
     <el-dialog :visible.sync="dialogVisible" width="30%">
       <p align="center">保存成功！是否进行会员卡办理?</p>
       <div slot="footer" class="dialog-footer">
-        <el-button @click="dialogVisible = false">取 消</el-button>
-        <router-link to="/MembershipManagement/MemberProcessing">
-          <el-button type="primary">确 定</el-button>
-        </router-link>
+        <el-button @click="concelSubmit">取 消</el-button>
+        <el-button type="primary"
+                   @click="$router.push({path:'/MembershipManagement/MemberProcessing',query:{id:clientId}})">确 定
+        </el-button>
       </div>
     </el-dialog>
 
@@ -215,7 +215,7 @@
           carBrand: '',
           insuranceStartTime: '',
           carType: '',
-          clientBrandCar:'',
+          carBrand: '',
           insuranceEndTime: '',
           lastMiles: '',
           insuranceAmount: '',
@@ -224,18 +224,19 @@
           frameNumber: '',
           engineNumber: ''
         },
-        carInfoFormRules:{
-          licensePlate:[
+        carInfoFormRules: {
+          licensePlate: [
             {required: true, message: '请输入手机号码', trigger: 'blur'}
           ]
         },
         dialogVisible: false,
-        carBrand:{
+        carBrand: {
           carBrandShow: false,
           carTypeList: [],//型号列表
           clientBrandCar: '',//品牌
           clientVehicleModel: '',//型号
-        }
+        },
+        clientId: ''
       }
     },
     methods: {
@@ -244,21 +245,25 @@
         this.$post('/client/addClientAndCar', {
           client: this.clientForm,
           car: this.carInfoForm
-        }).then(res=>{
+        }).then(res => {
+          this.$message({
+            message: '保存成功',
+            type: 'success'
+          })
+          this.clientId = res.client.id
           this.dialogVisible = true
-          // this.$router.go(-1)
         })
       },
 
       // 从子组件中获取型号信息
-      getCarTypeInfo(list){
-        this.carBrand=list
-        this.carInfoForm.clientBrandCar = list.clientBrandCar
+      getCarTypeInfo(list) {
+        this.carBrand = list
+        this.carInfoForm.carBrand = list.clientBrandCar
         this.carInfoForm.carType = list.clientVehicleModel
       },
 
       // 取消
-      concelSubmit(){
+      concelSubmit() {
         this.$router.go(-1)
       }
     },
@@ -272,6 +277,7 @@
   .el-card {
     margin-bottom: 40px;
   }
+
   .el-select, .el-input {
     width: 20vw;
   }
