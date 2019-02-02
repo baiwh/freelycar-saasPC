@@ -5,38 +5,26 @@
       <div slot="header">
         <span>客户资料</span>
       </div>
-      <el-row :gutter="30">
-        <el-col :span="12">姓名：
-          <el-input v-model="input" placeholder="请输入内容" size="small"></el-input>
-        </el-col>
-        <el-col :span="12">年龄：
-          <el-input v-model="input" placeholder="请输入内容" size="small"></el-input>
-        </el-col>
+      <el-row>
+        <el-col :span="12">姓名：{{clinetInfo.client.name}}</el-col>
+        <el-col :span="12">年龄：{{clinetInfo.client.age}}</el-col>
       </el-row>
-      <el-row :gutter="30">
-        <el-col :span="12">手机号：
-          <el-input v-model="input" placeholder="请输入内容" size="small"></el-input>
-        </el-col>
-        <el-col :span="12">性别：
-          <el-input v-model="input" placeholder="请输入内容" size="small"></el-input>
-        </el-col>
+
+      <el-row>
+        <el-col :span="12">手机号：{{clinetInfo.client.phone}}</el-col>
+        <el-col :span="12">性别：{{clinetInfo.client.gender}}</el-col>
       </el-row>
-      <el-row :gutter="30">
-        <el-col :span="12">生日：
-          <el-input v-model="input" placeholder="请输入内容" size="small"></el-input>
-        </el-col>
-        <el-col :span="12">身份证：
-          <el-input v-model="input" placeholder="请输入内容" size="small"></el-input>
-        </el-col>
+
+      <el-row>
+        <el-col :span="12">生日：{{clinetInfo.client.birthday}}</el-col>
+        <el-col :span="12">身份证号：{{clinetInfo.client.idNumber}}</el-col>
       </el-row>
-      <el-row :gutter="30">
-        <el-col :span="12">行驶证号：
-          <el-input v-model="input" placeholder="请输入内容" size="small"></el-input>
-        </el-col>
-        <el-col :span="12">积分：
-          <el-input v-model="input" placeholder="请输入内容" size="small"></el-input>
-        </el-col>
+
+      <el-row>
+        <el-col :span="12">行驶证号：{{clinetInfo.client.driverLicense}}</el-col>
+        <el-col :span="12">积分：{{clinetInfo.client.points}}</el-col>
       </el-row>
+
     </el-card>
 
     <!--会员卡信息-->
@@ -45,18 +33,18 @@
         <span>会员卡信息</span>
       </div>
       <div>
-        <router-link to="/MembershipManagement/MemberProcessing">
-          <el-button>开卡</el-button>
-        </router-link>
-        <el-table :data="cardInfoTable">
+        <el-button @click="$router.push({path:'/MembershipManagement/MemberProcessing',query:{id:$route.query.id}})">
+          开卡
+        </el-button>
+        <el-table :data="clinetInfo.card">
           <el-table-column property="cardNumber" label="卡号" align="center"/>
-          <el-table-column property="cardName" label="卡名称" align="center"/>
-          <el-table-column property="cardOpeningTime" label="开卡时间" align="center"/>
-          <el-table-column property="cardClosingTime" label="有效期至" align="center"/>
+          <el-table-column property="name" label="卡名称" align="center"/>
+          <el-table-column property="createTime" label="开卡时间" align="center"/>
+          <el-table-column property="expirationDate" label="有效期至" align="center"/>
           <el-table-column label="操作" align="center">
             <template slot-scope="scope">
-              <el-button size="mini" type="primary" @click="onDetail(scope.row)">详情</el-button>
-              <el-button size="mini" type="primary" @click="onRenewalCard(scope.row)">续卡</el-button>
+              <el-button size="mini" type="primary" @click="getCardInfo(scope.row)">详情</el-button>
+              <el-button size="mini" type="primary" @click="renewalCard(scope.row)">续卡</el-button>
             </template>
           </el-table-column>
         </el-table>
@@ -68,10 +56,10 @@
       <div slot="header">
         <span>优惠券信息</span>
       </div>
-      <el-table :data="couponInfoTable">
-        <el-table-column property="couponName" label="抵用券名" align="center"/>
-        <el-table-column property="expiryDate" label="到期日" align="center"/>
-        <el-table-column property="couponPrice" label="价格" align="center"/>
+      <el-table :data="clinetInfo.coupon">
+        <el-table-column property="name" label="抵用券名" align="center"/>
+        <el-table-column property="buyEndTime" label="到期日" align="center"/>
+        <el-table-column property="price" label="价格" align="center"/>
         <el-table-column property="usableProject" label="可用项目" align="center"/>
       </el-table>
     </el-card>
@@ -83,31 +71,28 @@
       </div>
       <div>
         <el-button @click="addNewCar">新增车辆</el-button>
-        <el-table :data="carInfoTable">
-          <el-table-column property="carNumber" label="车牌号码" align="center"/>
+        <el-table :data="clinetInfo.car">
+          <el-table-column property="licensePlate" label="车牌号码" align="center"/>
           <el-table-column property="carBrand" label="品牌" align="center"/>
-          <el-table-column property="vehicleModel" label="车辆型号" align="center"/>
-          <el-table-column property="mileage" label="里程数" align="center"/>
+          <el-table-column property="carType" label="车辆型号" align="center"/>
+          <el-table-column property="miles" label="里程数" align="center"/>
           <el-table-column property="engineNumber" label="发动机号" align="center"/>
-          <el-table-column property="isNewCar" label="是否新车" align="center"/>
+          <el-table-column property="newCar" label="是否新车" align="center"/>
           <el-table-column property="insuranceAmount" label="保险金额" align="center"/>
-          <el-table-column property="insuranceValidity" label="保险有效期" align="center"/>
+          <el-table-column property="insuranceEndTime" label="保险有效期" align="center"/>
           <el-table-column label="操作" align="center" width="150">
             <template slot-scope="scope">
-              <el-button type="primary" size="mini" @click="modify(scope.row)">修改</el-button>
-              <el-popover
-                ref="popover{{$index}}"
-                placement="top"
-                width="160"
-                v-model="scope.row.deletePopVisible"
-              >
+              <el-button type="primary" size="mini" @click="modifyCarInfo(scope.row)">修改</el-button>
+              <el-popover :ref="scope.row.id" placement="top" width="160">
                 <p>表格数据确定删除吗？</p>
                 <div style="text-align: right; margin: 0">
-                  <el-button size="mini" type="text" @click="scope.row.deletePopVisible = false">取消</el-button>
-                  <el-button type="primary" size="mini" @click="onDeletePop(scope.$index,scope.row.deletePopVisible)">确定</el-button>
+                  <el-button size="mini" type="text" @click="handleClose(scope.row.id)">取消</el-button>
+                  <el-button type="primary" size="mini" @click="deleteCar(scope.row)">
+                    确定
+                  </el-button>
                 </div>
-                <el-button slot="reference" type="danger" size="mini">删除</el-button>
               </el-popover>
+              <el-button v-popover="scope.row.id" type="danger" size="mini">删除</el-button>
             </template>
           </el-table-column>
         </el-table>
@@ -119,7 +104,7 @@
       <div slot="header">
         <span>消费记录</span>
       </div>
-      <el-table :data="expensesRecordTable">
+      <el-table :data="expensesRecord">
         <el-table-column type="index" label="序号" align="center"/>
         <el-table-column property="projectName" label="项目" align="center"/>
         <el-table-column property="expensesAmounts" label="消费金额" align="center"/>
@@ -129,88 +114,65 @@
       </el-table>
       <el-row>
         <el-col :span="2" :offset="22">
-          <el-button type="text" @click="$router.push({path:'/MembershipManagement/ExpensesRecord',query:{id:$route.query.id}})">更多</el-button>
+          <el-button type="text"
+                     @click="$router.push({path:'/MembershipManagement/ExpensesRecord',query:{id:$route.query.id}})">更多
+          </el-button>
         </el-col>
       </el-row>
     </el-card>
 
     <!--续卡对话框-->
-    <el-dialog title="续卡充值" :visible.sync="renewalCardVisible">
-      <el-form :data="renewalCardForm" label-width="130px">
-        <el-form-item label="会员卡号：" prop="memberCardNumber">
-          <el-input v-model="renewalCardForm.memberCardNumber" disabled size="mini"/>
-        </el-form-item>
-        <el-form-item label="卡名称：" prop="memberCardName">
-          <el-input v-model="renewalCardForm.memberCardName" disabled size="mini"/>
-        </el-form-item>
-        <el-form-item label="会员卡类：" prop="memberCardCategory">
-          <el-input v-model="renewalCardForm.memberCardCategory" disabled size="mini"/>
-        </el-form-item>
-        <el-form-item label="有效期（年）：" prop="validDate">
-          <el-input v-model="renewalCardForm.validDate" disabled size="mini"/>
-        </el-form-item>
-        <el-form-item label="卡内余额：" prop="cardBalance">
-          <el-input v-model="renewalCardForm.cardBalance" disabled size="mini"/>
-        </el-form-item>
+    <el-dialog title="续卡充值" :visible.sync="renewalCardInfo.renewalCardVisible">
+      <el-form :data="renewalCardInfo" label-width="130px">
+        <el-form-item label="会员卡号：">{{cardInfo.cardNumber}}</el-form-item>
+        <el-form-item label="卡名称：">{{cardInfo.name}}</el-form-item>
+        <el-form-item label="会员卡类：">{{cardInfo.type}}</el-form-item>
+        <el-form-item label="有效期（年）：">{{cardInfo.validTime}}</el-form-item>
+        <el-form-item label="卡内余额：" prop="cardBalance">{{cardInfo.balance}}</el-form-item>
         <el-form-item label="续卡金额：">
-          <el-select v-model="renewalCardForm.renewalCardAmounts" placeholder="请选择储值卡" size="mini">
-            <el-option v-for="item in cardAmountsOptions" :key="item.index" :label="item.cardAmounts"
-                       :value="item.cardAmounts"/>
+          <el-select v-model="renewalCardInfo.cardAmounts" placeholder="请选择储值卡" size="mini">
+            <el-option v-for="item in cardAmounts" :key="item.index" :label="item.cardAmounts"
+                       :value="item.price"></el-option>
           </el-select>
         </el-form-item>
         <el-form-item label="卡面金额：" prop="cardSurfaceAmounts">
-          <el-input v-model="renewalCardForm.cardSurfaceAmounts" disabled size="mini"/>
+          <el-input v-model="renewalCardInfo.price" disabled size="mini"></el-input>
         </el-form-item>
         <el-form-item label="支付方式：">
-          <el-select v-model="renewalCardForm.payMethods" placeholder="请选择支付方式" size="mini">
-            <el-option v-for="item in payMethodsOptions" :key="item.index" :label="item.payMethods"
-                       :value="item.payMethods"/>
+          <el-select v-model="renewalCardInfo.payMethod" placeholder="请选择支付方式" size="mini">
+            <el-option v-for="item in payMethods" :key="item.index" :label="item.payMethods"
+                       :value="item.payMethods"></el-option>
           </el-select>
         </el-form-item>
         <el-form-item label="办理人员：">
-          <el-select v-model="renewalCardForm.staff" placeholder="请选择办理人员" size="mini">
-            <el-option v-for="item in staffOptions" :key="item.index" :label="item.staffName"
-                       :value="item.staffName"/>
+          <el-select v-model="renewalCardInfo.staffId" placeholder="请选择办理人员" size="mini">
+            <el-option v-for="item in staffList" :key="item.index" :label="item.staffName"
+                       :value="item.staffName"></el-option>
           </el-select>
         </el-form-item>
       </el-form>
       <div slot="footer" class="dialog-footer" style="text-align: center;">
-        <el-button type="primary" @click="renewalCardVisible = false">办 理</el-button>
+        <el-button type="primary" @click="renewalCardSubmit">办 理</el-button>
       </div>
     </el-dialog>
 
     <!--查看详情对话框-->
-    <el-dialog  title="会员卡详情" :visible.sync="detailsVisible">
+    <el-dialog title="会员卡详情" :visible.sync="detailsVisible">
       <el-row>
-        <el-col :span="10" :offset="1">
-          <span>卡类名称：</span>
-          <el-input v-model="input" disabled size="mini"/>
-        </el-col>
-        <el-col :span="10" :offset="1">
-          <span>卡类属性：</span>
-          <el-input v-model="input" disabled size="mini"/>
-        </el-col>
+        <el-col :span="12">卡类名称：{{cardInfo.name}}</el-col>
+        <el-col :span="12">卡类属性：{{cardInfo.type}}</el-col>
       </el-row>
+
       <el-row>
-        <el-col :span="10" :offset="1">
-          <span>售卡金额：</span>
-          <el-input v-model="input" disabled size="mini"/>
-        </el-col>
-        <el-col :span="10" :offset="1">
-          <span>有效期：</span>
-          <el-input v-model="input" disabled size="mini"/>
-        </el-col>
+        <el-col :span="12">售卡金额：{{cardInfo.price}}</el-col>
+        <el-col :span="12">有效期：{{cardInfo.validTime}}</el-col>
       </el-row>
+
       <el-row>
-        <el-col :span="10" :offset="1">
-          <span>实际金额：</span>
-          <el-input v-model="input" disabled size="mini"/>
-        </el-col>
-        <el-col :span="10" :offset="1">
-          <span>剩余金额：</span>
-          <el-input v-model="input" disabled size="mini"/>
-        </el-col>
+        <el-col :span="12">实际金额：{{cardInfo.actualPrice}}</el-col>
+        <el-col :span="12">剩余金额：{{cardInfo.balance}}</el-col>
       </el-row>
+
       <div slot="footer" class="dialog-footer">
         <el-button @click="detailsVisible = false">取 消</el-button>
         <el-button type="primary" @click="detailsVisible = false">确 定</el-button>
@@ -307,49 +269,24 @@
     name: 'CustomerInformation',
     data() {
       return {
-        input: '',
-        cardInfoTable: [{
-          cardNumber: '00781',
-          cardName: '储值卡',
-          cardOpeningTime: '',
-          cardClosingTime: ''
-        }],
-        couponInfoTable: [],
-        carInfoTable: [{
-          carNumber: '1111',
-          deletePopVisible: false
-        }, {
-          carNumber: '2222',
-          deletePopVisible: false
-        }, {
-          carNumber: '3333',
-          deletePopVisible: false
-        }, {
-          carNumber: '4444',
-          deletePopVisible: false
-        }],
-        expensesRecordTable: [],
-        renewalCardVisible: false,
-        renewalCardForm: {
-          memberCardNumber: '',
-          memberCardName: '',
-          memberCardCategory: '',
-          validDate: '',
-          cardBalance: '',
-          renewalCardAmounts: '',
-          cardSurfaceAmounts: '',
-          payMethods: '',
-          staff: ''
+        clinetInfo: {},
+        expensesRecord: [],
+        renewalCardInfo: {
+          renewalCardVisible:false,
+          cardAmounts: '',
+          price: '',
+          payMethod: '',
+          staffId: ''
         },
-        cardAmountsOptions: [{
+        cardAmounts: [{
           index: '1',
-          cardAmounts: '1000储值卡'
+          price: '1000储值卡'
         }],
-        payMethodsOptions: [{
+        payMethods: [{
           index: '1',
           payMethods: '支付宝'
         }],
-        staffOptions: [{
+        staffList: [{
           index: '1',
           staffName: '小易'
         }],
@@ -372,18 +309,58 @@
         }],
         datePickerValue: '',
         index: 4,
+        cardInfo: {}
       }
     },
     methods: {
-      onRenewalCard(row) {
-        this.renewalCardVisible = true
-        this.renewalCardForm.memberCardNumber = row.cardNumber
-        this.renewalCardForm.memberCardName = row.cardName
+      // 获取客户信息
+      getClientInfo() {
+        this.$get('/client/getCustomerInfo', {
+          id: this.$route.query.id
+        }).then(res => {
+          console.log(res)
+          this.clinetInfo = res
+        })
       },
-      onDetail(row) {
+
+      // 获取消费详情
+
+      // 会员卡详情
+      getCardInfo(row) {
         this.detailsVisible = true
+        this.$get('/card/detail', {
+          id: row.id
+        }).then(res => {
+          this.cardInfo = res
+        })
       },
-      //新增车辆信息
+
+      // 续卡
+      renewalCard(row) {
+        this.$get('/card/detail', {
+          id: row.id
+        }).then(res => {
+          this.cardInfo = res
+        })
+        this.renewalCardInfo.renewalCardVisible = true
+        this.renewalCardInfo.memberCardNumber = row.cardNumber
+        this.renewalCardInfo.memberCardName = row.cardName
+      },
+
+      // 提交续卡信息
+      renewalCardSubmit() {
+        this.renewalCardInfo.renewalCardVisible = false
+        this.$post('', {})
+      },
+
+      //修改车辆信息
+      modifyCarInfo(row) {
+        this.isModify = false
+        this.addNewCarVisible = true
+        //?
+      },
+
+      //新增车辆信息打开弹框
       addNewCar() {
         this.isModify = true
         this.addNewCarForm = {
@@ -399,11 +376,14 @@
         this.addNewCarVisible = true
       },
 
-      //修改车辆信息
-      modify(row) {
-        this.isModify = false
-        this.addNewCarVisible = true
-        //获取详细信息
+      // 关闭小提示框
+      handleClose(id) {
+        this.$refs[id].doClose()
+      },
+
+      // 删除车辆信息
+      deleteCar(row){
+        console.log('删了')
       },
 
       //新增车辆信息弹框中的保存按钮
@@ -412,26 +392,29 @@
         this.addNewCarVisible = false
         //调用方法重新获取表格信息
       },
-      onDeletePop(index,deletePopVisible) {
-        this.carInfoTable.splice(index,1)
-        deletePopVisible = false
-      }
+
     },
     mounted: function () {
-      console.log(this.$route.query.id)
+      this.getClientInfo()
     }
   }
 </script>
 
 <style lang="less" scoped>
-.el-card {
-  margin-bottom: 40px;
-}
-.el-col > .el-input {
-  width: 60%;
-  margin-bottom: 20px;
-}
-.dateWidth {
-  width: 99%;
-}
+  .el-card {
+    margin-bottom: 40px;
+  }
+
+  .el-col > .el-input {
+    width: 60%;
+    margin-bottom: 20px;
+  }
+
+  .el-row {
+    margin: 20px;
+  }
+
+  .dateWidth {
+    width: 99%;
+  }
 </style>
