@@ -57,16 +57,13 @@
       <el-table-column prop="totalBalance" label="卡内未消费金额" align="center"></el-table-column>
       <el-table-column label="操作" width="220" align="center">
         <template slot-scope="scope">
-          <router-link to="/MembershipManagement/MemberProcessing">
-            <el-button size="mini" type="primary">开卡</el-button>
-          </router-link>
-          <router-link to="/MembershipManagement/ModifyCustomers">
-            <el-button size="mini" type="primary">修改</el-button>
-          </router-link>
-          <el-popover
-            placement="top"
-            width="160"
-            :ref="scope.$index">
+          <el-button @click="$router.push({path:'/MembershipManagement/MemberProcessing',query:{id:scope.row.id}})"
+                     size="mini" type="primary">开卡
+          </el-button>
+          <el-button @click="$router.push({path:'/MembershipManagement/ModifyCustomers',query:{id:scope.row.id}})"
+                     size="mini" type="primary">修改
+          </el-button>
+          <el-popover placement="top" width="160" :ref="scope.$index">
             <p>确定删除？</p>
             <div style="text-align: right; margin: 0">
               <el-button size="mini" type="text" @click="handleClose(scope.$index)">取消</el-button>
@@ -79,9 +76,7 @@
     </el-table>
 
     <!--分页器-->
-    <pagingDevice
-      :pageData.sync="pageData"
-      @changePage="getDataList"></pagingDevice>
+    <pagingDevice :pageData.sync="pageData" @changePage="getDataList"></pagingDevice>
 
     <!--会员统计模态框-->
     <el-dialog title="会员统计" :visible.sync="statisticsVisible" width="30%">
@@ -107,6 +102,7 @@
         buttonType: '',
         name: '',
         phone: '',
+        isMember: '',
         carNumber: '',
         tableData: [],
         pageData: {
@@ -124,12 +120,12 @@
       // 获取列表
       getDataList() {
         this.$get('/client/list', {
-          name: '',
-          phone: '',
-          isMember: '',
+          name: this.name,
+          phone: this.phone,
           currentPage: this.pageData.currentPage,
           pageSize: this.pageData.pageSize,
-          storeId: 1
+          storeId: 1,
+          isMember: this.isMember,
         }).then((res) => {
           this.loading = false
           this.tableData = res.data
@@ -157,18 +153,17 @@
       },
 
       // 删除当前行的会员
-      handleDelete() {
-
-      },
-
-      // 修改按钮
-      customerModify(){
-
-      },
-
-      // 开卡按钮
-      openCard(){
-
+      handleDelete(row) {
+        this.$get('/client/delete', {
+          id: row.id
+        }).then(res => {
+          this.$message({
+            message: '删除成功',
+            type: 'success'
+          })
+          // this.handleClose(row.id)
+          this.getDataList()
+        })
       },
 
       // 导出表单
@@ -176,6 +171,8 @@
       // 是否会员
       onVipButton() {
         this.buttonType = this.buttonType === '' ? 'primary' : ''
+        this.isMember = this.isMember ? '' : true
+        this.getDataList()
       }
     },
     mounted: function () {
@@ -185,10 +182,11 @@
 </script>
 
 <style lang="less" scoped>
-  a{
+  a {
     color: #409EFF;
     text-decoration: none;
   }
+
   .el-input {
     width: 60%;
   }
