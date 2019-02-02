@@ -1,76 +1,7 @@
 <template>
   <div>
-    <!--客户信息模块-->
-    <el-card shadow="hover">
-      <div slot="header">
-        <span>客户信息</span>
-      </div>
-
-      <!--表单部分-->
-      <el-form :model="clientForm" :rules="clientFormRules" ref="clientForm" label-width="100px">
-
-        <el-row>
-          <el-col :span="11">
-            <el-form-item label="客户姓名：" prop="clientName">
-              <el-input v-model="clientForm.clientName"></el-input>
-            </el-form-item>
-          </el-col>
-          <el-col :span="11" :offset="2">
-            <el-form-item label="性别：" prop="clientGender">
-              <el-radio-group v-model="clientForm.clientGender">
-                <el-radio label="男"></el-radio>
-                <el-radio label="女"></el-radio>
-              </el-radio-group>
-            </el-form-item>
-          </el-col>
-        </el-row>
-
-        <el-row>
-          <el-col :span="11">
-            <el-form-item label="手机号码：" prop="clientPhone">
-              <el-input v-model="clientForm.clientPhone"></el-input>
-            </el-form-item>
-          </el-col>
-          <el-col :span="11" :offset="2">
-            <el-form-item label="车牌号码：" prop="clientLicenseNumber">
-              <el-input v-model="clientForm.clientLicenseNumber"></el-input>
-            </el-form-item>
-          </el-col>
-        </el-row>
-
-        <el-row>
-          <el-col>
-            <el-form-item label="品牌车系：" prop="clientBrandCar">
-              <el-input v-show="clientForm.clientBrandCar" v-model="clientForm.clientBrandCar" disabled></el-input>
-              <addNewButton @click="carBrand.carBrandShow = true"></addNewButton>
-            </el-form-item>
-          </el-col>
-        </el-row>
-
-        <el-row>
-          <el-col :span="11">
-            <el-form-item label="车辆型号：">
-              <el-select v-model="clientForm.clientVehicleModel" placeholder="请选择车辆型号">
-                <el-option v-for="item in carBrand.carTypeList" :key="item.type" :label="item.type"
-                           :value="item.type"></el-option>
-              </el-select>
-            </el-form-item>
-          </el-col>
-        </el-row>
-
-      </el-form>
-
-      <!--按钮-->
-      <el-row>
-        <el-col :span="2" :offset="20">
-          <el-button type="primary">保存</el-button>
-        </el-col>
-      </el-row>
-
-    </el-card>
-
     <!--会员信息模块-->
-    <el-card shadow="hover">
+    <el-card shadow="hover" v-loading="formLoading">
       <div slot="header">
         <span>会员信息</span>
       </div>
@@ -80,15 +11,28 @@
 
         <el-row>
           <el-col :span="11">
+            <el-form-item label="客户姓名：" prop="memberCard">
+              <el-input v-model="clientName" disabled></el-input>
+            </el-form-item>
+          </el-col>
+          <el-col :span="11" :offset="1">
+            <el-form-item label="手机号码：" prop="memberCard">
+              <el-input v-model="clientPhone" disabled></el-input>
+            </el-form-item>
+          </el-col>
+        </el-row>
+
+        <el-row>
+          <el-col :span="11">
             <el-form-item label="会员卡号：" prop="memberCard">
               <el-input v-model="memberForm.memberCard"></el-input>
             </el-form-item>
           </el-col>
           <el-col :span="11" :offset="1">
             <el-form-item label="会员卡类：">
-              <el-select v-model="memberForm.memberCardKind" placeholder="请选择会员卡类">
-                <el-option v-for="item in memberCardKindOptions" :key="item.index" :label="item.memberCardKind"
-                           :value="item.memberCardKind"/>
+              <el-select v-model="memberForm.cardServiceId" placeholder="请选择会员卡类" @change="chooseCard">
+                <el-option v-for="item in cardList" :key="item.id" :label="item.name"
+                           :value="item.id"/>
               </el-select>
             </el-form-item>
           </el-col>
@@ -118,7 +62,7 @@
           </el-col>
           <el-col :span="11" :offset="1">
             <el-form-item label="折扣比例：" prop="discount">
-              <el-input v-model="memberForm.discount"></el-input>
+              <el-input v-model="memberForm.discount" disabled></el-input>
             </el-form-item>
           </el-col>
         </el-row>
@@ -126,17 +70,17 @@
         <el-row>
           <el-col :span="11">
             <el-form-item label="支付方式：">
-              <el-select v-model="memberForm.memberCardKind" placeholder="请选择储值卡">
-                <el-option v-for="item in memberCardKindOptions" :key="item.index" :label="item.memberCardKind"
-                           :value="item.memberCardKind"/>
+              <el-select v-model="memberForm.payMethod" placeholder="请选择支付方式">
+                <el-option v-for="item in payMethods" :key="item.code" :label="item.value"
+                           :value="item.code"/>
               </el-select>
             </el-form-item>
           </el-col>
           <el-col :span="11" :offset="1">
             <el-form-item label="办理人员：">
-              <el-select v-model="memberForm.handlingStaff" placeholder="请选择办理人员">
-                <el-option v-for="item in handlingStaffOptions" :key="item.index" :label="item.handlingStaff"
-                           :value="item.handlingStaff"/>
+              <el-select v-model="memberForm.staffId" placeholder="请选择办理人员">
+                <el-option v-for="item in staffList" :key="item.id" :label="item.name"
+                           :value="item.id"/>
               </el-select>
             </el-form-item>
           </el-col>
@@ -147,51 +91,50 @@
       <!--按钮-->
       <el-row>
         <el-col :span="2" :offset="20">
-          <el-button type="primary">办理</el-button>
+          <el-button type="primary" @click="handleCard">办理</el-button>
         </el-col>
       </el-row>
     </el-card>
 
-    <!--添加车型-->
-    <addCarBrand @getCarTypeInfo="getCarTypeInfo"
-                 :carBrandShow.sync="carBrand.carBrandShow"></addCarBrand>
-
     <!--新增会员卡-->
-    <el-dialog title="新增会员卡" v-loading="dialogLoading" :visible.sync="isShow">
+    <el-dialog v-loading="dialogLoading" title="新增会员卡" :visible.sync="isShow">
       <el-row>
-        <el-col :span="3" :offset="3">卡类名称：</el-col>
+        <el-col :span="4" :offset="2">卡类名称：</el-col>
         <el-col :span="18">
-          <el-input v-model="input" style="width: 80%" size="small"></el-input>
+          <el-input v-model="dialog.name" style="width: 80%" size="small"></el-input>
         </el-col>
       </el-row>
-      <el-row style="margin-top: 20px;">
-        <el-col :span="3" :offset="3">售卡金额：</el-col>
+      <el-row>
+        <el-col :span="4" :offset="2">售卡金额：</el-col>
         <el-col :span="18">
-          <el-input v-model="input" style="width: 80%" size="small"></el-input>
+          <el-input v-model="dialog.price" style="width: 80%" size="small"></el-input>
         </el-col>
       </el-row>
-      <el-row style="margin-top: 20px;">
-        <el-col :span="3" :offset="3">卡面金额：</el-col>
+      <el-row>
+        <el-col :span="4" :offset="2">卡面金额：</el-col>
         <el-col :span="18">
-          <el-input v-model="input" style="width: 80%" size="small"></el-input>
+          <el-input v-model="dialog.actualPrice" style="width: 80%" size="small"></el-input>
         </el-col>
       </el-row>
-      <el-row style="margin-top: 20px;">
-        <el-col :span="3" :offset="3">有效期：</el-col>
+      <el-row>
+        <el-col :span="4" :offset="2">有效期（年）：</el-col>
         <el-col :span="18">
-          <el-input v-model="input" style="width: 80%" size="small"></el-input>
+          <el-select v-model="dialog.validTime" placeholder="请选择" style="width: 80%">
+            <el-option v-for="item in validTimeList" :key="item.code" :label="item.value"
+                       :value="item.code"></el-option>
+          </el-select>
         </el-col>
       </el-row>
-      <el-row style="margin-top: 20px;">
-        <el-col :span="3" :offset="3">备注：</el-col>
+      <el-row>
+        <el-col :span="4" :offset="2">备注：</el-col>
         <el-col :span="18">
-          <el-input type="textarea" placeholder="请输入内容" v-model="input" style="width:80%"></el-input>
+          <el-input type="textarea" :rows="2" placeholder="请输入内容" v-model="dialog.comment" style="width:80%"></el-input>
         </el-col>
       </el-row>
 
       <div slot="footer" class="dialog-footer">
         <el-button @click="isShow = false">取 消</el-button>
-        <el-button type="primary" @click="isShow = false">确 定</el-button>
+        <el-button type="primary" @click="submit">确 定</el-button>
       </div>
     </el-dialog>
   </div>
@@ -204,115 +147,165 @@
     data() {
       return {
         isShow: false,
-        input: '',
-        carBrandShow: false,
+        dialog: {
+          name: '',
+          price: '',
+          actualPrice: '',
+          validTime: '',
+          comment: ''
+        },
         dialogLoading: false,
-        pinyinZimu: 'A',
-        //客户信息表单
-        clientForm: {
-          clientName: '',
-          clientGender: '',
-          clientPhone: '',
-          clientLicenseNumber: '',
-          clientBrandCar: '',
-          clientVehicleModel: ''
-        },
-        //车牌型号选项
-        vehicleModelOptions: [
-          {
-            index: '1',
-            vehicleModel: '沃尔沃'
-          }, {
-            index: '2',
-            vehicleModel: '悍马'
-          }, {
-            index: '3',
-            vehicleModel: '吉普'
-          }],
-        //客户表单验证，非自定义验证，若自定义验证，待修改
-        clientFormRules: {
-          clientName: [
-            {required: true, message: '请输入客户姓名', trigger: 'blur'},
-            {min: 2, max: 5, message: '长度在 2 到 5 个字符', trigger: 'blur'}
-          ],
-          clientPhone: [
-            {required: true, message: '请输入手机号码', trigger: 'blur'}
-          ],
-          clientLicenseNumber: [
-            {required: true, message: '请输入车牌号码', trigger: 'blur'}
-          ],
-          clientBrandCar: [
-            {required: true, message: '请选择品牌车系', trigger: 'blur'}
-          ]
-        },
-        //会员信息绑定表单
+        clientName: '',
+        clientPhone: '',
         memberForm: {
           memberCard: '',
-          memberCardKind: '',
-          cardAmount: '2000',
-          validityPeriod: '1年',
-          cardSurfaceAmount: '2500',
-          discount: '无',
-          payMethods: '',
-          handlingStaff: ''
+          cardServiceId: '',
+          cardAmount: '',
+          validityPeriod: '',
+          cardSurfaceAmount: '',
+          discount: '',
+          payMethod: '',
+          staffId: ''
         },
-        //支付手段选项
-        payMethodsOptions: [
+        payMethods: [
           {
-            index: '1',
-            payMethods: '现金'
+            code: '1',
+            value: '现金'
           }, {
-            index: '2',
-            payMethods: '刷卡'
+            code: '2',
+            value: '微信'
           }, {
-            index: '3',
-            payMethods: '支付宝'
+            code: '3',
+            value: '支付宝'
           }, {
-            index: '4',
-            payMethods: '易付宝'
+            code: '4',
+            value: '易付宝'
           }, {
-            index: '5',
-            payMethods: '微信'
+            code: '5',
+            value: '刷卡'
           }
         ],
-        //会员卡类选项
-        memberCardKindOptions: [
+        cardList: [],
+        staffList: [],
+        formLoading: false,
+        validTimeList: [
           {
-            index: '1',
-            memberCardKind: '3000储值卡'
-          }
-        ],
-        handlingStaffOptions: [
-          {
-            index: '1',
-            handlingStaff: '小易'
-          }, {
-            index: '2',
-            handlingStaff: '科科'
-          }
-        ],
-        carBrand: {
-          carBrandShow: false,
-          carTypeList: [],//型号列表
-          clientBrandCar: '',//品牌
-          clientVehicleModel: '',//型号
-        }
+            value: '1年',
+            code: 1,
+          },
+        ]
       }
     },
     methods: {
-      // 从子组件中获取型号信息
-      getCarTypeInfo(list) {
-        this.carBrand = list
-        this.clientForm.clientBrandCar = list.clientBrandCar
-        this.clientForm.clientVehicleModel = list.clientVehicleModel
+      // 获取客户基本信息
+      getClientInfo() {
+        this.formLoading = true
+        this.$get('/client/detail', {
+          id: this.$route.query.id
+        }).then(res => {
+          this.clientName = res.name
+          this.clientPhone = res.phone
+          this.formLoading = false
+        })
       },
 
+      // 获取工作人员列表
+      getStaffList() {
+        this.$get('/staff/list', {
+          storeId: 1,
+          currentPage: 1,
+          pageSize: 1000
+        }).then((res) => {
+          this.loading = false
+          this.staffList = res.data
+        })
+      },
+
+      // 获取卡类列表
+      getCardList() {
+        this.$get('/cardService/list', {
+          storeId: 1,
+          currentPage: 1,
+          pageSize: 1000
+        }).then((res) => {
+          this.loading = false
+          this.cardList = res.data
+        })
+      },
+
+      // 选择会员卡
+      chooseCard(val) {
+        this.cardList.map(item => {
+          if (item.id === val) {
+            this.memberForm.cardAmount = item.price
+            this.memberForm.validityPeriod = item.validTime + '年'
+            this.memberForm.cardSurfaceAmount = item.actualPrice
+            this.memberForm.discount = (1-item.price / item.actualPrice) * 100 + '%'
+          }
+        })
+      },
+
+      // 提交办卡信息
+      handleCard() {
+        this.$post('/card/handleCard', {
+          storeId: 1,
+          cardNumber: this.memberForm.memberCard,
+          payMethod: this.memberForm.payMethod,
+          staffId: this.memberForm.staffId,
+          clientId: this.$route.query.id,
+          cardServiceId: this.memberForm.cardServiceId
+        }).then(res => {
+          this.formLoading = false
+          this.$message({
+            message: '办理成功',
+            type: 'success'
+          })
+          this.$router.go(-1)
+        })
+      },
+
+      // 显示新增会员卡弹框
       handleShow() {
-        this.isShow = true;
+        this.isShow = true
+        this.dialog = {
+          name: '',
+          price: '',
+          actualPrice: '',
+          validTime: '',
+          comment: ''
+        }
+      },
+
+      // 新增卡类提交
+      submit() {
+        this.dialogLoading = true
+        this.$post('/cardService/modify', {
+          id: this.dialog.id,
+          name: this.dialog.name,
+          price: this.dialog.price,
+          actualPrice: this.dialog.actualPrice,
+          validTime: this.dialog.validTime,
+          comment: this.dialog.comment,
+          storeId: 1
+        }).then(res => {
+          this.dialogLoading = false
+          this.$message({
+            message: '新增成功',
+            type: 'success'
+          })
+          this.memberForm.cardAmount = ''
+          this.memberForm.validityPeriod = ''
+          this.memberForm.cardSurfaceAmount = ''
+          this.memberForm.discount = ''
+          this.isShow = false
+          this.getCardList()
+        })
       }
     },
     mounted: function () {
-
+      this.getClientInfo()
+      this.getStaffList()
+      this.getCardList()
     }
   }
 </script>
@@ -324,5 +317,9 @@
 
   .el-select, .el-input {
     width: 20vw;
+  }
+
+  .el-row {
+    margin: 20px;
   }
 </style>

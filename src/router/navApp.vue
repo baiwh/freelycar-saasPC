@@ -54,8 +54,11 @@
                 <i class="el-icon-service"></i>
                 <span>会员管理</span>
               </template>
-              <el-menu-item index="/MembershipManagement/MemberProcessing"
-                            class="el-submenu-margin">会员办理
+              <!--<el-menu-item index="/MembershipManagement/MemberProcessing"-->
+                            <!--class="el-submenu-margin">会员办理-->
+              <!--</el-menu-item>-->
+              <el-menu-item index="/MembershipManagement/AddNewCustomers"
+                            class="el-submenu-margin">新增客户
               </el-menu-item>
               <el-menu-item index="/MembershipManagement/CustomerManagement"
                             class="el-submenu-margin">客户管理

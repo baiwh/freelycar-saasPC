@@ -348,9 +348,6 @@
         }).then((res) => {
           this.loading = false
           this.staffList = res.data
-          this.pageData.currentPage = res.currentPage
-          this.pageData.pageSize = res.pageSize
-          this.pageData.pageTotal = res.total
         })
       },
 
