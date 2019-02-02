@@ -5,7 +5,7 @@
       <div slot="header">
         <span>客户信息</span>
       </div>
-      <el-form :model="clientForm" :rules="clientFormRules" ref="clientForm" label-width="100px">
+      <el-form v-loading="formLoading" :model="clientForm" :rules="clientFormRules" ref="clientForm" label-width="100px">
 
         <el-row>
           <el-col :span="10">
@@ -31,7 +31,7 @@
           </el-col>
           <el-col :span="10" :offset="2">
             <el-form-item label="年龄：" prop="clientAge">
-              <el-input v-model="clientForm.clientAge"></el-input>
+              <el-input v-model="clientForm.age"></el-input>
             </el-form-item>
           </el-col>
         </el-row>
@@ -79,16 +79,7 @@
     data() {
       return {
         //客户信息绑定表单
-        clientForm: {
-          name: '',
-          gender: '',
-          phone: '',
-          age: '',
-          birthday: '',
-          idNumber: '',
-          driverLicense: '',
-          storeId: 1
-        },
+        clientForm: {},
         //客户表单验证，非自定义验证，若自定义验证，待修改
         clientFormRules: {
           name: [
@@ -99,31 +90,51 @@
             {required: true, message: '请输入手机号码', trigger: 'blur'}
           ]
         },
-        carInfoFormRules:{
-          licensePlate:[
-            {required: true, message: '请输入手机号码', trigger: 'blur'}
-          ]
-        },
+        formLoading:false
       }
     },
     methods: {
+      // 获取客户基本信息
+      getClientInfo() {
+        this.formLoading = true
+        this.$get('/client/detail', {
+          id: this.$route.query.id
+        }).then(res => {
+          this.clientForm = res
+          this.formLoading = false
+        })
+      },
+
       // 提交信息
       submitInfo() {
-        this.$post('/client/addClientAndCar', {
-
-        }).then(res=>{
-
-          // this.$router.go(-1)
+        this.formLoading = true
+        this.$post('/client/modify', {
+          id: this.clientForm.id,
+          name: this.clientForm.name,
+          phone: this.clientForm.phone,
+          gender: this.clientForm.gender,
+          birthday: this.clientForm.birthday,
+          age: this.clientForm.age,
+          idNumber: this.clientForm.idNumber,
+          driverLicense: this.clientForm.driverLicense,
+          storeId: this.clientForm.storeId
+        }).then(res => {
+          this.formLoading = false
+          this.$message({
+            message: '修改成功',
+            type: 'success'
+          })
+          this.$router.go(-1)
         })
       },
 
       // 取消
-      concelSubmit(){
+      concelSubmit() {
         this.$router.go(-1)
       }
     },
     mounted: function () {
-
+      this.getClientInfo()
     }
   }
 </script>
