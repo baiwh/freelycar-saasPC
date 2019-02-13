@@ -88,6 +88,7 @@
         }).then(res => {
           this.carBrand.carTypeList = res
           this.carBrand.clientBrandCar = item.brand
+          this.carBrand.clientVehicleModel = ''
           this.$emit('getCarTypeInfo', this.carBrand)
           this.dialogLoading = false
         })

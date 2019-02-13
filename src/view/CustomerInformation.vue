@@ -58,9 +58,9 @@
       </div>
       <el-table :data="clinetInfo.coupon">
         <el-table-column property="name" label="抵用券名" align="center"/>
-        <el-table-column property="buyEndTime" label="到期日" align="center"/>
+        <el-table-column property="deadline" label="到期日" align="center"/>
         <el-table-column property="price" label="价格" align="center"/>
-        <el-table-column property="usableProject" label="可用项目" align="center"/>
+        <el-table-column property="projectId" label="可用项目" align="center"/>
       </el-table>
     </el-card>
 
@@ -179,87 +179,89 @@
       </div>
     </el-dialog>
 
+    <!--添加车型-->
+    <addCarBrand @getCarTypeInfo="getCarTypeInfo"
+                 :carBrandShow.sync="addNewCarForm.carBrandShow"></addCarBrand>
+
     <!--新增车辆对话框-->
     <el-dialog :title="isModify ? '新增车辆' : '修改车辆信息'" :visible.sync="addNewCarVisible" width="70%">
       <el-form :model="addNewCarForm" label-width="120px">
-        <el-row :gutter="20">
+        <el-row>
           <el-col :span="11">
-            <el-form-item label="车牌号：" prop="carNumber">
-              <el-input v-model="addNewCarForm.carNumber" size="mini"/>
+            <el-form-item label="车牌号码：" prop="carNumber">
+              <el-input v-model="addNewCarForm.licensePlate"></el-input>
             </el-form-item>
           </el-col>
           <el-col :span="11">
             <el-form-item label="车辆品牌：" prop="carBrand">
-              <el-select v-model="addNewCarForm.carBrand" placeholder="请选择" size="small">
-                <el-option v-for="item in selectOptions" :key="item.value" :label="item.label"
-                           :value="item.value"></el-option>
-              </el-select>
+              <el-input v-show="addNewCarForm.carBrand" v-model="addNewCarForm.carBrand"
+                        style="width: 75%"disabled></el-input>
+              <addNewButton @click="chooseCarBrand"></addNewButton>
             </el-form-item>
           </el-col>
         </el-row>
         <el-row>
           <el-col :span="11">
-            <el-form-item label="车牌类型：" prop="vehicleModel">
-              <el-input v-model="addNewCarForm.vehicleModel" size="mini"/>
+            <el-form-item label="车牌类型：" prop="carType">
+              <el-input v-model="addNewCarForm.carType" disabled></el-input>
             </el-form-item>
           </el-col>
           <el-col :span="11">
             <el-form-item label="保险起止时间：" prop="insuranceTime">
-              <el-date-picker
-                v-model="datePickerValue"
-                type="daterange"
-                range-separator="~"
-                start-placeholder="开始日期"
-                end-placeholder="结束日期"
-                class="dateWidth">
+              <el-date-picker v-model="insuranceTime" type="daterange"
+                              range-separator="~" start-placeholder="开始日期"
+                              value-format="yyyy-MM-dd" end-placeholder="结束日期">
               </el-date-picker>
             </el-form-item>
           </el-col>
         </el-row>
         <el-row>
           <el-col :span="11">
-            <el-form-item label="是否二手车：" prop="isNewCar">
-              <el-select v-model="addNewCarForm.isNewCar" placeholder="请选择储值卡" size="small">
-                <el-option label="是" value="yes"/>
-                <el-option label="否" value="no"/>
-              </el-select>
+            <el-form-item label="是否新车：" prop="isNewCar">
+              <el-radio-group v-model="addNewCarForm.newCar">
+                <el-radio :label="true">是</el-radio>
+                <el-radio :label="false">否</el-radio>
+              </el-radio-group>
             </el-form-item>
           </el-col>
           <el-col :span="11">
             <el-form-item label="保险金额：" prop="insuranceAmount">
-              <el-input v-model="addNewCarForm.insuranceAmount" size="mini"/>
+              <el-input v-model="addNewCarForm.insuranceAmount"/>
             </el-form-item>
           </el-col>
         </el-row>
         <el-row>
           <el-col :span="11">
             <el-form-item label="里程数：" prop="mileage">
-              <el-input v-model="addNewCarForm.mileage" size="mini"/>
+              <el-input v-model="addNewCarForm.miles"/>
             </el-form-item>
           </el-col>
           <el-col :span="11">
             <el-form-item label="上牌时间：" prop="addLicenseTime">
-              <el-input v-model="addNewCarForm.addLicenseTime" size="mini"/>
+              <el-date-picker v-model="addNewCarForm.licenseDate" type="date" placeholder="选择日期"
+                              value-format="yyyy-MM-dd" ></el-date-picker>
             </el-form-item>
           </el-col>
         </el-row>
         <el-row>
           <el-col :span="11">
             <el-form-item label="车架号：" prop="frameNumber">
-              <el-input v-model="addNewCarForm.frameNumber" size="mini"/>
+              <el-input v-model="addNewCarForm.frameNumber"/>
             </el-form-item>
           </el-col>
           <el-col :span="11">
             <el-form-item label="发动机号：" prop="engineNumber">
-              <el-input v-model="addNewCarForm.engineNumber" size="mini"/>
+              <el-input v-model="addNewCarForm.engineNumber"/>
             </el-form-item>
           </el-col>
         </el-row>
       </el-form>
+
       <div slot="footer" class="dialog-footer">
         <el-button type="primary" @click="submit">保存</el-button>
         <el-button @click="addNewCarVisible = false">取消</el-button>
       </div>
+
     </el-dialog>
   </div>
 </template>
@@ -272,7 +274,7 @@
         clinetInfo: {},
         expensesRecord: [],
         renewalCardInfo: {
-          renewalCardVisible:false,
+          renewalCardVisible: false,
           cardAmounts: '',
           price: '',
           payMethod: '',
@@ -294,19 +296,25 @@
         isModify: false,
         addNewCarVisible: false,
         addNewCarForm: {
-          carNumber: '',
+          carBrandShow: false,
+          carTypeList: [],//型号列表
           carBrand: '',
-          vehicleModel: '',
-          mileage: '',
+          carType: '',//型号
           engineNumber: '',
-          isNewCar: '',
+          frameNumber: '',
           insuranceAmount: '',
-          addLicenseTime: ''
+          miles: '',
+          newCar: '',
+          licenseDate: '',
+          licensePlate: ''
         },
-        selectOptions: [{
-          label: '沃尔沃',
-          value: 'wow'
-        }],
+        insuranceTime:[],
+        carBrand: {
+          carBrandShow: true,
+          carTypeList: [],//型号列表
+          clientBrandCar: '',//品牌
+          clientVehicleModel: '',//型号
+        },
         datePickerValue: '',
         index: 4,
         cardInfo: {}
@@ -322,8 +330,6 @@
           this.clinetInfo = res
         })
       },
-
-      // 获取消费详情
 
       // 会员卡详情
       getCardInfo(row) {
@@ -353,27 +359,50 @@
         this.$post('', {})
       },
 
-      //修改车辆信息
+      //修改车辆信息（打开弹窗）
       modifyCarInfo(row) {
         this.isModify = false
         this.addNewCarVisible = true
-        //?
+        this.addNewCarForm = row
+        this.insuranceTime[0]=row.insuranceStartTime
+        this.insuranceTime[1]=row.insuranceEndTime
       },
 
       //新增车辆信息打开弹框
       addNewCar() {
         this.isModify = true
+        this.insuranceTime=[]
         this.addNewCarForm = {
-          carNumber: '',
+          carBrandShow: false,
+          carTypeList: [],//型号列表
           carBrand: '',
-          vehicleModel: '',
-          mileage: '',
+          carType: '',//型号
           engineNumber: '',
-          isNewCar: '',
+          frameNumber: '',
           insuranceAmount: '',
-          addLicenseTime: ''
+          miles: '',
+          newCar: '',
+          licenseDate: '',
+          licensePlate: ''
         }
         this.addNewCarVisible = true
+      },
+
+      // 打开选择车辆型号弹框
+      chooseCarBrand() {
+        this.addNewCarVisible = false
+        this.addNewCarForm.carBrandShow = true
+      },
+
+      // 选择车辆型号信息
+      getCarTypeInfo(list) {
+        if (list.clientVehicleModel) {
+          this.carBrand = list
+          this.addNewCarForm.carBrand = list.clientBrandCar
+          this.addNewCarForm.carType = list.clientVehicleModel
+          this.addNewCarVisible = true
+          this.addNewCarForm.carBrandShow = false
+        }
       },
 
       // 关闭小提示框
@@ -382,17 +411,48 @@
       },
 
       // 删除车辆信息
-      deleteCar(row){
-        console.log('删了')
+      deleteCar(row) {
+        this.$get('/car/delete',{
+          id:row.id
+        }).then(res=>{
+          this.$message({
+            message: '删除成功',
+            type: 'success'
+          })
+          this.handleClose(row.id)
+          this.getClientInfo()
+        })
       },
 
       //新增车辆信息弹框中的保存按钮
       submit() {
-        //提交弹框中的信息
         this.addNewCarVisible = false
-        //调用方法重新获取表格信息
+        this.$post('/car/modify', {
+          carBrand:this.addNewCarForm.carBrand,
+          carType:this.addNewCarForm.carType,
+          clientId:this.$route.query.id,
+          engineNumber:this.addNewCarForm.engineNumber,
+          frameNumber:this.addNewCarForm.frameNumber,
+          insuranceAmount:this.addNewCarForm.insuranceAmount,
+          insuranceEndTime:this.insuranceTime[0],
+          insuranceStartTime:this.insuranceTime[1],
+          miles:this.addNewCarForm.miles,
+          newCar:this.addNewCarForm.newCar,
+          licenseDate:this.addNewCarForm.licenseDate,
+          licensePlate:this.addNewCarForm.licensePlate,
+          storeId:1,
+          id:this.addNewCarForm.id
+        }).then(res=>{
+          this.$message({
+            message: '保存成功',
+            type: 'success'
+          })
+          this.getClientInfo()
+        })
       },
 
+
+      // 获取消费详情
     },
     mounted: function () {
       this.getClientInfo()
@@ -405,9 +465,8 @@
     margin-bottom: 40px;
   }
 
-  .el-col > .el-input {
-    width: 60%;
-    margin-bottom: 20px;
+  .el-input, .el-select, .el-date-editor {
+    width: 90%;
   }
 
   .el-row {
