@@ -60,7 +60,7 @@
         <el-table-column property="name" label="抵用券名" align="center"/>
         <el-table-column property="deadline" label="到期日" align="center"/>
         <el-table-column property="price" label="价格" align="center"/>
-        <el-table-column property="projectId" label="可用项目" align="center"/>
+        <el-table-column property="projectId" label="可用项目" align="center" :formatter="projectTypeFormat"/>
       </el-table>
     </el-card>
 
@@ -77,7 +77,7 @@
           <el-table-column property="carType" label="车辆型号" align="center"/>
           <el-table-column property="miles" label="里程数" align="center"/>
           <el-table-column property="engineNumber" label="发动机号" align="center"/>
-          <el-table-column property="newCar" label="是否新车" align="center"/>
+          <el-table-column property="newCar" label="是否新车" align="center" :formatter="newCarFormat"/>
           <el-table-column property="insuranceAmount" label="保险金额" align="center"/>
           <el-table-column property="insuranceEndTime" label="保险有效期" align="center"/>
           <el-table-column label="操作" align="center" width="150">
@@ -267,11 +267,13 @@
 </template>
 
 <script>
+  import {trueOrFlase} from './../components/formatter.js'
   export default {
     name: 'CustomerInformation',
     data() {
       return {
         clinetInfo: {},
+        projectType:[],
         expensesRecord: [],
         renewalCardInfo: {
           renewalCardVisible: false,
@@ -451,11 +453,38 @@
         })
       },
 
+      // 是否新车过滤器
+      newCarFormat(row){
+        return trueOrFlase(row.newCar)
+      },
+
+      // 获取项目类别列表
+      getProjectType() {
+        this.$get('/project/list', {
+          storeId: 1,
+          currentPage: 1,
+          pageSize: 1000
+        }).then((res) => {
+          this.projectType = res.data
+        })
+      },
+
+      // 项目名称过滤器
+      projectTypeFormat(row){
+        let name = ''
+        this.projectType.filter(v=>{
+          if(v.id===row.projectId){
+            name = v.name
+          }
+        })
+        return name
+      },
 
       // 获取消费详情
     },
     mounted: function () {
       this.getClientInfo()
+      this.getProjectType()
     }
   }
 </script>
