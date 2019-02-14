@@ -6,7 +6,7 @@
       <div slot="header" class="clearfix">
         <span>服务项目</span>
       </div>
-      <el-table :data="settlementCenterTable" show-summary :summary-method="getProjectSummaries">
+      <el-table :data="consumerProjectInfos" show-summary :summary-method="getProjectSummaries">
         <el-table-column type="index" width="50" label="序号" align="center"/>
         <el-table-column width="70" align="center"/>
         <el-table-column property="project" label="项目" width="200" align="center"/>
@@ -20,7 +20,7 @@
       <div slot="header" class="clearfix">
         <span>配件明细</span>
       </div>
-      <el-table :data="fittingDetailsTable" show-summary :summary-method="getFittingSummaries">
+      <el-table :data="autoParts" show-summary :summary-method="getFittingSummaries">
         <el-table-column type="index" width="50" label="序号" align="center"/>
         <el-table-column width="70" align="center"/>
         <el-table-column property="fittingCategory" width="90" label="配件类别" align="center"/>
@@ -109,31 +109,6 @@
     name: 'SettlementCenter',
     data() {
       return {
-        settlementCenterTable: [
-          {
-            project: '维修维修维修',
-            price: '554',
-            staff: '张三'
-          }, {
-            project: '洗车',
-            price: '20',
-            staff: '李四'
-          }, {
-            project: '维修',
-            price: '123',
-            staff: '王五'
-          }, {
-            project: '维修',
-            price: '11',
-            staff: '赵六'
-          }],
-        fittingDetailsTable: [{
-          fittingCategory: '机油',
-          fittingName: '嘉实多机油',
-          number: '20',
-          perPrice: '1',
-          sumPrice: '20.00'
-        }],
         deductionAmounts: '',
         payAmounts: '',
         payMethods: '',
@@ -167,10 +142,25 @@
             label: '3000储值卡'
           }],
         visible: false,
-        sumMoney: []
+        sumMoney: [],
+        consumerOrder:[],
+        consumerProjectInfos:[],
+        autoParts:[],
       }
     },
     methods: {
+      // 获取订单详情
+      getOrderDetail(){
+        this.$get('/order/detail',{
+          id: this.$route.query.id
+        }).then(res=>{
+          console.log(res)
+          this.consumerOrder = res.consumerOrder
+          this.consumerProjectInfos = res.consumerProjectInfos
+          this.autoParts = res.autoParts
+        })
+      },
+
       // 挂单
       pendingOrder() {
         this.$post('/order/pendingOrder',{
@@ -271,7 +261,7 @@
       }
     },
     mounted: function () {
-
+      this.getOrderDetail()
     }
   }
 </script>

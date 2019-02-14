@@ -67,7 +67,7 @@
                    plain @click="projectAddVisible = true">添加
         </el-button>
       </div>
-      <el-table :data="consumerProjectInfos" show-summary :summary-method="getSummaries" style="width: 100%">
+      <el-table :data="projectShow" show-summary :summary-method="getSummaries" style="width: 100%">
         <el-table-column type="index" label="序号"></el-table-column>
         <el-table-column prop="projectName" label="项目名称"></el-table-column>
         <el-table-column prop="price" label="项目价格"></el-table-column>
@@ -98,11 +98,11 @@
     </el-card>
 
     <!--第四部分。使用配件-->
-    <el-card shadow="hover" v-show="consumerProjectInfos.length>0">
+    <el-card shadow="hover" v-show="projectShow.length>0">
       <div slot="header">
         <span>使用配件</span>
         <el-button type="primary" size="small" class="addButton" icon="el-icon-plus"
-                   plain @click="fittingAddVisible = true">添加
+                   plain @click="openAccessoriesDialog">添加
         </el-button>
       </div>
       <el-table :data="accessoriesList" show-summary :summary-method="getFittingSummaries" style="width: 100%">
@@ -196,45 +196,34 @@
     </el-dialog>
 
     <!--适用配件-添加模态框-->
-    <el-dialog title="配件添加" :visible.sync="fittingAddVisible" width="80%">
-      <el-table :data="fittingAddTable">
-        <el-table-column prop="item" label="配件类别">
+    <el-dialog title="配件添加" :visible.sync="accessoriesVisible" width="80%">
+      <el-table :data="accessoriesDialog">
+        <el-table-column prop="type" label="配件类别">
           <template slot-scope="scope">
-            <el-input v-model="scope.row[scope.column.property]"></el-input>
+            <el-input v-model="accessoriesDialog[0].type"></el-input>
           </template>
         </el-table-column>
-        <el-table-column prop="fittingName" label="配件名称">
+        <el-table-column prop="name" label="配件名称">
           <template slot-scope="scope">
-            <el-input v-model="scope.row[scope.column.property]"></el-input>
+            <el-input v-model="accessoriesDialog[0].name"></el-input>
           </template>
         </el-table-column>
-        <el-table-column prop="number" label="数量">
+        <el-table-column prop="count" label="数量">
           <template slot-scope="scope">
-            <el-select v-model="scope.row[scope.column.property]" placeholder="请选择数量">
-              <el-option
-                v-for="item in projectType"
-                :key="item.value"
-                :label="item.label"
-                :value="item.value">
-              </el-option>
-            </el-select>
+            <el-input v-model="accessoriesDialog[0].count"></el-input>
           </template>
         </el-table-column>
-        <el-table-column prop="fittingPrice" label="单价">
+        <el-table-column prop="unitPrice" label="单价">
           <template slot-scope="scope">
-            <el-input v-model="scope.row[scope.column.property]"></el-input>
+            <el-input v-model="accessoriesDialog[0].unitPrice"></el-input>
           </template>
         </el-table-column>
-        <el-table-column prop="fittingSum" label="总价">
-          <template slot-scope="scope">
-            <el-input v-model="scope.row[scope.column.property]"></el-input>
-          </template>
-        </el-table-column>
+        <el-table-column prop="totalPrice" label="总价">{{getTotalPrice}}</el-table-column>
       </el-table>
 
       <div slot="footer" class="dialog-footer">
-        <el-button @click="fittingAddVisible = false">取 消</el-button>
-        <el-button type="primary" @click="fittingAddVisible = false">确 定</el-button>
+        <el-button @click="accessoriesVisible = false">取 消</el-button>
+        <el-button type="primary" @click="saveAccessoriesDialog">确 定</el-button>
       </div>
     </el-dialog>
 
@@ -267,11 +256,11 @@
           pickTime: '',
           pickCarStaffId: '',
           pickCarStaffName: '',
-          totalPrice:null,
+          totalPrice: null,
           miles: '',
-          faultDescription:''
+          faultDescription: ''
         },
-        consumerProjectInfos: [
+        projectShow: [
           {
             projectId: "4028a18167aac8410167aacec2010004",
             projectName: "打蜡1",
@@ -280,6 +269,7 @@
             price: 10
           }
         ],
+        projectSubmit: [],
         autoParts: [
           {
             type: "耗材",
@@ -290,6 +280,8 @@
           }
         ],
         accessoriesList: [],
+        accessoriesVisible: false,
+        accessoriesDialog: [],
         radio: '否',
         datetime: '',
         projectType: [],
@@ -300,17 +292,23 @@
           pageSize: 10,
           pageTotal: 100
         },
-        fittingAddVisible: false,
-        fittingAddTable: [
-          {
-            item: 'yuio'
-          }
-        ],
         multipleSelection: [],
         staffList: []
       }
     },
     methods: {
+      // 获取订单详情
+      getOrderDetail() {
+        this.$get('/order/detail', {
+          id: this.$route.query.id
+        }).then(res => {
+          console.log(res)
+          this.consumerOrder = res.consumerOrder
+          this.projectShow = res.consumerProjectInfos
+          this.autoParts = res.autoParts
+        })
+      },
+
       // 获取项目类别列表
       getProjectType() {
         this.$get('/projectType/list', {
@@ -399,46 +397,31 @@
         }
       },
 
-      // 保存快速开单
+      // 保存快速开单（修改呢？？）
       submitOrder(settlement) {
         this.$post('/order/handleOrder', {
           consumerOrder: {
-            licensePlate: "牛B74DSB",
-            carBrand: "别克凯越",
-            carType: "2016自动挡",
-            storeId: "1",
-            carId: "4028802767e9302a0167e935f2c40003",
-            lastMiles: 2222,
-            miles: 3333,
-            clientId: "4028802767e9302a0167e935f2ab0002",
-            clientName: "李四",
-            phone: "18918907788",
-            isMember: true,
-            pickTime: "2019-01-04T09:39:16.170+0000",
-            pickCarStaffId: "4028a18167ce66590167ce683ac60000",
-            faultDescription: ""
+            licensePlate: this.consumerOrder.licensePlate,
+            carBrand: this.consumerOrder.carBrand,
+            carType: this.consumerOrder.carType,
+            storeId: 1,
+            carId: this.consumerOrder.carId,
+            lastMiles: this.consumerOrder.lastMiles,
+            miles: this.consumerOrder.miles,
+            clientId: this.consumerOrder.clientId,
+            clientName: this.consumerOrder.clientName,
+            phone: this.consumerOrder.phone,
+            isMember: this.consumerOrder.isMember,
+            pickTime: this.consumerOrder.pickTime,
+            pickCarStaffId: this.consumerOrder.pickCarStaffId,
+            faultDescription: this.consumerOrder.faultDescription
           },
-          consumerProjectInfos: [
-            {
-              projectId: "4028a18167aac8410167aade77980009",
-              projectName: "普洗",
-              staffId: "297ede6067e3520b0167e3539eb70000",
-              staffName: "张五"
-            }
-          ],
-          autoParts: [
-            {
-              type: "耗材",
-              name: "xx车蜡",
-              count: 2,
-              unitPrice: 25.5,
-              totalPrice: 51
-            }
-          ]
+          consumerProjectInfos: this.projectShow,
+          autoParts: this.accessoriesList
         }).then(res => {
-          // 结算
           if (settlement) {
-            this.$router.push({path: '/ConsumptionOrder/SettlementCenter', query: {id: res.id}})
+            // 结算
+            this.$router.push({path: '/ConsumptionOrder/SettlementCenter', query: {id: res}})
           } else {
             // 保存
           }
@@ -452,6 +435,23 @@
             this.consumerOrder.pickCarStaffName = v.name
           }
         })
+      },
+
+      // 打开添加配件的模态框
+      openAccessoriesDialog(){
+        this.accessoriesVisible = true
+        this.accessoriesDialog=[{
+          type: '',
+          name: '',
+          count: null,
+          unitPrice: null,
+          totalPrice: null
+        }]
+      },
+
+      saveAccessoriesDialog(){
+        this.accessoriesList.push(this.accessoriesDialog[0])
+        this.accessoriesVisible = false
       },
 
       handleDelete() {
@@ -485,7 +485,21 @@
       changePage() {
       }
     },
+    computed: {
+      // 添加配件模态框的总金额
+      getTotalPrice(){
+        let price = null
+        if(this.accessoriesDialog.length>0){
+          price =this.accessoriesDialog[0].count*this.accessoriesDialog[0].unitPrice
+          this.accessoriesDialog[0].totalPrice=price
+        }
+        return price
+      }
+    },
     mounted: function () {
+      if (this.$route.query.id) {
+        this.getOrderDetail()
+      }
       this.getServiceList()
       this.getProjectType()
       this.getStaffList()
@@ -494,7 +508,7 @@
 </script>
 
 <style lang="less" scoped>
-  .el-input {
+  .el-input, .el-select {
     width: 60%;
   }
 
