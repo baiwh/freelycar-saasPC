@@ -73,7 +73,8 @@
         <el-table-column prop="price" label="项目价格"></el-table-column>
         <el-table-column prop="staffName" label="施工人员">
           <template slot-scope="scope">
-            <el-select size="small" v-model="consumerOrder.pickCarStaffId" placeholder="请选择" @change="changeStaff">
+            <el-select size="small" v-model="projectShow[scope.$index].staffId" placeholder="请选择"
+                       @change="changeProjectStaff(scope)">
               <el-option v-for="item in staffList" :key="item.id" :label="item.name"
                          :value="item.id"></el-option>
             </el-select>
@@ -81,17 +82,14 @@
         </el-table-column>
         <el-table-column label="操作">
           <template slot-scope="scope">
-            <el-popover
-              placement="top"
-              width="160"
-              v-model="visible2">
+            <el-popover placement="top" width="160" :ref="scope.$index">
               <p>确定删除？</p>
               <div style="text-align: right; margin: 0">
-                <el-button size="mini" type="text" @click="visible2 = false">取消</el-button>
-                <el-button type="primary" size="mini" @click="handleDelete(scope.row)">确定</el-button>
+                <el-button size="mini" type="text" @click="handleClose(scope.$index)">取消</el-button>
+                <el-button type="primary" size="mini" @click="projectHandleDelete(scope)">确定</el-button>
               </div>
-              <el-button slot="reference" size="mini" type="danger">删除</el-button>
             </el-popover>
+            <el-button v-popover="scope.$index" size="mini" type="danger">删除</el-button>
           </template>
         </el-table-column>
       </el-table>
@@ -116,17 +114,14 @@
         </el-table-column>
         <el-table-column label="操作">
           <template slot-scope="scope">
-            <el-popover
-              placement="top"
-              width="160"
-              v-model="visible2">
+            <el-popover placement="top" width="160" :ref="scope.row.type">
               <p>确定删除？</p>
               <div style="text-align: right; margin: 0">
-                <el-button size="mini" type="text" @click="visible2 = false">取消</el-button>
-                <el-button type="primary" size="mini" @click="handleDelete(scope.row)">确定</el-button>
+                <el-button size="mini" type="text" @click="handleClose(scope.row.type)">取消</el-button>
+                <el-button type="primary" size="mini" @click="handleDelete(scope)">确定</el-button>
               </div>
-              <el-button slot="reference" size="mini" type="danger">删除</el-button>
             </el-popover>
+            <el-button v-popover="scope.row.type" size="mini" type="danger">删除</el-button>
           </template>
         </el-table-column>
       </el-table>
@@ -158,11 +153,7 @@
         <el-col :span="10">
           <span>项目类别：</span>
           <el-select v-model="selectValue" clearable placeholder="请选择项目类别">
-            <el-option
-              v-for="item in projectType"
-              :key="item.id"
-              :label="item.name"
-              :value="item.id">
+            <el-option v-for="item in projectType" :key="item.id" :label="item.name" :value="item.id">
             </el-option>
           </el-select>
         </el-col>
@@ -191,7 +182,7 @@
 
       <div slot="footer" class="dialog-footer">
         <el-button @click="projectAddVisible = false">取 消</el-button>
-        <el-button type="primary" @click="projectAddVisible = false">确 定</el-button>
+        <el-button type="primary" @click="saveProject">确 定</el-button>
       </div>
     </el-dialog>
 
@@ -264,21 +255,12 @@
           {
             projectId: "4028a18167aac8410167aacec2010004",
             projectName: "打蜡1",
-            staffId: "4028a18167ce66590167ce6881300001",
-            staffName: "张四",
+            staffId: "",
+            staffName: "",
             price: 10
           }
         ],
-        projectSubmit: [],
-        autoParts: [
-          {
-            type: "耗材",
-            name: "xx车蜡",
-            count: 2,
-            unitPrice: 25.5,
-            totalPrice: 51
-          }
-        ],
+        autoParts: [],
         accessoriesList: [],
         accessoriesVisible: false,
         accessoriesDialog: [],
@@ -360,12 +342,6 @@
         return name
       },
 
-      // 多选
-      handleSelectionChange(val) {
-        this.multipleSelection = val
-        console.log(val)
-      },
-
       // 根据车牌查信息
       getCarInfo() {
         if (this.consumerOrder.licensePlate.length === 7) {
@@ -397,10 +373,11 @@
         }
       },
 
-      // 保存快速开单（修改呢？？）
+      // 保存快速开单
       submitOrder(settlement) {
         this.$post('/order/handleOrder', {
           consumerOrder: {
+            id: this.consumerOrder.id,
             licensePlate: this.consumerOrder.licensePlate,
             carBrand: this.consumerOrder.carBrand,
             carType: this.consumerOrder.carType,
@@ -428,7 +405,12 @@
         })
       },
 
-      // 选中员工后的回调，提取员工姓名
+      // 关闭小提示框
+      handleClose(id) {
+        this.$refs[id].doClose()
+      },
+
+      // 接车人员。选中员工后的回调，提取员工姓名
       changeStaff(id) {
         this.staffList.map(v => {
           if (v.id === id) {
@@ -438,9 +420,9 @@
       },
 
       // 打开添加配件的模态框
-      openAccessoriesDialog(){
+      openAccessoriesDialog() {
         this.accessoriesVisible = true
-        this.accessoriesDialog=[{
+        this.accessoriesDialog = [{
           type: '',
           name: '',
           count: null,
@@ -449,14 +431,72 @@
         }]
       },
 
-      saveAccessoriesDialog(){
+      // 添加配件模态框保存按钮
+      saveAccessoriesDialog() {
         this.accessoriesList.push(this.accessoriesDialog[0])
         this.accessoriesVisible = false
       },
 
-      handleDelete() {
-        console.log('this', this.radio)
+      // 服务项目删除按钮
+      projectHandleDelete(scope) {
+        let arr = this.projectShow
+        delete arr[scope.$index]
+        let newArr = []
+        arr.map(value => {
+          if (value) {
+            newArr.push(value)
+          }
+        })
+        this.projectShow = newArr
+        this.handleClose(scope.row.id)
       },
+
+      // 配件删除按钮
+      handleDelete(scope) {
+        let arr = this.accessoriesList
+        delete arr[scope.$index]
+        let newArr = []
+        arr.map(value => {
+          if (value) {
+            newArr.push(value)
+          }
+        })
+        this.accessoriesList = newArr
+        this.handleClose(scope.$index)
+      },
+
+      // 多选
+      handleSelectionChange(val) {
+        this.multipleSelection = val
+        console.log(val)
+      },
+
+      // 添加服务项目的确定按钮
+      saveProject(){
+        this.projectAddVisible = false
+        // 检查id是否存在列表，不存在就插入
+        // this.multipleSelection.map(value=>{
+        //   for(let i=0;i<this.projectShow.length;i++){
+        //     if(this.projectShow[i].projectId!==value.id){
+        //       this.projectShow.push(value)
+        //     }
+        //   }
+        // })
+      },
+
+      // 服务项目施工人员
+      changeProjectStaff(scope) {
+        console.log(scope)
+        this.staffList.map(v => {
+          if (v.id === scope.row.id) {
+            this.projectShow[scope.$index].staffId = v.id
+            this.projectShow[scope.$index].staffName = v.name
+          }
+        })
+        console.log(this.projectShow)
+      },
+
+
       sum(param, totalIndex, totalPriceIndex, ride) {
         const {columns, data} = param
         const sums = []
@@ -482,16 +522,14 @@
       getFittingSummaries(param) {
         return this.sum(param, 0, 5, true)
       },
-      changePage() {
-      }
     },
     computed: {
       // 添加配件模态框的总金额
-      getTotalPrice(){
+      getTotalPrice() {
         let price = null
-        if(this.accessoriesDialog.length>0){
-          price =this.accessoriesDialog[0].count*this.accessoriesDialog[0].unitPrice
-          this.accessoriesDialog[0].totalPrice=price
+        if (this.accessoriesDialog.length > 0) {
+          price = this.accessoriesDialog[0].count * this.accessoriesDialog[0].unitPrice
+          this.accessoriesDialog[0].totalPrice = price
         }
         return price
       }
