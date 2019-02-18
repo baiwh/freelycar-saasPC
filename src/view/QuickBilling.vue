@@ -129,13 +129,15 @@
 
     <!--金额结算等-->
     <el-row>
-      <el-col :offset="9" :span="5">项目：<span class="redPrice">70</span>元</el-col>
-      <el-col :span="5">配件：<span class="redPrice">70</span>元</el-col>
-      <el-col :span="5">整单金额：<span class="redPrice">70</span>元</el-col>
+      <el-col :offset="9" :span="5">项目：<span class="redPrice">{{projectPrice?projectPrice:0}}</span>元</el-col>
+      <el-col :span="5">配件：<span class="redPrice">{{accessoriesPrice?accessoriesPrice:0}}</span>元</el-col>
+      <el-col :span="5">整单金额：
+        <span class="redPrice">{{projectPrice?(accessoriesPrice?projectPrice+accessoriesPrice:projectPrice):0}}</span>元
+      </el-col>
     </el-row>
     <el-row>
       <el-col :offset="16" :span="4">
-        <el-button type="primary" @click="submitOrder">保存</el-button>
+        <el-button type="primary" @click="submitOrder(false)">保存</el-button>
       </el-col>
       <el-col :span="4">
         <el-button type="primary" @click="submitOrder(true)">结算</el-button>
@@ -251,19 +253,13 @@
           miles: '',
           faultDescription: ''
         },
-        projectShow: [
-          {
-            projectId: "4028a18167aac8410167aacec2010004",
-            projectName: "打蜡1",
-            staffId: "",
-            staffName: "",
-            price: 10
-          }
-        ],
+        projectShow: [],
+        projectSum: [],
         autoParts: [],
         accessoriesList: [],
         accessoriesVisible: false,
         accessoriesDialog: [],
+        accessoriesSum: [],
         radio: '否',
         datetime: '',
         projectType: [],
@@ -391,7 +387,9 @@
             isMember: this.consumerOrder.isMember,
             pickTime: this.consumerOrder.pickTime,
             pickCarStaffId: this.consumerOrder.pickCarStaffId,
-            faultDescription: this.consumerOrder.faultDescription
+            pickCarStaffName: this.consumerOrder.pickCarStaffName,
+            faultDescription: this.consumerOrder.faultDescription,
+            totalPrice: this.projectPrice?(this.accessoriesPrice?this.projectPrice+this.accessoriesPrice:this.projectPrice):0
           },
           consumerProjectInfos: this.projectShow,
           autoParts: this.accessoriesList
@@ -401,6 +399,11 @@
             this.$router.push({path: '/ConsumptionOrder/SettlementCenter', query: {id: res}})
           } else {
             // 保存
+            this.$message({
+              message: '保存成功',
+              type: 'success'
+            })
+            this.$router.go(-1)
           }
         })
       },
@@ -468,35 +471,45 @@
       // 多选
       handleSelectionChange(val) {
         this.multipleSelection = val
-        console.log(val)
       },
 
       // 添加服务项目的确定按钮
-      saveProject(){
+      saveProject() {
         this.projectAddVisible = false
-        // 检查id是否存在列表，不存在就插入
-        // this.multipleSelection.map(value=>{
-        //   for(let i=0;i<this.projectShow.length;i++){
-        //     if(this.projectShow[i].projectId!==value.id){
-        //       this.projectShow.push(value)
-        //     }
-        //   }
-        // })
+        if (this.multipleSelection.length > 0) {
+          this.multipleSelection.map(value => {
+            let flag = false
+            // 检查是否有和它相同的
+            for (let i = 0; i < this.projectShow.length; i++) {
+              if (this.projectShow[i].projectId === value.id) {
+                flag = true
+              }
+            }
+            // 如果没有就插入
+            if (!flag) {
+              this.projectShow.push({
+                projectId: value.id,
+                projectName: value.name,
+                staffId: '',
+                staffName: '',
+                price: value.price
+              })
+            }
+          })
+        }
       },
 
       // 服务项目施工人员
       changeProjectStaff(scope) {
-        console.log(scope)
         this.staffList.map(v => {
-          if (v.id === scope.row.id) {
+          if (v.id === scope.row.staffId) {
             this.projectShow[scope.$index].staffId = v.id
             this.projectShow[scope.$index].staffName = v.name
           }
         })
-        console.log(this.projectShow)
       },
 
-
+      // 合计
       sum(param, totalIndex, totalPriceIndex, ride) {
         const {columns, data} = param
         const sums = []
@@ -517,9 +530,11 @@
         return sums
       },
       getSummaries(param) {
+        this.projectSum = this.sum(param, 0, 2)
         return this.sum(param, 0, 2)
       },
       getFittingSummaries(param) {
+        this.accessoriesSum = this.sum(param, 0, 5, true)
         return this.sum(param, 0, 5, true)
       },
     },
@@ -532,7 +547,19 @@
           this.accessoriesDialog[0].totalPrice = price
         }
         return price
-      }
+      },
+
+      // 项目
+      projectPrice() {
+        let value = this.projectSum.filter(value => value !== '' && (typeof value) === "number")
+        return value[0]
+      },
+
+      // 配件
+      accessoriesPrice() {
+        let value = this.accessoriesSum.filter(value => value !== '' && (typeof value) === "number")
+        return value[0]
+      },
     },
     mounted: function () {
       if (this.$route.query.id) {
