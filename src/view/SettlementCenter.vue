@@ -6,12 +6,11 @@
       <div slot="header" class="clearfix">
         <span>服务项目</span>
       </div>
-      <el-table :data="consumerProjectInfos" show-summary :summary-method="getProjectSummaries">
-        <el-table-column type="index" width="50" label="序号" align="center"/>
-        <el-table-column width="70" align="center"/>
-        <el-table-column property="project" label="项目" width="200" align="center"/>
-        <el-table-column property="price" label="项目价格" width="120" align="center"/>
-        <el-table-column property="staff" label="施工人员" align="center"/>
+      <el-table :data="consumerProjectInfos" show-summary :summary-method="getSummaries">
+        <el-table-column type="index" label="序号" align="center"/>
+        <el-table-column property="projectName" label="项目" align="center"/>
+        <el-table-column property="price" label="项目价格" align="center"/>
+        <el-table-column property="staffName" label="施工人员" align="center"/>
       </el-table>
     </el-card>
 
@@ -21,21 +20,21 @@
         <span>配件明细</span>
       </div>
       <el-table :data="autoParts" show-summary :summary-method="getFittingSummaries">
-        <el-table-column type="index" width="50" label="序号" align="center"/>
-        <el-table-column width="70" align="center"/>
-        <el-table-column property="fittingCategory" width="90" label="配件类别" align="center"/>
-        <el-table-column property="fittingName" width="90" label="配件名称" align="center"/>
-        <el-table-column property="number" width="70" label="数量" align="center"/>
-        <el-table-column property="perPrice" width="70" label="单价" align="center"/>
-        <el-table-column property="sumPrice" label="总价" align="center"/>
+        <el-table-column type="index" label="序号" align="center"/>
+        <el-table-column property="type" label="配件类别" align="center"/>
+        <el-table-column property="name" label="配件名称" align="center"/>
+        <el-table-column property="count" label="数量" align="center"/>
+        <el-table-column property="unitPrice" label="单价" align="center"/>
+        <el-table-column property="sumPrice" label="总价" align="center">
+          <template slot-scope="scope">{{scope.row.count*scope.row.unitPrice}}</template>
+        </el-table-column>
       </el-table>
     </el-card>
 
     <!--应付金额模块-->
     <el-row class="paymentInput">
       <el-col :span="6" :offset="18">
-        应付金额：
-        <el-input :value="amountsPayableComputed" size="small" class="inputWidth red" disabled/>
+        应付金额：<span class="redPrice">{{consumerOrder.totalPrice}}</span>
       </el-col>
     </el-row>
 
@@ -46,41 +45,54 @@
       </div>
 
       <el-row>
-        <el-col :span="8">
+        <el-col>
+          抵用券使用：
+          <el-switch v-model="useCoupons" active-text="洗车券" inactive-text=""></el-switch>
+        </el-col>
+      </el-row>
+      <!--第一种支付方式-->
+      <el-row>
+        <el-col :span="7">
           <span class="fontSize">支付方式：</span>
-          <el-select v-model="payMethods" size="small" class="inputWidth">
+          <el-select v-model="payWay1.payMethods" size="small" class="inputWidth">
             <el-option v-for="item in payMethodOptions" :key="item.value" :label="item.label" :value="item.value"/>
           </el-select>
         </el-col>
-        <el-col :span="8">
+        <el-col :span="8" v-show="payWay1.payMethods===1">
           <span class="fontSize">可用卡劵：</span>
-          <el-select v-model="usableCards" size="small" class="inputWidth">
-            <el-option v-for="item in usableCardOptions" :key="item.value" :label="item.label" :value="item.value"/>
+          <el-select v-model="payWay1.usableCards" size="small" class="inputWidth">
+            <el-option v-for="item in cardList" :key="item.id" :label="item.name" :value="item.id"/>
           </el-select>
         </el-col>
-        <el-col :span="7">
+        <el-col :span="8">
           <span class="fontSize">扣除金额：</span>
-          <el-input v-model="deductionAmounts" size="small" class="inputWidth red"/>
+          <el-input v-model="payWay1.deductionAmounts" size="small" class="inputWidth red"/>
         </el-col>
         <el-col :span="1">
-          <add-new-button @click="handlePlusIconClick"></add-new-button>
+          <add-new-button @click="payWay2.visible = true"></add-new-button>
         </el-col>
       </el-row>
 
-      <!--可隐藏的叠加支付方式模块-->
-      <div v-show="visible">
+      <!--第二种支付方式-->
+      <div v-show="payWay2.visible">
         <el-row>
-          <el-col :span="8">
+          <el-col :span="7">
             <span class="fontSize">支付方式：</span>
-            <el-select v-model="payMethods" size="small" class="inputWidth">
+            <el-select v-model="payWay2.payMethods" size="small" class="inputWidth">
               <el-option v-for="item in payMethodOptions" :key="item.value" :label="item.label" :value="item.value"/>
+            </el-select>
+          </el-col>
+          <el-col :span="8" v-show="payWay2.payMethods===1">
+            <span class="fontSize">可用卡劵：</span>
+            <el-select v-model="payWay2.usableCards" size="small" class="inputWidth">
+              <el-option v-for="item in cardList" :key="item.id" :label="item.name" :value="item.id"/>
             </el-select>
           </el-col>
           <el-col :span="8">
             <span class="fontSize">支付金额：</span>
-            <el-input v-model="payAmounts" size="small" class="inputWidth red"/>
+            <el-input v-model="payWay2.payAmounts" size="small" class="inputWidth red"/>
           </el-col>
-          <el-col :span="1" :offset="7">
+          <el-col :span="1">
             <add-new-button :minus="true" @click="handleRemoveIconClick"></add-new-button>
           </el-col>
         </el-row>
@@ -89,10 +101,10 @@
       <!--确定按钮-->
       <el-row>
         <el-col :span="5" :offset="8">
-          <el-button type="primary" size="small" @click="orderPayment">确定</el-button>
+          <el-button type="primary" size="small" @click="pendingOrder">确定</el-button>
         </el-col>
         <el-col :span="5">
-          <el-button type="primary" size="small" @click="pendingOrder">结算</el-button>
+          <el-button type="primary" size="small" @click="orderPayment">结算</el-button>
         </el-col>
       </el-row>
       <div>
@@ -109,159 +121,165 @@
     name: 'SettlementCenter',
     data() {
       return {
-        deductionAmounts: '',
-        payAmounts: '',
-        payMethods: '',
+        clinetInfo: [],
+        payWay1: {
+          payMethods: '',
+          usableCards: '',
+          deductionAmounts: '',
+        },
+        payWay2: {
+          visible: false,
+          payMethods: '',
+          usableCards: '',
+          payAmounts: '',
+        },
         payMethodOptions: [
           {
-            value: '1',
+            value: 1,
             label: '会员卡'
           }, {
-            value: '2',
+            value: 2,
             label: '现金'
           }, {
-            value: '3',
+            value: 3,
             label: '微信'
           }, {
-            value: '4',
+            value: 4,
             label: '支付宝'
           }, {
-            value: '5',
+            value: 5,
             label: '易付宝'
           }, {
-            value: '6',
+            value: 6,
             label: '刷卡'
           }],
-        usableCards: '',
-        usableCardOptions: [
-          {
-            value: '1',
-            label: '1500储值卡'
-          }, {
-            value: '2',
-            label: '3000储值卡'
-          }],
-        visible: false,
+        cardList: [],
         sumMoney: [],
-        consumerOrder:[],
-        consumerProjectInfos:[],
-        autoParts:[],
+        consumerOrder: [],
+        consumerProjectInfos: [],
+        autoParts: [],
+        useCoupons: []
       }
     },
     methods: {
       // 获取订单详情
-      getOrderDetail(){
-        this.$get('/order/detail',{
+      getOrderDetail() {
+        this.$get('/order/detail', {
           id: this.$route.query.id
-        }).then(res=>{
+        }).then(res => {
           console.log(res)
           this.consumerOrder = res.consumerOrder
           this.consumerProjectInfos = res.consumerProjectInfos
           this.autoParts = res.autoParts
+          this.getClientInfo(res.consumerOrder.clientId)
         })
       },
 
-      // 挂单
+      // 获取会员信息
+      getClientInfo(id) {
+        this.$get('/client/getCustomerInfo', {
+          id: id
+        }).then(res => {
+          console.log(res)
+          this.clinetInfo = res
+          this.cardList = res.card
+        })
+      },
+
+      // 确定按钮
       pendingOrder() {
-        this.$post('/order/pendingOrder',{
-          "consumerOrder": {
-            "id":"S0011901310003",
-            "actualPrice": 100,
-            "firstPayMethod": 0,
-            "firstActualPrice": 22.5,
-            "firstCardId": "4028802767ef13c40167ef1420d40000",
-            "secondPayMethod": 1,
-            "secondActualPrice": 77.5,
-            "secondCardId": ""
+        this.$post('/order/pendingOrder', {
+          consumerOrder: {
+            id: this.consumerOrder.id,
+            actualPrice: this.consumerOrder.totalPrice,
+            firstPayMethod: this.payWay1.payMethods,
+            firstActualPrice: this.payWay1.deductionAmounts,
+            firstCardId: this.payWay1.usableCards,
+            secondPayMethod: this.payWay2.payMethods,
+            secondActualPrice: this.payWay2.payAmounts,
+            secondCardId: this.payWay2.usableCards
           },
-          "useCoupons": [
-            {
-              "id": "35XJKE"
-            },
-            {
-              "id": "36XJKE"
-            }
-          ]
-        }).then(res=>{
-
+          useCoupons: []
+        }).then(res => {
+          this.$message({
+            message: '保存成功',
+            type: 'success'
+          })
+          this.$router.push({path:'/ConsumptionOrder/DocumentManagement'})
         })
       },
-      // 结算
+
+      // 结算按钮
       orderPayment() {
-        this.$post('/order/payment',{
-          "consumerOrder": {
-            "id":"S0011901310003",
-            "actualPrice": 100,
-            "firstPayMethod": 0,
-            "firstActualPrice": 22.5,
-            "firstCardId": "4028802767ef13c40167ef1420d40000",
-            "secondPayMethod": 1,
-            "secondActualPrice": 77.5,
-            "secondCardId": ""
+        this.$post('/order/payment', {
+          consumerOrder: {
+            id: this.consumerOrder.id,
+            actualPrice: this.consumerOrder.totalPrice,
+            firstPayMethod: this.payWay1.payMethods,
+            firstActualPrice: this.payWay1.deductionAmounts,
+            firstCardId: this.payWay1.usableCards,
+            secondPayMethod: this.payWay2.payMethods,
+            secondActualPrice: this.payWay2.payAmounts,
+            secondCardId: this.payWay2.usableCards
           },
-          "useCoupons": [
-            {
-              "id": "35XJKE"
-            },
-            {
-              "id": "36XJKE"
-            }
-          ]
-        }).then(res=>{
-
+          useCoupons: []
+        }).then(res => {
+          this.$message({
+            message: '结算成功',
+            type: 'success'
+          })
+          this.$router.push({path:'/ConsumptionOrder/DocumentManagement'})
         })
       },
-      getProjectSummaries(param) {
-        // 计算服务项目的总价
+
+      // 合计
+      sum(param, totalIndex, totalPriceIndex, ride) {
         const {columns, data} = param
         const sums = []
         columns.forEach((column, index) => {
-          if (index === 1) {
+          if (index === totalIndex) {
             sums[index] = '合计'
             return
-          } else if (index === 3) {
-            const values = data.map(item => Number(item.price))
-            sums[index] = values.reduce((prev, curr) => prev + curr)
-            this.sumMoney[this.sumMoney.length] = sums[index]
+          } else if (index === totalPriceIndex) {
+            if (ride) {
+              const values = data.map(item => Number(item.count * item.unitPrice))
+              sums[index] = eval(values.join("+"))
+            } else {
+              const values = data.map(item => Number(item.price))
+              sums[index] = values.reduce((prev, curr) => prev + curr)
+            }
           }
         })
-        console.log('sums:', sums)
         return sums
+      },
+      getSummaries(param) {
+        return this.sum(param, 0, 2)
       },
       getFittingSummaries(param) {
-        // 计算配件明细的总价
-        const {columns, data} = param
-        const sums = []
-        columns.forEach((column, index) => {
-          if (index === 1) {
-            sums[index] = '合计'
-            return
-          } else if (index === columns.length - 1) {
-            const values = data.map(item => Number(item.sumPrice))
-            sums[index] = values.reduce((prev, curr) => prev + curr)
-            this.sumMoney[this.sumMoney.length] = sums[index]
-          }
-        })
-        return sums
+        return this.sum(param, 0, 5, true)
       },
-      handlePlusIconClick() {
-        this.visible = true
-      },
+
+      // 删除第二种支付方式
       handleRemoveIconClick() {
-        this.visible = false
-      }
-    },
-    computed: {
-      amountsPayableComputed() {
-        // console.log('typeof this.sumMoney:',typeof this.sumMoney)
-        if (this.sumMoney.length !== 0) {
-          console.log('typeof this.sumMoney:', this.sumMoney.reduce((prev, curr) => prev + curr))
-          this.amountsPayableComputed = this.sumMoney.reduce((prev, curr) => prev + curr)
+        this.payWay2 = {
+          visible: false,
+          payMethods: '',
+          usableCards: '',
+          payAmounts: '',
         }
-      }
+      },
+
+      // 抵扣价格预判
+      // 选择抵用券
+      // useCoupons: [
+      //   {id: "35XJKE"},
+      //   {id: "36XJKE"}
+      // ]
     },
+    computed: {},
     mounted: function () {
       this.getOrderDetail()
+
     }
   }
 </script>
@@ -291,8 +309,10 @@
     margin-bottom: 40px;
   }
 
-  .red /deep/ .el-input__inner {
-    color: red !important;
+  .redPrice {
+    color: red;
+    font-size: 25px;
+    margin: 20px;
   }
 
 </style>

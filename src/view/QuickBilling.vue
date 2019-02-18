@@ -283,7 +283,7 @@
           console.log(res)
           this.consumerOrder = res.consumerOrder
           this.projectShow = res.consumerProjectInfos
-          this.autoParts = res.autoParts
+          this.accessoriesList = res.autoParts
         })
       },
 
