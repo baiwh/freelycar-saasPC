@@ -11,14 +11,14 @@ module.exports = {
     assetsSubDirectory: 'static',
     assetsPublicPath: '/',
     proxyTable: {
-      '/api': {
-        target: 'http://www.pwai.net.cn/SaaS',
+      '/SaaS': {
+        target: 'http://www.pwai.net.cn/',
         // target: 'http://192.168.0.167:8080',
         secure: false,
         changeOrigin: true,
         withCredentials: false,
         pathRewrite: {
-          '^/api': ''
+          // '^/api': ''
         }
       }
     },
