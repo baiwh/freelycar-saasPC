@@ -31,7 +31,7 @@
           </el-col>
           <el-col :span="10" :offset="2">
             <el-form-item label="年龄：" prop="clientAge">
-              <el-input v-model="clientForm.clientAge"></el-input>
+              <el-input v-model="clientForm.age"></el-input>
             </el-form-item>
           </el-col>
         </el-row>
@@ -100,7 +100,7 @@
         <el-row>
           <el-col :span="12">
             <el-form-item label="车辆型号：" prop="carType">
-              <el-select v-model="carInfoForm.carType" placeholder="请选择车辆型号">
+              <el-select v-model="carInfoForm.carType" placeholder="请选择车辆型号" clearable>
                 <el-option v-for="item in carBrand.carTypeList" :key="item.type" :label="item.type"
                            :value="item.type"></el-option>
               </el-select>
@@ -161,7 +161,7 @@
         <el-button type="primary" @click="submitInfo">保存</el-button>
       </el-col>
       <el-col :span="2" :offset="2">
-        <el-button type="primary" @click="concelSubmit">取消</el-button>
+        <el-button type="primary" @click="$router.push({path:'/MembershipManagement/CustomerManagement'})">取消</el-button>
       </el-col>
     </el-row>
 
@@ -191,7 +191,7 @@
         clientForm: {
           name: '',
           gender: '',
-          phone: '',
+          phone: null,
           age: '',
           birthday: '',
           idNumber: '',
@@ -201,11 +201,11 @@
         //客户表单验证，非自定义验证，若自定义验证，待修改
         clientFormRules: {
           name: [
-            {required: true, message: '请输入客户姓名', trigger: 'blur'},
-            {min: 2, max: 5, message: '长度在 2 到 5 个字符', trigger: 'blur'}
+            {required: true, message: '请输入客户姓名', trigger: 'blur'}
           ],
           phone: [
-            {required: true, message: '请输入手机号码', trigger: 'blur'}
+            {required: true, message: '请输入手机号码', trigger: 'blur'},
+            { min: 11, max: 11, message: '长度应为11个字符', trigger: 'blur' }
           ]
         },
         //车辆信息绑定表单
@@ -215,7 +215,6 @@
           carBrand: '',
           insuranceStartTime: '',
           carType: '',
-          carBrand: '',
           insuranceEndTime: '',
           lastMiles: '',
           insuranceAmount: '',
@@ -226,7 +225,11 @@
         },
         carInfoFormRules: {
           licensePlate: [
-            {required: true, message: '请输入手机号码', trigger: 'blur'}
+            {required: true, message: '请输入车牌号码', trigger: 'blur'},
+            {min: 7, max: 7, message: '长度应为7个字符', trigger: 'blur'}
+          ],
+          carBrand: [
+            {required: true, message: '请选择品牌车系', trigger: 'blur'}
           ]
         },
         dialogVisible: false,
@@ -242,17 +245,39 @@
     methods: {
       // 提交信息
       submitInfo() {
-        this.$post('/client/addClientAndCar', {
-          client: this.clientForm,
-          car: this.carInfoForm
-        }).then(res => {
-          this.$message({
-            message: '保存成功',
-            type: 'success'
-          })
-          this.clientId = res.client.id
-          this.dialogVisible = true
+        this.$refs['clientForm'].validate((valid1) => {
+          if (valid1) {
+            this.$refs['carInfoForm'].validate((valid2) => {
+              if (valid2) {
+                this.$post('/client/addClientAndCar', {
+                  client: this.clientForm,
+                  car: this.carInfoForm
+                }).then(res => {
+                  this.$message({
+                    message: '保存成功',
+                    type: 'success'
+                  })
+                  this.clientId = res.client.id
+                  this.dialogVisible = true
+                })
+              } else {
+                this.$message({
+                  message: '车辆信息不完整',
+                  type: 'error'
+                })
+                return false
+              }
+            })
+
+          } else {
+            this.$message({
+              message: '客户信息不完整',
+              type: 'error'
+            })
+            return false
+          }
         })
+
       },
 
       // 从子组件中获取型号信息
