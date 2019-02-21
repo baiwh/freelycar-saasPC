@@ -171,6 +171,7 @@
           this.consumerOrder = res.consumerOrder
           this.consumerProjectInfos = res.consumerProjectInfos
           this.autoParts = res.autoParts
+          this.payWay1.deductionAmounts = res.consumerOrder.totalPrice
           this.getClientInfo(res.consumerOrder.clientId)
         })
       },

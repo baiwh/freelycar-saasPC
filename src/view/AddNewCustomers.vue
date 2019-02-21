@@ -169,7 +169,7 @@
     <el-dialog :visible.sync="dialogVisible" width="30%">
       <p align="center">保存成功！是否进行会员卡办理?</p>
       <div slot="footer" class="dialog-footer">
-        <el-button @click="concelSubmit">取 消</el-button>
+        <el-button @click="$router.push({path:'/MembershipManagement/CustomerManagement'})">取 消</el-button>
         <el-button type="primary"
                    @click="$router.push({path:'/MembershipManagement/MemberProcessing',query:{id:clientId}})">确 定
         </el-button>
@@ -263,9 +263,9 @@
       },
 
       // 取消
-      concelSubmit() {
-        this.$router.go(-1)
-      }
+      // concelSubmit() {
+      //   this.$router.go(-1)
+      // }
     },
     mounted: function () {
 
