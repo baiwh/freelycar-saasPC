@@ -83,11 +83,11 @@
         //客户表单验证，非自定义验证，若自定义验证，待修改
         clientFormRules: {
           name: [
-            {required: true, message: '请输入客户姓名', trigger: 'blur'},
-            {min: 2, max: 5, message: '长度在 2 到 5 个字符', trigger: 'blur'}
+            {required: true, message: '请输入客户姓名', trigger: 'blur'}
           ],
           phone: [
-            {required: true, message: '请输入手机号码', trigger: 'blur'}
+            {required: true, message: '请输入手机号码', trigger: 'blur'},
+            { min: 11, max: 11, message: '长度应为11个字符', trigger: 'blur' }
           ]
         },
         formLoading:false
@@ -107,24 +107,34 @@
 
       // 提交信息
       submitInfo() {
-        this.formLoading = true
-        this.$post('/client/modify', {
-          id: this.clientForm.id,
-          name: this.clientForm.name,
-          phone: this.clientForm.phone,
-          gender: this.clientForm.gender,
-          birthday: this.clientForm.birthday,
-          age: this.clientForm.age,
-          idNumber: this.clientForm.idNumber,
-          driverLicense: this.clientForm.driverLicense,
-          storeId: this.clientForm.storeId
-        }).then(res => {
-          this.formLoading = false
-          this.$message({
-            message: '修改成功',
-            type: 'success'
-          })
-          this.$router.go(-1)
+        this.$refs['clientForm'].validate((valid) => {
+          if (valid) {
+            this.formLoading = true
+            this.$post('/client/modify', {
+              id: this.clientForm.id,
+              name: this.clientForm.name,
+              phone: this.clientForm.phone,
+              gender: this.clientForm.gender,
+              birthday: this.clientForm.birthday,
+              age: this.clientForm.age,
+              idNumber: this.clientForm.idNumber,
+              driverLicense: this.clientForm.driverLicense,
+              storeId: this.clientForm.storeId
+            }).then(res => {
+              this.formLoading = false
+              this.$message({
+                message: '修改成功',
+                type: 'success'
+              })
+              this.$router.go(-1)
+            })
+          } else {
+            this.$message({
+              message: '请将带*号的内容填写完整',
+              type: 'error'
+            })
+            return false
+          }
         })
       },
 

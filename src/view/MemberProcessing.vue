@@ -7,16 +7,16 @@
       </div>
 
       <!--表单部分-->
-      <el-form :model="memberForm" ref="memberForm" label-width="100px">
+      <el-form :model="memberForm" :rules="memberRules" ref="memberForm" label-width="100px">
 
         <el-row>
           <el-col :span="11">
-            <el-form-item label="客户姓名：" prop="memberCard">
+            <el-form-item label="客户姓名：">
               <el-input v-model="clientName" disabled></el-input>
             </el-form-item>
           </el-col>
           <el-col :span="11" :offset="1">
-            <el-form-item label="手机号码：" prop="memberCard">
+            <el-form-item label="手机号码：">
               <el-input v-model="clientPhone" disabled></el-input>
             </el-form-item>
           </el-col>
@@ -29,7 +29,7 @@
             </el-form-item>
           </el-col>
           <el-col :span="11" :offset="1">
-            <el-form-item label="会员卡类：">
+            <el-form-item label="会员卡类：" prop="cardServiceId">
               <el-select v-model="memberForm.cardServiceId" placeholder="请选择会员卡类" @change="chooseCard">
                 <el-option v-for="item in cardList" :key="item.id" :label="item.name"
                            :value="item.id"/>
@@ -43,12 +43,12 @@
 
         <el-row>
           <el-col :span="11">
-            <el-form-item label="售卡金额：" prop="memberCard">
+            <el-form-item label="售卡金额：">
               <el-input v-model="memberForm.cardAmount" disabled></el-input>
             </el-form-item>
           </el-col>
           <el-col :span="11" :offset="1">
-            <el-form-item label="有效期：" prop="validityPeriod">
+            <el-form-item label="有效期：">
               <el-input v-model="memberForm.validityPeriod" disabled></el-input>
             </el-form-item>
           </el-col>
@@ -56,12 +56,12 @@
 
         <el-row>
           <el-col :span="11">
-            <el-form-item label="卡面金额：" prop="cardSurfaceAmount">
+            <el-form-item label="卡面金额：">
               <el-input v-model="memberForm.cardSurfaceAmount" disabled></el-input>
             </el-form-item>
           </el-col>
           <el-col :span="11" :offset="1">
-            <el-form-item label="折扣比例：" prop="discount">
+            <el-form-item label="折扣比例：">
               <el-input v-model="memberForm.discount" disabled></el-input>
             </el-form-item>
           </el-col>
@@ -98,39 +98,26 @@
 
     <!--新增会员卡-->
     <el-dialog v-loading="dialogLoading" title="新增会员卡" :visible.sync="isShow">
-      <el-row>
-        <el-col :span="4" :offset="2">卡类名称：</el-col>
-        <el-col :span="18">
+      <el-form :model="dialog" :rules="dialogRules" ref="dialog" label-width="200px">
+        <el-form-item label="卡类名称：" prop="name">
           <el-input v-model="dialog.name" style="width: 80%" size="small"></el-input>
-        </el-col>
-      </el-row>
-      <el-row>
-        <el-col :span="4" :offset="2">售卡金额：</el-col>
-        <el-col :span="18">
-          <el-input v-model="dialog.price" style="width: 80%" size="small"></el-input>
-        </el-col>
-      </el-row>
-      <el-row>
-        <el-col :span="4" :offset="2">卡面金额：</el-col>
-        <el-col :span="18">
-          <el-input v-model="dialog.actualPrice" style="width: 80%" size="small"></el-input>
-        </el-col>
-      </el-row>
-      <el-row>
-        <el-col :span="4" :offset="2">有效期（年）：</el-col>
-        <el-col :span="18">
+        </el-form-item>
+        <el-form-item label="售卡金额：" prop="price">
+          <el-input v-model.number="dialog.price" style="width: 80%" size="small"></el-input>
+        </el-form-item>
+        <el-form-item label="卡面金额：" prop="actualPrice">
+          <el-input v-model.number="dialog.actualPrice" style="width: 80%" size="small"></el-input>
+        </el-form-item>
+        <el-form-item label="有效期（年）：" prop="validTime">
           <el-select v-model="dialog.validTime" placeholder="请选择" style="width: 80%">
             <el-option v-for="item in validTimeList" :key="item.code" :label="item.value"
                        :value="item.code"></el-option>
           </el-select>
-        </el-col>
-      </el-row>
-      <el-row>
-        <el-col :span="4" :offset="2">备注：</el-col>
-        <el-col :span="18">
+        </el-form-item>
+        <el-form-item label="备注：" prop="comment">
           <el-input type="textarea" :rows="2" placeholder="请输入内容" v-model="dialog.comment" style="width:80%"></el-input>
-        </el-col>
-      </el-row>
+        </el-form-item>
+      </el-form>
 
       <div slot="footer" class="dialog-footer">
         <el-button @click="isShow = false">取 消</el-button>
@@ -153,6 +140,30 @@
           actualPrice: '',
           validTime: '',
           comment: ''
+        },
+        memberRules:{
+          memberCard: [
+            {required: true, message: '请输入会员卡号', trigger: 'blur'}
+          ],
+          cardServiceId: [
+            {required: true, message: '请选择会员卡类', trigger: 'blur'}
+          ]
+        },
+        dialogRules:{
+          name: [
+            {required: true, message: '请输入名称', trigger: 'blur'}
+          ],
+          price: [
+            {required: true, message: '请输入价格', trigger: 'blur'},
+            {type:'number',required: true, message: '只能输入数字', trigger: 'blur'}
+          ],
+          actualPrice: [
+            {required: true, message: '请输入实际价格', trigger: 'blur'},
+            {type:'number',required: true, message: '只能输入数字', trigger: 'blur'}
+          ],
+          validTime: [
+            {required: true, message: '请选择有效期', trigger: 'blur'}
+          ]
         },
         dialogLoading: false,
         clientName: '',
@@ -247,20 +258,30 @@
 
       // 提交办卡信息
       handleCard() {
-        this.$post('/card/handleCard', {
-          storeId: 1,
-          cardNumber: this.memberForm.memberCard,
-          payMethod: this.memberForm.payMethod,
-          staffId: this.memberForm.staffId,
-          clientId: this.$route.query.id,
-          cardServiceId: this.memberForm.cardServiceId
-        }).then(res => {
-          this.formLoading = false
-          this.$message({
-            message: '办理成功',
-            type: 'success'
-          })
-          this.$router.go(-1)
+        this.$refs['memberForm'].validate((valid) => {
+          if (valid) {
+            this.$post('/card/handleCard', {
+              storeId: 1,
+              cardNumber: this.memberForm.memberCard,
+              payMethod: this.memberForm.payMethod,
+              staffId: this.memberForm.staffId,
+              clientId: this.$route.query.id,
+              cardServiceId: this.memberForm.cardServiceId
+            }).then(res => {
+              this.formLoading = false
+              this.$message({
+                message: '办理成功',
+                type: 'success'
+              })
+              this.$router.go(-1)
+            })
+          } else {
+            this.$message({
+              message: '有信息未填写',
+              type: 'error'
+            })
+            return false
+          }
         })
       },
 
@@ -278,28 +299,39 @@
 
       // 新增卡类提交
       submit() {
-        this.dialogLoading = true
-        this.$post('/cardService/modify', {
-          id: this.dialog.id,
-          name: this.dialog.name,
-          price: this.dialog.price,
-          actualPrice: this.dialog.actualPrice,
-          validTime: this.dialog.validTime,
-          comment: this.dialog.comment,
-          storeId: 1
-        }).then(res => {
-          this.dialogLoading = false
-          this.$message({
-            message: '新增成功',
-            type: 'success'
-          })
-          this.memberForm.cardAmount = ''
-          this.memberForm.validityPeriod = ''
-          this.memberForm.cardSurfaceAmount = ''
-          this.memberForm.discount = ''
-          this.isShow = false
-          this.getCardList()
+        this.$refs['dialog'].validate((valid) => {
+          if (valid) {
+            this.dialogLoading = true
+            this.$post('/cardService/modify', {
+              id: this.dialog.id,
+              name: this.dialog.name,
+              price: this.dialog.price,
+              actualPrice: this.dialog.actualPrice,
+              validTime: this.dialog.validTime,
+              comment: this.dialog.comment,
+              storeId: 1
+            }).then(res => {
+              this.dialogLoading = false
+              this.$message({
+                message: '新增成功',
+                type: 'success'
+              })
+              this.memberForm.cardAmount = ''
+              this.memberForm.validityPeriod = ''
+              this.memberForm.cardSurfaceAmount = ''
+              this.memberForm.discount = ''
+              this.isShow = false
+              this.getCardList()
+            })
+          } else {
+            this.$message({
+              message: '信息不完整',
+              type: 'error'
+            })
+            return false
+          }
         })
+
       }
     },
     mounted: function () {
