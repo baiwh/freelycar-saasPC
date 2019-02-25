@@ -3,7 +3,7 @@ import {Message} from 'element-ui'
 
 export function get(url, params = {}) {
   return new Promise((resolve, reject) => {
-    axios.get('/api' + url, {
+    axios.get('/SaaS' + url, {
       params: params
     })
       .then(response => {
@@ -21,7 +21,7 @@ export function get(url, params = {}) {
 
 export function post(url, data = {}) {
   return new Promise((resolve, reject) => {
-    axios.post('/api' + url, data)
+    axios.post('/SaaS' + url, data)
       .then(response => {
         if (response.data.code === 1 || response.data.status === 0) {
           if (response.data.result) {
