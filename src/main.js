@@ -38,6 +38,7 @@ Vue.prototype.$post = post
 Vue.config.productionTip = false
 
 router.beforeEach((to, from, next) => {
+  console.log('to.path:',to.path)
   let jwt = document.cookie
   if (to.path === '/login') {
     next()
