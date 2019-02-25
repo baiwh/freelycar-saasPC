@@ -67,46 +67,30 @@
     </el-table>
 
     <!--分页器-->
-    <pagingDevice
-      :pageData.sync="pageData"
-      @changePage="getDataList"></pagingDevice>
+    <pagingDevice :pageData.sync="pageData" @changePage="getDataList"></pagingDevice>
 
     <!--新增卡类弹框-->
     <el-dialog v-loading="dialogLoading" :title="isModify?'修改卡类':'新增卡类'" :visible.sync="isShow">
-      <el-row>
-        <el-col :span="4" :offset="2">卡名称：</el-col>
-        <el-col :span="18">
+      <el-form :model="dialog" :rules="dialogRules" ref="dialog" label-width="200px">
+        <el-form-item label="卡名称：" prop="name">
           <el-input v-model="dialog.name" style="width: 80%" size="small"></el-input>
-        </el-col>
-      </el-row>
-      <el-row>
-        <el-col :span="4" :offset="2">售卡金额：</el-col>
-        <el-col :span="18">
+        </el-form-item>
+        <el-form-item label="售卡金额：" prop="price">
           <el-input v-model="dialog.price" style="width: 80%" size="small"></el-input>
-        </el-col>
-      </el-row>
-      <el-row>
-        <el-col :span="4" :offset="2">卡面金额：</el-col>
-        <el-col :span="18">
+        </el-form-item>
+        <el-form-item label="卡面金额：" prop="actualPrice">
           <el-input v-model="dialog.actualPrice" style="width: 80%" size="small"></el-input>
-        </el-col>
-      </el-row>
-      <el-row>
-        <el-col :span="4" :offset="2">有效期（年）：</el-col>
-        <el-col :span="18">
+        </el-form-item>
+        <el-form-item label="有效期（年）：" prop="validTime">
           <el-select v-model="dialog.validTime" placeholder="请选择" style="width: 80%">
             <el-option v-for="item in selectOptions" :key="item.value" :label="item.label"
                        :value="item.value"></el-option>
           </el-select>
-        </el-col>
-      </el-row>
-      <el-row>
-        <el-col :span="4" :offset="2">备注：</el-col>
-        <el-col :span="18">
+        </el-form-item>
+        <el-form-item label="备注：" prop="comment">
           <el-input type="textarea" :rows="2" placeholder="请输入内容" v-model="dialog.comment" style="width:80%"></el-input>
-        </el-col>
-      </el-row>
-
+        </el-form-item>
+      </el-form>
       <div slot="footer" class="dialog-footer">
         <el-button @click="isShow = false">取 消</el-button>
         <el-button type="primary" @click="submit">确 定</el-button>
@@ -138,6 +122,20 @@
           actualPrice: '',
           validTime: '',
           comment: ''
+        },
+        dialogRules:{
+          name: [
+            { required: true, message: '请输入名称', trigger: 'blur' }
+          ],
+          price: [
+            { required: true, message: '请输入金额', trigger: 'blur' }
+          ],
+          actualPrice: [
+            { required: true, message: '请输入卡面金额', trigger: 'blur' }
+          ],
+          validTime: [
+            { required: true, message: '请选择有效期', trigger: 'blur' }
+          ],
         },
         isModify: false,
         selectOptions: [{
@@ -221,9 +219,9 @@
         this.multipleSelection.filter(v => {
           ids.push(v.id)
         })
-        this.$post('/cardService/batchDelete',{
-          ids:ids.join(',')
-        }).then(res=>{
+        this.$post('/cardService/batchDelete', {
+          ids: ids.join(',')
+        }).then(res => {
           this.$message({
             message: '批量删除成功',
             type: 'success'
@@ -262,23 +260,33 @@
 
       // 模态框的保存按钮
       submit() {
-        this.dialogLoading = true
-        this.$post('/cardService/modify', {
-          id: this.dialog.id,
-          name: this.dialog.name,
-          price: this.dialog.price,
-          actualPrice: this.dialog.actualPrice,
-          validTime: this.dialog.validTime,
-          comment: this.dialog.comment,
-          storeId: 1
-        }).then(res=>{
-          this.dialogLoading = false
-          this.$message({
-            message: '保存成功',
-            type: 'success'
-          })
-          this.isShow = false
-          this.getDataList()
+        this.$refs['dialog'].validate((valid) => {
+          if (valid) {
+            this.dialogLoading = true
+            this.$post('/cardService/modify', {
+              id: this.dialog.id,
+              name: this.dialog.name,
+              price: this.dialog.price,
+              actualPrice: this.dialog.actualPrice,
+              validTime: this.dialog.validTime,
+              comment: this.dialog.comment,
+              storeId: 1
+            }).then(res => {
+              this.dialogLoading = false
+              this.$message({
+                message: '保存成功',
+                type: 'success'
+              })
+              this.isShow = false
+              this.getDataList()
+            })
+          } else {
+            this.$message({
+              message: '有信息未填写',
+              type: 'error'
+            })
+            return false
+          }
         })
       }
     },
