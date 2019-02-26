@@ -145,17 +145,15 @@
     <!--项目类别模态框-->
     <el-dialog v-loading="dialogLoading1" :title="projectIsModify?'修改项目类别':'新增项目类别'"
                :visible.sync="addCategoryVisible" width="50%">
-      <div>
-        <el-row style="margin-top: 20px">
-          <el-col :span="4">类别名称：</el-col>
-          <el-input v-model="dialog1.name" placeholder="请输入内容" style="width: 80%" size="small"></el-input>
-        </el-row>
-        <el-row style="margin-top: 20px">
-          <el-col :span="4">备注：</el-col>
-          <el-input type="textarea" :rows="2" placeholder="请输入内容" v-model="dialog1.comment"
-                    style="width:80%"></el-input>
-        </el-row>
-      </div>
+        <el-form :model="dialog1" :rules="dialog1Rules" ref="dialog1" label-width="100px">
+            <el-form-item label="类别名称：" prop="name">
+              <el-input v-model="dialog1.name" placeholder="请输入内容" style="width: 80%" size="small"></el-input>
+            </el-form-item>
+          <el-form-item label="备注：">
+            <el-input type="textarea" :rows="2" placeholder="请输入内容" v-model="dialog1.comment"
+                      style="width:80%"></el-input>
+          </el-form-item>
+        </el-form>
 
       <div slot="footer" class="dialog-footer">
         <el-button @click="addCategoryVisible = false">取 消</el-button>
@@ -165,29 +163,23 @@
 
     <!--项目管理模态框-->
     <el-dialog v-loading="dialogLoading2" :title="projectIsModify2?'修改项目':'新增项目'" :visible.sync="addManagementVisible">
-      <el-row>
-        <el-col :span="4">项目名称：</el-col>
-        <el-col :span="8">
+      <el-form :model="dialog2" :rules="dialog2Rules" ref="dialog2" label-width="100px">
+        <el-form-item label="项目名称：" prop="name">
           <el-input v-model="dialog2.name" placeholder="请输入内容" style="width: 80%" size="small"></el-input>
-        </el-col>
-        <el-col :span="4">项目类别：</el-col>
-        <el-col :span="8">
+        </el-form-item>
+        <el-form-item label="项目类别：" prop="projectTypeId">
           <el-select v-model="dialog2.projectTypeId" placeholder="请选择" style="width: 80%">
             <el-option v-for="item in tableData1" :key="item.id" :label="item.name"
                        :value="item.id"></el-option>
           </el-select>
-        </el-col>
-      </el-row>
-      <el-row>
-        <el-col :span="4">项目价格：</el-col>
-        <el-col :span="8">
+        </el-form-item>
+        <el-form-item label="项目价格：" prop="price">
           <el-input v-model="dialog2.price" placeholder="请输入内容" style="width: 80%" size="small"></el-input>
-        </el-col>
-        <el-col :span="4">备注：</el-col>
-        <el-col :span="8">
+        </el-form-item>
+        <el-form-item label="备注：" prop="comment">
           <el-input type="textarea" placeholder="请输入内容" v-model="dialog2.comment" style="width:80%"></el-input>
-        </el-col>
-      </el-row>
+        </el-form-item>
+      </el-form>
 
       <div slot="footer" class="dialog-footer">
         <el-button @click="addManagementVisible =false">取 消</el-button>
@@ -221,8 +213,32 @@
           pageSize: 10,
           pageTotal: 100
         },
-        dialog1: {},
-        dialog2: {},
+        dialog1: {
+          name:'',
+          comment:'',
+        },
+        dialog1Rules:{
+          name: [
+            { required: true, message: '请输入名称', trigger: 'blur' }
+          ]
+        },
+        dialog2: {
+          name:'',
+          projectTypeId:'',
+          price:null,
+          comment:'',
+        },
+        dialog2Rules:{
+          name: [
+            { required: true, message: '请输入名称', trigger: 'blur' }
+          ],
+          projectTypeId: [
+            { required: true, message: '请选择项目类别', trigger: 'blur' }
+          ],
+          price: [
+            { required: true, message: '请输入价格', trigger: 'blur' }
+          ]
+        },
         dialogLoading1: false,
         dialogLoading2: false,
         projectIsModify: false,
@@ -283,20 +299,30 @@
 
       // 保存按钮（提交）
       submitData1() {
-        this.dialogLoading1 = true
-        this.$post('/projectType/modify', {
-          id: this.dialog1.id,
-          name: this.dialog1.name,
-          comment: this.dialog1.comment,
-          storeId: 1
-        }).then((res) => {
-          this.dialogLoading1 = false
-          this.$message({
-            message: '保存成功',
-            type: 'success'
-          })
-          this.addCategoryVisible = false
-          this.getTableData1()
+        this.$refs['dialog1'].validate((valid) => {
+          if (valid) {
+            this.dialogLoading1 = true
+            this.$post('/projectType/modify', {
+              id: this.dialog1.id,
+              name: this.dialog1.name,
+              comment: this.dialog1.comment,
+              storeId: 1
+            }).then((res) => {
+              this.dialogLoading1 = false
+              this.$message({
+                message: '保存成功',
+                type: 'success'
+              })
+              this.addCategoryVisible = false
+              this.getTableData1()
+            })
+          } else {
+            this.$message({
+              message: '有信息未填写',
+              type: 'error'
+            })
+            return false
+          }
         })
       },
 
@@ -351,22 +377,32 @@
 
       // 保存按钮（提交）
       submitData2() {
-        this.dialogLoading2 = true
-        this.$post('/project/modify', {
-          id: this.dialog2.id,
-          name: this.dialog2.name,
-          projectTypeId: this.dialog2.projectTypeId,
-          price: this.dialog2.price,
-          comment: this.dialog2.comment,
-          storeId: 1
-        }).then((res) => {
-          this.dialogLoading2 = false
-          this.$message({
-            message: '保存成功',
-            type: 'success'
-          })
-          this.addManagementVisible = false
-          this.getTableData2()
+        this.$refs['dialog2'].validate((valid) => {
+          if (valid) {
+            this.dialogLoading2 = true
+            this.$post('/project/modify', {
+              id: this.dialog2.id,
+              name: this.dialog2.name,
+              projectTypeId: this.dialog2.projectTypeId,
+              price: this.dialog2.price,
+              comment: this.dialog2.comment,
+              storeId: 1
+            }).then((res) => {
+              this.dialogLoading2 = false
+              this.$message({
+                message: '保存成功',
+                type: 'success'
+              })
+              this.addManagementVisible = false
+              this.getTableData2()
+            })
+          } else {
+            this.$message({
+              message: '有信息未填写',
+              type: 'error'
+            })
+            return false
+          }
         })
       },
 

@@ -301,7 +301,6 @@
           endTime: this.form.time ? this.form.time[1] : null,
           orderState: this.form.orderState
         }).then((res) => {
-          console.log(res)
           this.loading = false
           this.docManagementTable = res.data
           this.pageData.currentPage = res.currentPage
@@ -354,6 +353,7 @@
             break
         }
       },
+
 
       // 支付状态过滤器
       payStateFormatter(row) {

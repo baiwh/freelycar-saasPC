@@ -61,49 +61,33 @@
     </el-table>
 
     <!--分页器-->
-    <pagingDevice
-      :pageData.sync="pageData"
-      @changePage="getDataList"></pagingDevice>
+    <pagingDevice :pageData.sync="pageData" @changePage="getDataList"></pagingDevice>
 
     <!--抵用券弹窗-->
     <el-dialog :title="isModify?'修改抵用券':'新增抵用券'" :visible.sync="isShow">
-      <el-row>
-        <el-col :span="5" :offset="2">抵用券名称：</el-col>
-        <el-col :span="17">
+      <el-form :model="dialog" :rules="dialogRules" ref="dialog" label-width="200px">
+        <el-form-item label="抵用券名称：" prop="name">
           <el-input v-model="dialog.name" style="width: 80%" size="small"></el-input>
-        </el-col>
-      </el-row>
-      <el-row>
-        <el-col :span="5" :offset="2">金额：</el-col>
-        <el-col :span="17">
+        </el-form-item>
+        <el-form-item label="金额：" prop="price">
           <el-input v-model="dialog.price" style="width: 80%" size="small"></el-input>
-        </el-col>
-      </el-row>
-      <el-row>
-        <el-col :span="5" :offset="2">项目：</el-col>
-        <el-col :span="17">
+        </el-form-item>
+        <el-form-item label="项目：" prop="project">
           <el-select v-model="dialog.project" placeholder="请选择" style="width: 80%">
             <el-option v-for="item in serviceList" :key="item.id" :label="item.name"
                        :value="item.id"></el-option>
           </el-select>
-        </el-col>
-      </el-row>
-      <el-row>
-        <el-col :span="5" :offset="2">有效期（月）：</el-col>
-        <el-col :span="17">
+        </el-form-item>
+        <el-form-item label="有效期（月）：" prop="validTime">
           <el-select v-model="dialog.validTime" placeholder="请选择" style="width: 80%">
             <el-option v-for="item in selectOptions2" :key="item.value" :label="item.label"
                        :value="item.value"></el-option>
           </el-select>
-        </el-col>
-      </el-row>
-      <el-row>
-        <el-col :span="5" :offset="2">备注：</el-col>
-        <el-col :span="17">
+        </el-form-item>
+        <el-form-item label="备注：" prop="content">
           <el-input type="textarea" :rows="2" placeholder="请输入内容" v-model="dialog.content" style="width:80%"></el-input>
-        </el-col>
-      </el-row>
-
+        </el-form-item>
+      </el-form>
       <div slot="footer" class="dialog-footer">
         <el-button @click="isShow = false">取 消</el-button>
         <el-button type="primary" @click="submit">确 定</el-button>
@@ -147,8 +131,7 @@
 
       <!--分页器-->
       <el-row style="height: 80px">
-        <pagingDevice
-          :pageData.sync="pageData2" @changePage="getServiceList"></pagingDevice>
+        <pagingDevice :pageData.sync="pageData2" @changePage="getServiceList"></pagingDevice>
       </el-row>
 
 
@@ -189,6 +172,20 @@
           project: '',
           validTime: '',
           content: '',
+        },
+        dialogRules:{
+          name: [
+            { required: true, message: '请输入名称', trigger: 'blur' }
+          ],
+          price: [
+            { required: true, message: '请输入金额', trigger: 'blur' }
+          ],
+          project: [
+            { required: true, message: '请选择项目', trigger: 'blur' }
+          ],
+          validTime: [
+            { required: true, message: '请选择有效期', trigger: 'blur' }
+          ],
         },
         selectOptions1: [{
           label: '1',
@@ -389,23 +386,33 @@
 
       // 模态框的保存按钮
       submit() {
-        this.dialogLoading = true
-        this.$post('/couponService/modify', {
-          id: this.dialog.id,
-          storeId: 1,
-          content: this.dialog.content,
-          name: this.dialog.name,
-          validTime: this.dialog.validTime,
-          price: this.dialog.price,
-          projectId: this.dialog.projectId
-        }).then(res => {
-          this.dialogLoading = false
-          this.$message({
-            message: '保存成功',
-            type: 'success'
-          })
-          this.isShow = false
-          this.getDataList()
+        this.$refs['dialog'].validate((valid) => {
+          if (valid) {
+            this.dialogLoading = true
+            this.$post('/couponService/modify', {
+              id: this.dialog.id,
+              storeId: 1,
+              content: this.dialog.content,
+              name: this.dialog.name,
+              validTime: this.dialog.validTime,
+              price: this.dialog.price,
+              projectId: this.dialog.projectId
+            }).then(res => {
+              this.dialogLoading = false
+              this.$message({
+                message: '保存成功',
+                type: 'success'
+              })
+              this.isShow = false
+              this.getDataList()
+            })
+          } else {
+            this.$message({
+              message: '有信息未填写',
+              type: 'error'
+            })
+            return false
+          }
         })
       }
     },
