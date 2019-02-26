@@ -182,6 +182,7 @@ export default new Router({
     },
 
   ],
+  base:'/saas/',
   mode: 'history',
 })
 
