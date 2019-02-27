@@ -12,13 +12,14 @@ module.exports = {
     assetsPublicPath: '/',
     proxyTable: {
       '/api': {
+        target: 'https://www.freelycar.com',
         // target: 'http://www.pwai.net.cn',
-        target: 'http://localhost:8080',
+        // target: 'http://localhost:8080',
         secure: false,
         changeOrigin: true,
         withCredentials: false,
         pathRewrite: {
-          '^/api': ''
+          // '^/api': ''
         }
       }
     },
