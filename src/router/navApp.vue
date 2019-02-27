@@ -187,6 +187,10 @@
     overflow: hidden;
   }
 
+  .el-menu--inline {
+    overflow: hidden;
+  }
+
   .nav-title {
     border-bottom: 1px solid #ebeef5;
     line-height: 45px;
