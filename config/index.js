@@ -11,20 +11,20 @@ module.exports = {
     assetsSubDirectory: 'static',
     assetsPublicPath: '/',
     proxyTable: {
-      '/SaaS': {
-        target: 'http://www.pwai.net.cn',
-        // target: 'http://192.168.0.167:8080',
+      '/api': {
+        // target: 'http://www.pwai.net.cn',
+        target: 'http://localhost:8080',
         secure: false,
         changeOrigin: true,
         withCredentials: false,
-        // pathRewrite: {
-        //   '^/api': ''
-        // }
+        pathRewrite: {
+          '^/api': ''
+        }
       }
     },
     // Various Dev Server settings
     host: 'localhost', // can be overwritten by process.env.HOST
-    port: 8080, // can be overwritten by process.env.PORT, if port is in use, a free one will be determined
+    port: 80, // can be overwritten by process.env.PORT, if port is in use, a free one will be determined
     autoOpenBrowser: true,
     errorOverlay: true,
     notifyOnErrors: true,

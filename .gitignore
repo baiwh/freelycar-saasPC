@@ -50,7 +50,7 @@ typings/
 
 # Output of 'npm pack'
 *.tgz
-build
+dist/
 
 # Yarn Integrity file
 .yarn-integrity
@@ -176,3 +176,10 @@ fabric.properties
 
 # Android studio 3.1+ serialized cache file
 .idea/caches/build_file_checksums.ser
+
+# Visual Studio Code
+.vscode/*
+!.vscode/settings.json
+!.vscode/tasks.json
+!.vscode/launch.json
+!.vscode/extensions.json
