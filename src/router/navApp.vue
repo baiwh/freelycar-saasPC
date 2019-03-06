@@ -55,7 +55,7 @@
                 <span>会员管理</span>
               </template>
               <!--<el-menu-item index="/MembershipManagement/MemberProcessing"-->
-                            <!--class="el-submenu-margin">会员办理-->
+              <!--class="el-submenu-margin">会员办理-->
               <!--</el-menu-item>-->
               <el-menu-item index="/MembershipManagement/AddNewCustomers"
                             class="el-submenu-margin">新增客户
@@ -152,13 +152,13 @@
     },
     methods: {
       // 退出登录
-      logOut(command){
+      logOut(command) {
         let time = new Date()
         let nowTime = time.getTime()
         time.setTime(nowTime)
         document.cookie = "jwt=''; expires=" + time.toGMTString() + ";path=/"
         console.log(document.cookie)
-        this.$router.push({path:'/login'})
+        this.$router.push({path: '/login'})
       },
       // 收起/打开左侧导航
       modifyNav() {

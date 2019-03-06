@@ -38,7 +38,7 @@ Vue.prototype.$post = post
 Vue.config.productionTip = false
 
 router.beforeEach((to, from, next) => {
-  console.log('to.path:',to.path)
+  console.log('to.path:', to.path)
   if (to.path === '/login') {
     next()
     return
@@ -46,14 +46,14 @@ router.beforeEach((to, from, next) => {
   let cookie = document.cookie
   // 先判定cookie是否有值。是，继续。否，跳转登录页
   if (cookie) {
-    let cookieArr=cookie.split('; ')
-    let cookieObj={}
+    let cookieArr = cookie.split('; ')
+    let cookieObj = {}
     cookieArr.forEach(value => {
-      let newValue=value.split('=')
-      cookieObj[newValue[0]]=newValue[1]
+      let newValue = value.split('=')
+      cookieObj[newValue[0]] = newValue[1]
     })
     // 判断jwt是否存在。是，继续。否，跳转到登录页
-    if(cookieObj.jwt){
+    if (cookieObj.jwt) {
       if (to.path === '/') {
         next({
           path: '/home'
@@ -61,7 +61,7 @@ router.beforeEach((to, from, next) => {
       } else {
         next()
       }
-    }else {
+    } else {
       next({
         path: '/login'
       })
@@ -78,7 +78,7 @@ const store = new Vuex.Store({
     count: 0
   },
   mutations: {
-    increment (state) {
+    increment(state) {
       state.count++
     }
   }
