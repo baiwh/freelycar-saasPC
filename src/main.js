@@ -39,18 +39,32 @@ Vue.config.productionTip = false
 
 router.beforeEach((to, from, next) => {
   console.log('to.path:',to.path)
-  let jwt = document.cookie
   if (to.path === '/login') {
     next()
     return
   }
-  if (jwt!=='') {
-    if (to.path === '/') {
+  let cookie = document.cookie
+  // 先判定cookie是否有值。是，继续。否，跳转登录页
+  if (cookie) {
+    let cookieArr=cookie.split('; ')
+    let cookieObj={}
+    cookieArr.forEach(value => {
+      let newValue=value.split('=')
+      cookieObj[newValue[0]]=newValue[1]
+    })
+    // 判断jwt是否存在。是，继续。否，跳转到登录页
+    if(cookieObj.jwt){
+      if (to.path === '/') {
+        next({
+          path: '/home'
+        })
+      } else {
+        next()
+      }
+    }else {
       next({
-        path: '/home'
+        path: '/login'
       })
-    } else {
-      next()
     }
   } else {
     next({
