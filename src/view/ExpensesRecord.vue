@@ -17,6 +17,8 @@
           range-separator="~"
           start-placeholder="开始日期"
           end-placeholder="结束日期"
+          value-format="yyyy-MM-dd"
+          @change="getOrderRecord"
           class="dateWidth">
         </el-date-picker>
       </el-col>
@@ -29,12 +31,14 @@
       </div>
       <el-table :data="expensesRecordTable">
         <el-table-column type="index" label="序号" align="center"/>
-        <el-table-column property="projectName" label="项目" align="center"/>
-        <el-table-column property="expensesAmounts" label="消费金额" align="center"/>
-        <el-table-column property="payMethods" label="支付方式" align="center"/>
-        <el-table-column property="isUseCard" label="是否使用会员卡扣" align="center"/>
+        <el-table-column property="projectNames" label="项目" align="center"/>
+        <el-table-column property="cost" label="消费金额" align="center"/>
+        <el-table-column property="payMethod" label="支付方式" align="center"/>
+        <el-table-column property="useCard" label="是否使用会员卡扣" align="center"/>
         <el-table-column property="serviceTime" label="服务时间" align="center"/>
       </el-table>
+      <!--分页器-->
+      <pagingDevice :pageData.sync="pageData" @changePage="getOrderRecord"></pagingDevice>
     </el-card>
   </div>
 </template>
@@ -46,17 +50,41 @@
       return {
         tabPosition: 'today',
         visible: false,
-        datePickerValue: '',
+        loading: true,
+        pageData: {
+          currentPage: 1,
+          pageSize: 10,
+          pageTotal: 100
+        },
+        datePickerValue: [],
         expensesRecordTable: []
       }
     },
     methods: {
+      // 获取消费详情
+      getOrderRecord() {
+        this.$get('/order/orderRecord', {
+          clientId: this.$route.query.id,
+          currentPage: this.pageData.currentPage,
+          pageSize: this.pageData.pageSize,
+          startTime: this.datePickerValue[0],
+          endTime: this.datePickerValue[1]
+        }).then((res) => {
+          this.loading = false
+          this.pageData.currentPage = res.currentPage
+          this.pageData.pageSize = res.pageSize
+          this.pageData.pageTotal = res.total
+          this.expensesRecordTable = res.data
+        })
+      },
+
+      // 是否显示时间区间
       onTabChange(e) {
         this.visible = e === 'search' ? true : false
       }
     },
     mounted: function () {
-
+      this.getOrderRecord()
     }
   }
 </script>
@@ -65,6 +93,7 @@
   .el-card {
     margin-top: 40px;
   }
+
   .dateWidth {
     width: 70%;
   }

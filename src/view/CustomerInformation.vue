@@ -106,10 +106,10 @@
       </div>
       <el-table :data="expensesRecord">
         <el-table-column type="index" label="序号" align="center"/>
-        <el-table-column property="projectName" label="项目" align="center"/>
-        <el-table-column property="expensesAmounts" label="消费金额" align="center"/>
-        <el-table-column property="payMethods" label="支付方式" align="center"/>
-        <el-table-column property="isUseCard" label="是否使用会员卡扣" align="center"/>
+        <el-table-column property="projectNames" label="项目" align="center"/>
+        <el-table-column property="cost" label="消费金额" align="center"/>
+        <el-table-column property="payMethod" label="支付方式" align="center"/>
+        <el-table-column property="useCard" label="是否使用会员卡扣" align="center"/>
         <el-table-column property="serviceTime" label="服务时间" align="center"/>
       </el-table>
       <el-row>
@@ -195,7 +195,7 @@
           <el-col :span="11">
             <el-form-item label="车辆品牌：" prop="carBrand">
               <el-input v-show="addNewCarForm.carBrand" v-model="addNewCarForm.carBrand"
-                        style="width: 75%"disabled></el-input>
+                        style="width: 75%" disabled></el-input>
               <addNewButton @click="chooseCarBrand"></addNewButton>
             </el-form-item>
           </el-col>
@@ -239,7 +239,7 @@
           <el-col :span="11">
             <el-form-item label="上牌时间：" prop="addLicenseTime">
               <el-date-picker v-model="addNewCarForm.licenseDate" type="date" placeholder="选择日期"
-                              value-format="yyyy-MM-dd" ></el-date-picker>
+                              value-format="yyyy-MM-dd"></el-date-picker>
             </el-form-item>
           </el-col>
         </el-row>
@@ -268,12 +268,13 @@
 
 <script>
   import {trueOrFlase} from './../components/formatter.js'
+
   export default {
     name: 'CustomerInformation',
     data() {
       return {
         clinetInfo: {},
-        projectType:[],
+        projectType: [],
         expensesRecord: [],
         renewalCardInfo: {
           renewalCardVisible: false,
@@ -310,7 +311,7 @@
           licenseDate: '',
           licensePlate: ''
         },
-        insuranceTime:[],
+        insuranceTime: [],
         carBrand: {
           carBrandShow: true,
           carTypeList: [],//型号列表
@@ -366,14 +367,14 @@
         this.isModify = false
         this.addNewCarVisible = true
         this.addNewCarForm = row
-        this.insuranceTime[0]=row.insuranceStartTime
-        this.insuranceTime[1]=row.insuranceEndTime
+        this.insuranceTime[0] = row.insuranceStartTime
+        this.insuranceTime[1] = row.insuranceEndTime
       },
 
       //新增车辆信息打开弹框
       addNewCar() {
         this.isModify = true
-        this.insuranceTime=[]
+        this.insuranceTime = []
         this.addNewCarForm = {
           carBrandShow: false,
           carTypeList: [],//型号列表
@@ -414,9 +415,9 @@
 
       // 删除车辆信息
       deleteCar(row) {
-        this.$get('/car/delete',{
-          id:row.id
-        }).then(res=>{
+        this.$get('/car/delete', {
+          id: row.id
+        }).then(res => {
           this.$message({
             message: '删除成功',
             type: 'success'
@@ -430,21 +431,21 @@
       submit() {
         this.addNewCarVisible = false
         this.$post('/car/modify', {
-          carBrand:this.addNewCarForm.carBrand,
-          carType:this.addNewCarForm.carType,
-          clientId:this.$route.query.id,
-          engineNumber:this.addNewCarForm.engineNumber,
-          frameNumber:this.addNewCarForm.frameNumber,
-          insuranceAmount:this.addNewCarForm.insuranceAmount,
-          insuranceEndTime:this.insuranceTime[0],
-          insuranceStartTime:this.insuranceTime[1],
-          miles:this.addNewCarForm.miles,
-          newCar:this.addNewCarForm.newCar,
-          licenseDate:this.addNewCarForm.licenseDate,
-          licensePlate:this.addNewCarForm.licensePlate,
-          storeId:1,
-          id:this.addNewCarForm.id
-        }).then(res=>{
+          carBrand: this.addNewCarForm.carBrand,
+          carType: this.addNewCarForm.carType,
+          clientId: this.$route.query.id,
+          engineNumber: this.addNewCarForm.engineNumber,
+          frameNumber: this.addNewCarForm.frameNumber,
+          insuranceAmount: this.addNewCarForm.insuranceAmount,
+          insuranceEndTime: this.insuranceTime[0],
+          insuranceStartTime: this.insuranceTime[1],
+          miles: this.addNewCarForm.miles,
+          newCar: this.addNewCarForm.newCar,
+          licenseDate: this.addNewCarForm.licenseDate,
+          licensePlate: this.addNewCarForm.licensePlate,
+          storeId: 1,
+          id: this.addNewCarForm.id
+        }).then(res => {
           this.$message({
             message: '保存成功',
             type: 'success'
@@ -454,7 +455,7 @@
       },
 
       // 是否新车过滤器
-      newCarFormat(row){
+      newCarFormat(row) {
         return trueOrFlase(row.newCar)
       },
 
@@ -470,10 +471,10 @@
       },
 
       // 项目名称过滤器
-      projectTypeFormat(row){
+      projectTypeFormat(row) {
         let name = ''
-        this.projectType.filter(v=>{
-          if(v.id===row.projectId){
+        this.projectType.filter(v => {
+          if (v.id === row.projectId) {
             name = v.name
           }
         })
@@ -481,10 +482,22 @@
       },
 
       // 获取消费详情
+      getOrderRecord() {
+        this.$get('/order/orderRecord', {
+          clientId: this.$route.query.id,
+          currentPage: 1,
+          pageSize: 3,
+          startTime: '',
+          endTime: ''
+        }).then((res) => {
+          this.expensesRecord = res.data
+        })
+      }
     },
     mounted: function () {
       this.getClientInfo()
       this.getProjectType()
+      this.getOrderRecord()
     }
   }
 </script>
