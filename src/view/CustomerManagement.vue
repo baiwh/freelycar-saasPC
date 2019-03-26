@@ -34,7 +34,7 @@
         <el-button type="primary" plain size="small" @click="statisticsVisible = true">会员统计</el-button>
       </el-col>
       <el-col :span="3">
-        <el-button type="primary" icon="el-icon-download" size="small">导出表单</el-button>
+        <el-button type="primary" icon="el-icon-download" size="small" @click="exportExcel">导出表单</el-button>
       </el-col>
     </el-row>
 
@@ -94,6 +94,8 @@
 </template>
 
 <script>
+  import axios from 'axios'
+
   export default {
     name: 'CustomerManagement',
     data() {
@@ -167,6 +169,16 @@
       },
 
       // 导出表单
+      exportExcel(){
+        this.$getExcel('/client/exportExcel', {
+          name: this.name,
+          phone: this.phone,
+          currentPage: this.pageData.currentPage,
+          pageSize: this.pageData.pageSize,
+          storeId: 1,
+          isMember: this.isMember
+        })
+      },
 
       // 是否会员
       onVipButton() {

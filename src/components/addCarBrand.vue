@@ -14,7 +14,7 @@
       <div v-for="item in carBrandList"
            :class="carBrandId===item.id?'brand-list-item choose-brand':'brand-list-item'"
            @click="getCarBrand(item)">
-        <img :src="'./../../static/images/'+item.brand+'.jpg'" :alt="item.brand">
+        <img :src="'/saas/static/images/'+item.brand+'.jpg'" :alt="item.brand">
         <span>{{item.brand}}</span>
       </div>
     </div>
@@ -26,6 +26,8 @@
 
   </el-dialog>
 </template>
+<a href="http://www.jetstar.com/sg/zh/home?gigya-reset=true&amp;pwrt=tk1.1PlKGt7eTdTV6X-1PxZedFn7C3tvPIclGz5L8pY5moU"
+   old-href="https://login.jetstar.com/newPassword/?apiKey=3_y39YeztbA0QnfeCfZCEHfYUHMm8YL3cRsOhXqqh7L09Mp-l5r4Bgj24wBMrwAeV0&amp;pwrt=tk1.1PlKGt7eTdTV6X-1PxZedFn7C3tvPIclGz5L8pY5moU"
 
 <script>
   /**

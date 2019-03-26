@@ -41,3 +41,27 @@ export function post(url, data = {}) {
       })
   })
 }
+
+export function getExcel(url, params = {}) {
+  return new Promise((resolve, reject) => {
+    axios.get('/api' + url, {
+      params: params,
+      responseType: 'blob',
+    })
+      .then(res => {
+        if (!res) {
+          return
+        }
+        let url = window.URL.createObjectURL(res.data)
+        let link = document.createElement('a')
+        link.style.display = 'none'
+        link.href = url
+        link.setAttribute('download', 'excel.xls')
+        document.body.appendChild(link)
+        link.click()
+      })
+      .catch(err => {
+        Message.error(err)
+      })
+  })
+}
