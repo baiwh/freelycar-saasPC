@@ -65,3 +65,23 @@ export function getExcel(url, params = {}) {
       })
   })
 }
+
+export function postExcel(url, data = {}) {
+  return new Promise((resolve, reject) => {
+    axios.post('/api' + url, data, {responseType: 'blob'})
+      .then(res => {
+        if (!res) {
+          return
+        }
+        let url = window.URL.createObjectURL(res.data)
+        let link = document.createElement('a')
+        link.style.display = 'none'
+        link.href = url
+        link.setAttribute('download', 'excel.xls')
+        document.body.appendChild(link)
+        link.click()
+      }, err => {
+        Message(err)
+      })
+  })
+}

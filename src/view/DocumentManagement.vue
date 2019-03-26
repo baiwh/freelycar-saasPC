@@ -354,7 +354,6 @@
         }
       },
 
-
       // 支付状态过滤器
       payStateFormatter(row) {
         switch (row.payState) {
@@ -445,7 +444,16 @@
 
       // 导出表单
       getExcel() {
-
+        this.$postExcel('/order/exportOrder?storeId=1&currentPage=' + this.pageData.currentPage + '&pageSize=' + this.pageData.pageSize,{
+          orderId: this.form.orderId,
+          licensePlate: this.form.licensePlate,
+          projectId: this.form.projectId,
+          payState: this.form.payState,
+          dateType: this.form.dateType,
+          startTime: this.form.time ? this.form.time[0] : null,
+          endTime: this.form.time ? this.form.time[1] : null,
+          orderState: this.form.orderState
+        })
       },
 
 

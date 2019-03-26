@@ -64,11 +64,11 @@
       </div>
       <el-table :data="autoParts" show-summary :summary-method="getFittingSummaries">
         <el-table-column type="index" width="50" label="序号" align="center"/>
-        <el-table-column property="fittingCategory" label="配件类别" align="center"/>
-        <el-table-column property="fittingName" label="配件名称" align="center"/>
-        <el-table-column property="number" label="数量" align="center"/>
-        <el-table-column property="perPrice" label="单价" align="center"/>
-        <el-table-column property="sumPrice" label="总价" align="center"/>
+        <el-table-column property="type" label="配件类别" align="center"/>
+        <el-table-column property="name" label="配件名称" align="center"/>
+        <el-table-column property="count" label="数量" align="center"/>
+        <el-table-column property="unitPrice" label="单价" align="center"/>
+        <el-table-column property="totalPrice" label="总价" align="center"/>
       </el-table>
     </el-card>
 
