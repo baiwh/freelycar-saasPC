@@ -45,9 +45,11 @@
       </div>
 
       <el-row>
-        <el-col>
-          抵用券使用：
-          <el-switch v-model="useCoupons" active-text="洗车券" inactive-text=""></el-switch>
+        <el-col :span="4">抵用券使用：</el-col>
+        <el-col :span="20">
+          <el-checkbox-group v-model="useCoupons">
+            <el-checkbox v-for="item in orderCoupons" :label="item.id" :key="item.id">{{item.name}}</el-checkbox>
+          </el-checkbox-group>
         </el-col>
       </el-row>
       <!--第一种支付方式-->
@@ -158,6 +160,7 @@
         consumerOrder: [],
         consumerProjectInfos: [],
         autoParts: [],
+        orderCoupons: [],
         useCoupons: []
       }
     },
@@ -167,7 +170,6 @@
         this.$get('/order/detail', {
           id: this.$route.query.id
         }).then(res => {
-          console.log(res)
           this.consumerOrder = res.consumerOrder
           this.consumerProjectInfos = res.consumerProjectInfos
           this.autoParts = res.autoParts
@@ -181,14 +183,32 @@
         this.$get('/client/getCustomerInfo', {
           id: id
         }).then(res => {
-          console.log(res)
           this.clinetInfo = res
           this.cardList = res.card
         })
       },
 
+      // 获取可用抵用券
+      getCouponsForOrder() {
+        this.$get('/order/getCouponsForOrder', {
+          orderId: this.$route.query.id
+        }).then(res => {
+          this.orderCoupons = res
+          // payMethod=2说明已经被选中
+          this.orderCoupons.forEach(value => {
+            if(value.payMethod===2){
+              this.useCoupons.push(value.id)
+            }
+          })
+        })
+      },
+
       // 确定按钮
       pendingOrder() {
+        let submitCoupons = []
+        this.useCoupons.forEach(value => {
+          submitCoupons.push({id: value})
+        })
         this.$post('/order/pendingOrder', {
           consumerOrder: {
             id: this.consumerOrder.id,
@@ -200,18 +220,22 @@
             secondActualPrice: this.payWay2.payAmounts,
             secondCardId: this.payWay2.usableCards
           },
-          useCoupons: []
+          useCoupons: submitCoupons
         }).then(res => {
           this.$message({
             message: '保存成功',
             type: 'success'
           })
-          this.$router.push({path:'/ConsumptionOrder/DocumentManagement'})
+          this.$router.push({path: '/ConsumptionOrder/DocumentManagement'})
         })
       },
 
       // 结算按钮
       orderPayment() {
+        let submitCoupons = []
+        this.useCoupons.forEach(value => {
+          submitCoupons.push({id: value})
+        })
         this.$post('/order/payment', {
           consumerOrder: {
             id: this.consumerOrder.id,
@@ -223,13 +247,13 @@
             secondActualPrice: this.payWay2.payAmounts,
             secondCardId: this.payWay2.usableCards
           },
-          useCoupons: []
+          useCoupons: submitCoupons
         }).then(res => {
           this.$message({
             message: '结算成功',
             type: 'success'
           })
-          this.$router.push({path:'/ConsumptionOrder/DocumentManagement'})
+          this.$router.push({path: '/ConsumptionOrder/DocumentManagement'})
         })
       },
 
@@ -280,6 +304,7 @@
     computed: {},
     mounted: function () {
       this.getOrderDetail()
+      this.getCouponsForOrder()
 
     }
   }
