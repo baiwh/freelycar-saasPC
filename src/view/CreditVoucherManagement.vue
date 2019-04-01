@@ -230,7 +230,7 @@
       // 获取卡类列表
       getDataList() {
         this.$get('/couponService/list', {
-          storeId: 1,
+          storeId: localStorage.getItem('storeId'),
           currentPage: this.pageData.currentPage,
           pageSize: this.pageData.pageSize,
           name: this.input
@@ -246,7 +246,7 @@
       // 获取项目类别列表
       getProjectType() {
         this.$get('/projectType/list', {
-          storeId: 1,
+          storeId: localStorage.getItem('storeId'),
           currentPage: 1,
           pageSize: 1000
         }).then((res) => {
@@ -257,7 +257,7 @@
       // 获取项目列表
       getServiceList() {
         this.$get('/project/list?', {
-          storeId: 1,
+          storeId: localStorage.getItem('storeId'),
           currentPage: this.pageData2.currentPage,
           pageSize: this.pageData2.pageSize,
           name: this.itemName,
@@ -391,7 +391,7 @@
             this.dialogLoading = true
             this.$post('/couponService/modify', {
               id: this.dialog.id,
-              storeId: 1,
+              storeId: localStorage.getItem('storeId'),
               content: this.dialog.content,
               name: this.dialog.name,
               validTime: this.dialog.validTime,

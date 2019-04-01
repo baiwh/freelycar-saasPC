@@ -83,7 +83,26 @@
               let nowTime = time.getTime()
               time.setTime(nowTime + 5 * 24 * 60 * 60 * 1000)
               document.cookie = "jwt=" + res + "; expires=" + time.toGMTString() + ";path=/"
+
+              // 获取登录用户信息，将几个基本信息存入localStorage
+              this.getUserInfo(this.form.userName)
             }
+          }
+        })
+      },
+      // 获取登录用户信息，将几个基本信息存入localStorage
+      // 后续做用户权限功能这里还需要继续扩展
+      getUserInfo(userName){
+        this.$get('/sysUser/getUserInfoByUserName',{
+          userName: userName
+        }).then((res) => {
+          console.log(res)
+          if(res){
+            localStorage.setItem('userName',res.username)
+            localStorage.setItem('storeId',res.storeId)
+            localStorage.setItem('staffName',res.staffName)
+
+            // 跳转到门户首页
             this.$router.push('/home')
           }
         })

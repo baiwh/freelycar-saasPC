@@ -223,7 +223,7 @@
       // 获取工作人员列表
       getStaffList() {
         this.$get('/staff/list', {
-          storeId: 1,
+          storeId: localStorage.getItem('storeId'),
           currentPage: 1,
           pageSize: 1000
         }).then((res) => {
@@ -235,7 +235,7 @@
       // 获取卡类列表
       getCardList() {
         this.$get('/cardService/list', {
-          storeId: 1,
+          storeId: localStorage.getItem('storeId'),
           currentPage: 1,
           pageSize: 1000
         }).then((res) => {
@@ -261,7 +261,7 @@
         this.$refs['memberForm'].validate((valid) => {
           if (valid) {
             this.$post('/card/handleCard', {
-              storeId: 1,
+              storeId: localStorage.getItem('storeId'),
               cardNumber: this.memberForm.memberCard,
               payMethod: this.memberForm.payMethod,
               staffId: this.memberForm.staffId,
@@ -309,7 +309,7 @@
               actualPrice: this.dialog.actualPrice,
               validTime: this.dialog.validTime,
               comment: this.dialog.comment,
-              storeId: 1
+              storeId: localStorage.getItem('storeId')
             }).then(res => {
               this.dialogLoading = false
               this.$message({

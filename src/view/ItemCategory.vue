@@ -260,7 +260,7 @@
       // 获取项目类别列表
       getTableData1() {
         this.$get('/projectType/list', {
-          storeId: 1,
+          storeId: localStorage.getItem('storeId'),
           currentPage: this.pageData1.currentPage,
           pageSize: this.pageData1.pageSize
         }).then((res) => {
@@ -280,7 +280,7 @@
           id: '',
           name: '',
           comment: '',
-          storeId: 1
+          storeId: localStorage.getItem('storeId')
         }
       },
 
@@ -306,7 +306,7 @@
               id: this.dialog1.id,
               name: this.dialog1.name,
               comment: this.dialog1.comment,
-              storeId: 1
+              storeId: localStorage.getItem('storeId')
             }).then((res) => {
               this.dialogLoading1 = false
               this.$message({
@@ -333,7 +333,7 @@
       // 获取项目管理列表
       getTableData2() {
         this.$get('/project/list?', {
-          storeId: 1,
+          storeId: localStorage.getItem('storeId'),
           currentPage: this.pageData2.currentPage,
           pageSize: this.pageData2.pageSize,
           name: this.itemName,
@@ -358,7 +358,7 @@
           projectTypeId: '',
           price: null,
           comment: '',
-          storeId: 1
+          storeId: localStorage.getItem('storeId')
         }
       },
 
@@ -386,7 +386,7 @@
               projectTypeId: this.dialog2.projectTypeId,
               price: this.dialog2.price,
               comment: this.dialog2.comment,
-              storeId: 1
+              storeId: localStorage.getItem('storeId')
             }).then((res) => {
               this.dialogLoading2 = false
               this.$message({

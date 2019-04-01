@@ -291,7 +291,7 @@
       // 获取卡类列表
       getDataList() {
         console.log(this.form)
-        this.$post('/order/list?storeId=1&currentPage=' + this.pageData.currentPage + '&pageSize=' + this.pageData.pageSize, {
+        this.$post('/order/list?storeId=' + localStorage.getItem('storeId') + '&currentPage=' + this.pageData.currentPage + '&pageSize=' + this.pageData.pageSize, {
           orderId: this.form.orderId,
           licensePlate: this.form.licensePlate,
           projectId: this.form.projectId,
@@ -312,7 +312,7 @@
       // 获取项目类别列表
       getProjectType() {
         this.$get('/projectType/list', {
-          storeId: 1,
+          storeId: localStorage.getItem('storeId'),
           currentPage: 1,
           pageSize: 1000
         }).then((res) => {
@@ -444,7 +444,7 @@
 
       // 导出表单
       getExcel() {
-        this.$postExcel('/order/exportOrder?storeId=1&currentPage=' + this.pageData.currentPage + '&pageSize=' + this.pageData.pageSize,{
+        this.$postExcel('/order/exportOrder?storeId=' + localStorage.getItem('storeId') + '&currentPage=' + this.pageData.currentPage + '&pageSize=' + this.pageData.pageSize,{
           orderId: this.form.orderId,
           licensePlate: this.form.licensePlate,
           projectId: this.form.projectId,

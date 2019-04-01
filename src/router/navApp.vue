@@ -145,7 +145,7 @@
     name: 'navApp',
     data() {
       return {
-        userName: 'admin',
+        userName: localStorage.getItem('userName'),
         isCollapse: false,
         navPath: []
       }
