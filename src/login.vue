@@ -75,7 +75,7 @@
           username: this.form.userName,
           password: this.form.passWord
         }).then((res) => {
-          console.log(res)
+          // console.log(res)
           if (res) {
             this.axios.defaults.headers.common["Authorization"] = res
             if (this.checked) {
@@ -96,7 +96,7 @@
         this.$get('/sysUser/getUserInfoByUserName',{
           userName: userName
         }).then((res) => {
-          console.log(res)
+          // console.log(res)
           if(res){
             localStorage.setItem('userName',res.username)
             localStorage.setItem('storeId',res.storeId)
