@@ -101,14 +101,14 @@
                 placement="top"
                 width="160"
                 :ref="scope.row.name">
-                <p>确定{{scope.row.saleStatus ? '开通智能柜服务' : '取消智能柜服务'}}？</p>
+                <p>确定{{!scope.row.saleStatus ? '开通智能柜服务' : '取消智能柜服务'}}？</p>
                 <div style="text-align: right; margin: 0">
                   <el-button size="mini" type="text" @click="handleClose(scope.row.name)">取消</el-button>
                   <el-button type="primary" size="mini" @click="openService(scope.row)">确定</el-button>
                 </div>
               </el-popover>
-              <el-button size="mini" :type="scope.row.saleStatus ? 'success': 'info'" v-popover="scope.row.name">
-                {{scope.row.saleStatus ? '智能柜服务':'取消'}}
+              <el-button size="mini" :type="!scope.row.saleStatus ? 'info': 'success'" v-popover="scope.row.name">
+                {{!scope.row.saleStatus ? '开通':'取消'}}
               </el-button>
             </template>
           </el-table-column>
