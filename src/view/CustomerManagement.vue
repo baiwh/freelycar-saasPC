@@ -126,7 +126,7 @@
           phone: this.phone,
           currentPage: this.pageData.currentPage,
           pageSize: this.pageData.pageSize,
-          storeId: 1,
+          storeId: localStorage.getItem('storeId'),
           isMember: this.isMember,
         }).then((res) => {
           this.loading = false
@@ -141,7 +141,7 @@
       // 获取门店统计信息
       getMemberStatistics() {
         this.$get('/client/memberStatistics', {
-          storeId: 1
+          storeId: localStorage.getItem('storeId')
         }).then((res) => {
           this.memberCount = res.total
           this.newMemberCount = res.month_new
@@ -175,7 +175,7 @@
           phone: this.phone,
           currentPage: this.pageData.currentPage,
           pageSize: this.pageData.pageSize,
-          storeId: 1,
+          storeId: localStorage.getItem('storeId'),
           isMember: this.isMember
         })
       },

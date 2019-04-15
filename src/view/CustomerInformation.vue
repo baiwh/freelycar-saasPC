@@ -443,7 +443,7 @@
           newCar: this.addNewCarForm.newCar,
           licenseDate: this.addNewCarForm.licenseDate,
           licensePlate: this.addNewCarForm.licensePlate,
-          storeId: 1,
+          storeId: localStorage.getItem('storeId'),
           id: this.addNewCarForm.id
         }).then(res => {
           this.$message({
@@ -462,7 +462,7 @@
       // 获取项目类别列表
       getProjectType() {
         this.$get('/project/list', {
-          storeId: 1,
+          storeId: localStorage.getItem('storeId'),
           currentPage: 1,
           pageSize: 1000
         }).then((res) => {

@@ -71,7 +71,7 @@
         this.$get('/order/listOrderParticulars', {
           currentPage: this.pageData.currentPage,
           pageSize: this.pageData.pageSize,
-          storeId: 1,
+          storeId: localStorage.getItem('storeId'),
           startTime: this.datePickerValue ? this.datePickerValue[0] : '',
           endTime: this.datePickerValue ? this.datePickerValue[1] : ''
         }).then(res => {
@@ -88,7 +88,7 @@
         this.$getExcel('/order/exportOrderParticularsExcel', {
           currentPage: this.pageData.currentPage,
           pageSize: this.pageData.pageSize,
-          storeId: 1,
+          storeId: localStorage.getItem('storeId'),
           startTime: this.datePickerValue ? this.datePickerValue[0] : '',
           endTime: this.datePickerValue ? this.datePickerValue[1] : ''
         })

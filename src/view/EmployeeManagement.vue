@@ -209,7 +209,7 @@
       // 获取员工列表
       getDataList() {
         this.$get('/staff/list', {
-          storeId: 1,
+          storeId: localStorage.getItem('storeId'),
           currentPage: this.pageData.currentPage,
           pageSize: this.pageData.pageSize,
           name: this.staffName,
@@ -275,7 +275,7 @@
         this.dialogLoading1 = true
         this.$post('/staff/modify', {
           id: this.staffData.id,
-          storeId: 1,
+          storeId: localStorage.getItem('storeId'),
           comment: this.staffData.comment,
           name: this.staffData.name,
           phone: this.staffData.phone,

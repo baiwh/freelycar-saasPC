@@ -265,7 +265,7 @@
           isMember: '',
           lastMiles: '',
           phone: '',
-          storeId: 1,
+          storeId: localStorage.getItem('storeId'),
           pickTime: '',
           pickCarStaffId: '',
           pickCarStaffName: '',
@@ -335,7 +335,7 @@
       // 获取项目类别列表
       getProjectType() {
         this.$get('/projectType/list', {
-          storeId: 1,
+          storeId: localStorage.getItem('storeId'),
           currentPage: 1,
           pageSize: 1000
         }).then((res) => {
@@ -346,7 +346,7 @@
       // 获取项目列表
       getServiceList() {
         this.$get('/project/list?', {
-          storeId: 1,
+          storeId: localStorage.getItem('storeId'),
           currentPage: this.pageData.currentPage,
           pageSize: this.pageData.pageSize,
           name: this.itemName,
@@ -363,7 +363,7 @@
       // 获取员工列表
       getStaffList() {
         this.$get('/staff/list', {
-          storeId: 1,
+          storeId: localStorage.getItem('storeId'),
           currentPage: 1,
           pageSize: 1000
         }).then((res) => {
@@ -388,7 +388,7 @@
         if (this.consumerOrder.licensePlate.length === 7) {
           this.$get('/order/loadClientInfoByLicensePlate', {
             licensePlate: this.consumerOrder.licensePlate,
-            storeId: 1
+            storeId: localStorage.getItem('storeId')
           }).then(res => {
             console.log(res)
             this.consumerOrder = res
@@ -406,7 +406,7 @@
             isMember: '',
             lastMiles: '',
             phone: '',
-            storeId: 1,
+            storeId: localStorage.getItem('storeId'),
             pickTime: '',
             staffName: '',
             miles: '',
@@ -424,7 +424,7 @@
                 licensePlate: this.consumerOrder.licensePlate,
                 carBrand: this.consumerOrder.carBrand,
                 carType: this.consumerOrder.carType,
-                storeId: 1,
+                storeId: localStorage.getItem('storeId'),
                 carId: this.consumerOrder.carId,
                 lastMiles: this.consumerOrder.lastMiles,
                 miles: this.consumerOrder.miles,

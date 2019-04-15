@@ -71,14 +71,14 @@
                 placement="top"
                 width="160"
                 :ref="scope.row.name">
-                <p>确定{{scope.row.saleStatus ? '开通智能柜服务' : '取消智能柜服务'}}？</p>
+                <p>确定{{!scope.row.saleStatus ? '开通智能柜服务' : '取消智能柜服务'}}？</p>
                 <div style="text-align: right; margin: 0">
                   <el-button size="mini" type="text" @click="handleClose(scope.row.name)">取消</el-button>
                   <el-button type="primary" size="mini" @click="openService(scope.row)">确定</el-button>
                 </div>
               </el-popover>
-              <el-button size="mini" :type="scope.row.saleStatus ? 'success': 'info'" v-popover="scope.row.name">
-                {{scope.row.saleStatus ? '智能柜服务':'取消'}}
+              <el-button size="mini" :type="!scope.row.saleStatus ? 'info': 'success'" v-popover="scope.row.name">
+                {{!scope.row.saleStatus ? '开通':'取消'}}
               </el-button>
             </template>
           </el-table-column>
@@ -260,7 +260,7 @@
       // 获取项目类别列表
       getTableData1() {
         this.$get('/projectType/list', {
-          storeId: 1,
+          storeId: localStorage.getItem('storeId'),
           currentPage: this.pageData1.currentPage,
           pageSize: this.pageData1.pageSize
         }).then((res) => {
@@ -280,7 +280,7 @@
           id: '',
           name: '',
           comment: '',
-          storeId: 1
+          storeId: localStorage.getItem('storeId')
         }
       },
 
@@ -306,7 +306,7 @@
               id: this.dialog1.id,
               name: this.dialog1.name,
               comment: this.dialog1.comment,
-              storeId: 1
+              storeId: localStorage.getItem('storeId')
             }).then((res) => {
               this.dialogLoading1 = false
               this.$message({
@@ -333,7 +333,7 @@
       // 获取项目管理列表
       getTableData2() {
         this.$get('/project/list?', {
-          storeId: 1,
+          storeId: localStorage.getItem('storeId'),
           currentPage: this.pageData2.currentPage,
           pageSize: this.pageData2.pageSize,
           name: this.itemName,
@@ -358,7 +358,7 @@
           projectTypeId: '',
           price: null,
           comment: '',
-          storeId: 1
+          storeId: localStorage.getItem('storeId')
         }
       },
 
@@ -386,7 +386,7 @@
               projectTypeId: this.dialog2.projectTypeId,
               price: this.dialog2.price,
               comment: this.dialog2.comment,
-              storeId: 1
+              storeId: localStorage.getItem('storeId')
             }).then((res) => {
               this.dialogLoading2 = false
               this.$message({

@@ -196,7 +196,7 @@
           birthday: '',
           idNumber: '',
           driverLicense: '',
-          storeId: 1
+          storeId: localStorage.getItem('storeId')
         },
         //客户表单验证，非自定义验证，若自定义验证，待修改
         clientFormRules: {

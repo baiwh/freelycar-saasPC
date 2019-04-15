@@ -148,7 +148,7 @@
       // 获取卡类列表
       getDataList() {
         this.$get('/cardService/list', {
-          storeId: 1,
+          storeId: localStorage.getItem('storeId'),
           currentPage: this.pageData.currentPage,
           pageSize: this.pageData.pageSize,
           name: this.cardName
@@ -270,7 +270,7 @@
               actualPrice: this.dialog.actualPrice,
               validTime: this.dialog.validTime,
               comment: this.dialog.comment,
-              storeId: 1
+              storeId: localStorage.getItem('storeId')
             }).then(res => {
               this.dialogLoading = false
               this.$message({
