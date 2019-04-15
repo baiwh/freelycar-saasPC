@@ -393,25 +393,26 @@
             console.log(res)
             this.consumerOrder = res
           })
-        } else {
-          this.consumerOrder = {
-            licensePlate: this.consumerOrder.licensePlate,
-            balance: '',
-            carBrand: '',
-            carId: '',
-            carType: '',
-            clientId: '',
-            clientName: '',
-            historyConsumption: null,
-            isMember: '',
-            lastMiles: '',
-            phone: '',
-            storeId: localStorage.getItem('storeId'),
-            pickTime: '',
-            staffName: '',
-            miles: '',
-          }
         }
+        // else {
+        //   this.consumerOrder = {
+        //     licensePlate: this.consumerOrder.licensePlate,
+        //     balance: '',
+        //     carBrand: '',
+        //     carId: '',
+        //     carType: '',
+        //     clientId: '',
+        //     clientName: '',
+        //     historyConsumption: null,
+        //     isMember: '',
+        //     lastMiles: '',
+        //     phone: '',
+        //     storeId: 1,
+        //     pickTime: '',
+        //     staffName: '',
+        //     miles: '',
+        //   }
+        // }
       },
 
       // 保存快速开单
