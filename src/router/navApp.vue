@@ -71,7 +71,7 @@
                 <span>产品管理</span>
               </template>
               <el-menu-item index="/ProductManagement/ItemCategory"
-                            class="el-submenu-margin">项目类别
+                            class="el-submenu-margin">项目管理
               </el-menu-item>
               <el-menu-item index="/ProductManagement/CardManagement"
                             class="el-submenu-margin">卡类管理

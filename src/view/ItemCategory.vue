@@ -3,38 +3,8 @@
     <!--标签页-->
     <el-tabs v-model="item">
 
-      <!--项目类别-->
-      <el-tab-pane label="项目类别" name="first">
-
-        <!--新增类别按钮-->
-        <el-row>
-          <el-button type="primary" @click="addProject" plain size="small">新增类别</el-button>
-        </el-row>
-
-        <!--表格-->
-        <el-table :data="tableData1" border>
-          <el-table-column label="序号" type="index" align="center"></el-table-column>
-          <el-table-column prop="name" label="类别名称" align="center"></el-table-column>
-          <el-table-column prop="createTime" label="创建时间" align="center"></el-table-column>
-          <el-table-column prop="comment" label="备注" align="center"></el-table-column>
-          <el-table-column label="操作" align="center">
-            <template slot-scope="scope">
-              <el-button size="mini" type="primary" @click="modifyProject(scope.row)">修改</el-button>
-            </template>
-          </el-table-column>
-        </el-table>
-
-        <!--分页器-->
-        <el-row class="show">
-          <pagingDevice
-            :pageData.sync="pageData1"
-            @changePage="getTableData1"></pagingDevice>
-        </el-row>
-
-      </el-tab-pane>
-
       <!--项目管理-->
-      <el-tab-pane label="项目管理" name="second">
+      <el-tab-pane label="项目管理" name="first">
 
         <!--条件查询-->
         <el-row>
@@ -137,6 +107,36 @@
           <pagingDevice
             :pageData.sync="pageData2"
             @changePage="getTableData2"></pagingDevice>
+        </el-row>
+
+      </el-tab-pane>
+
+      <!--项目类别-->
+      <el-tab-pane label="项目类别" name="second">
+
+        <!--新增类别按钮-->
+        <el-row>
+          <el-button type="primary" @click="addProject" plain size="small">新增类别</el-button>
+        </el-row>
+
+        <!--表格-->
+        <el-table :data="tableData1" border>
+          <el-table-column label="序号" type="index" align="center"></el-table-column>
+          <el-table-column prop="name" label="类别名称" align="center"></el-table-column>
+          <el-table-column prop="createTime" label="创建时间" align="center"></el-table-column>
+          <el-table-column prop="comment" label="备注" align="center"></el-table-column>
+          <el-table-column label="操作" align="center">
+            <template slot-scope="scope">
+              <el-button size="mini" type="primary" @click="modifyProject(scope.row)">修改</el-button>
+            </template>
+          </el-table-column>
+        </el-table>
+
+        <!--分页器-->
+        <el-row class="show">
+          <pagingDevice
+            :pageData.sync="pageData1"
+            @changePage="getTableData1"></pagingDevice>
         </el-row>
 
       </el-tab-pane>
