@@ -59,7 +59,7 @@
           <el-table-column property="projectName" label="项目类别" align="center"/>
           <el-table-column property="count" label="数量" align="center"/>
           <el-table-column label="占比">
-            <template slot-scope="scope">{{scope.row.percent*100}}%</template>
+            <template slot-scope="scope">{{(scope.row.percent*100).toFixed(2)}}%</template>
           </el-table-column>
           <el-table-column property="projectPrice" label="金额" align="center"/>
         </el-table>
@@ -112,7 +112,7 @@
       // 获取页面数据
       getData(startTime, endTime) {
         this.$get('/order/getStoreIncome', {
-          storeId: 1,
+          storeId: localStorage.getItem('storeId'),
           startTime: startTime,
           endTime: endTime,
         }).then(res => {

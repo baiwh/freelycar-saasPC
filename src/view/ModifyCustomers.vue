@@ -119,7 +119,7 @@
               age: this.clientForm.age,
               idNumber: this.clientForm.idNumber,
               driverLicense: this.clientForm.driverLicense,
-              storeId: this.clientForm.storeId
+              storeId: localStorage.getItem('storeId')
             }).then(res => {
               this.formLoading = false
               this.$message({
