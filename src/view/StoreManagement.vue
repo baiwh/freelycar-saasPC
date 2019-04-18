@@ -52,7 +52,7 @@
             <div slot="tip" class="el-upload__tip">*最多上传五张图片</div>
             <div slot="tip" class="el-upload__tip">*注意图片方向和大小</div>
           </el-upload>
-          <el-dialog :visible.sync="imgVisible">
+          <el-dialog :visible.sync="dialogVisible">
             <img width="100%" :src="dialogImageUrl" alt="">
           </el-dialog>
         </el-col>
@@ -72,32 +72,28 @@
           time: [],
           phone: ''
         },
-        storeImgIds: null,
+        storeImgIds: [],
         storeImgs: [],
         dialogImageUrl: '',
-        imgVisible: false,
-        fileList: [
-          {
-            name: 'food.jpeg',
-            url: 'https://fuss10.elemecdn.com/3/63/4e7f3a15429bfda99bce42a18cdd1jpeg.jpeg?imageMogr2/thumbnail/360x360/format/webp/quality/100'
-          }, {
-            name: 'food.jpeg',
-            url: 'https://fuss10.elemecdn.com/3/63/4e7f3a15429bfda99bce42a18cdd1jpeg.jpeg?imageMogr2/thumbnail/360x360/format/webp/quality/100'
-          }]
+        dialogVisible: false,
+        fileList: []
       }
     },
     methods: {
       // 获取门店信息
       getStoreDetail() {
         this.$get('/store/detail', {
-          id: 1
+          id: localStorage.getItem('storeId')
         }).then(res => {
           this.storeForm.name = res.store.name
           this.storeForm.address = res.store.address
           this.storeForm.phone = res.store.phone
           this.storeForm.time = [res.store.openingTime, res.store.closingTime]
-          this.storeImgIds = res.storeImgIds
-          this.storeImgs = res.storeImgs
+          this.storeImgs = res.storeImgs?res.storeImgs:[]
+          this.storeImgs.forEach(value => {
+            this.fileList.push({name:value.id,url:value.url})
+            this.storeImgIds.push(value.id)
+          })
         })
       },
 
@@ -106,33 +102,51 @@
         console.log(this.storeForm.time)
         this.$post('/store/confirmInfo', {
           store: {
-            id: 1,
+            id: localStorage.getItem('storeId'),
             name: this.storeForm.name,
             address: this.storeForm.address,
             phone: this.storeForm.phone,
             openingTime: this.storeForm.time[0],
             closingTime: this.storeForm.time[1]
           },
-          storeImgIds: []
+          storeImgIds: this.storeImgIds
+        }).then(res=>{
+          this.$message({
+            message: '门店信息保存成功',
+            type: 'success'
+          })
         })
       },
 
       beforeUploadPicture() {
         console.log('beforeUploadPicture')
       },
+
+      // 放大
       handlePictureCardPreview(file) {
-        console.log(file)
+        this.dialogImageUrl = file.url
+        this.dialogVisible = true
       },
+
+      // 正在传的过程中
       uploadProgress() {
         console.log('uploadProgress')
       },
-      handleRemove() {
-        console.log('handleRemove')
+
+      // 删除照片
+      handleRemove(file,fileList) {
+        this.storeImgIds=[]
+        fileList.forEach(value=>{
+          this.storeImgIds.push(value.name)
+        })
       },
-      uploadSuccess() {
-        console.log('uploadSuccess')
+
+      // 上传成功
+      uploadSuccess(file) {
+        this.storeImgIds.push(file.data.id)
       },
-      uploadError() {
+
+      uploadError(err) {
         console.log('uploadError')
       }
     },
