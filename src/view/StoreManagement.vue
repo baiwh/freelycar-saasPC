@@ -88,7 +88,7 @@
           this.storeForm.name = res.store.name
           this.storeForm.address = res.store.address
           this.storeForm.phone = res.store.phone
-          this.storeForm.time = [res.store.openingTime, res.store.closingTime]
+          this.storeForm.time = [new Date(res.store.openingTime), new Date(res.store.closingTime)]
           this.storeImgs = res.storeImgs?res.storeImgs:[]
           this.storeImgs.forEach(value => {
             this.fileList.push({name:value.id,url:value.url})

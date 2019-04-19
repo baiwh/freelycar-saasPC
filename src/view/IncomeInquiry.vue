@@ -14,9 +14,9 @@
                         start-placeholder="开始日期" end-placeholder="结束日期" class="dateWidth"></el-date-picker>
         <el-button type="primary" @click="searchData">查询</el-button>
       </el-col>
-      <el-col :span="4" :offset="num">
-        <el-button type="primary" icon="el-icon-download">导出Excel</el-button>
-      </el-col>
+      <!--<el-col :span="4" :offset="num">-->
+        <!--<el-button type="primary" icon="el-icon-download">导出Excel</el-button>-->
+      <!--</el-col>-->
     </el-row>
 
     <!--消费金额卡片-->
@@ -58,7 +58,7 @@
         <el-table v-loading="loading" :data="itemCategoryTable">
           <el-table-column property="projectName" label="项目类别" align="center"/>
           <el-table-column property="count" label="数量" align="center"/>
-          <el-table-column label="占比">
+          <el-table-column label="占比" align="center">
             <template slot-scope="scope">{{(scope.row.percent*100).toFixed(2)}}%</template>
           </el-table-column>
           <el-table-column property="projectPrice" label="金额" align="center"/>
