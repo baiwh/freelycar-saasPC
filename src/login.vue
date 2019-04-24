@@ -26,6 +26,7 @@
             type="password"
             placeholder="请输入密码"
             prefix-icon="el-icon-search"
+            @keyup.enter.native="logIn"
             v-model="form.passWord">
           </el-input>
         </el-form-item>
