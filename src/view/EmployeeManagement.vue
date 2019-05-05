@@ -59,10 +59,10 @@
             </div>
           </el-popover>
           <el-button size="mini" v-popover="scope.row.name" type="info"
-                     v-show="scope.row.ark">关闭
+                     v-show="scope.row.isArk">关闭
           </el-button>
           <el-button size="mini" @click="handleEdit(scope.row)" type="success"
-                     v-show="!scope.row.ark" style="margin-left: 0;">开通
+                     v-show="!scope.row.isArk" style="margin-left: 0;">开通
           </el-button>
         </template>
       </el-table-column>
