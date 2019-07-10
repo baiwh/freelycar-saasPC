@@ -4,7 +4,7 @@
 # set -e
 
 # 构建
-npm run build
+cnpm run build
 
 # cd 到构建输出的目录
 cd dist
@@ -13,6 +13,6 @@ git init
 git add -A
 git commit -m 'deploy'
 
-git push -f Administrator:Freelycar2017@106.14.75.69:/cygdrive/c/nginx/html/saas/
+git push -f Administrator:Freelycar2017@freelycar.com:/cygdrive/c/nginx/html/saas
 
-cd -
+cd ../
