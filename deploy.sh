@@ -13,6 +13,6 @@ git init
 git add -A
 git commit -m 'deploy'
 
-git push -f Administrator:Freelycar2017@freelycar.com:/cygdrive/c/nginx/html/saas/
+git push -f Administrator:Freelycar2017@106.14.75.69:/cygdrive/c/nginx/html/saas/
 
 cd -
