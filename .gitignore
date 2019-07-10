@@ -51,6 +51,7 @@ typings/
 # Output of 'npm pack'
 *.tgz
 dist/
+saas/
 
 # Yarn Integrity file
 .yarn-integrity
