@@ -9,6 +9,7 @@
           type="daterange"
           size="small"
           range-separator="~"
+          value-format="yyyy-MM-dd"
           start-placeholder="开始日期"
           end-placeholder="结束日期">
         </el-date-picker>
@@ -68,6 +69,7 @@
     },
     methods: {
       getData() {
+        console.log(this.pageData)
         this.$get('/order/listOrderParticulars', {
           currentPage: this.pageData.currentPage,
           pageSize: this.pageData.pageSize,
@@ -78,9 +80,9 @@
           this.loading = false
           this.sumAmounts = res.totalAccount
           this.flowDetailsTable = res.pageResult.data
-          this.pageData.currentPage = res.currentPage
-          this.pageData.pageSize = res.pageSize
-          this.pageData.pageTotal = res.total
+          this.pageData.currentPage = res.pageResult.currentPage
+          this.pageData.pageSize = res.pageResult.pageSize
+          this.pageData.pageTotal = res.pageResult.total
         })
       },
 

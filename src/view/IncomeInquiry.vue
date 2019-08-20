@@ -10,8 +10,10 @@
         </el-radio-group>
       </el-col>
       <el-col :span="12" v-if="visible">
-        <el-date-picker v-model="datePickerValue" type="daterange" range-separator="~" value-format="yyyy-MM-dd"
-                        start-placeholder="开始日期" end-placeholder="结束日期" class="dateWidth"></el-date-picker>
+        <el-date-picker v-model="datePickerValue" type="daterange"
+                        range-separator="~" value-format="yyyy-MM-dd"
+                        start-placeholder="开始日期"
+                        end-placeholder="结束日期" class="dateWidth"></el-date-picker>
         <el-button type="primary" @click="searchData">查询</el-button>
       </el-col>
       <!--<el-col :span="4" :offset="num">-->
@@ -179,6 +181,9 @@
         }
         if (e === 'thisMonth') {
           this.getData(this.searchDate.thisMonth[0], this.searchDate.thisMonth[1])
+        }
+        if (e === 'search') {
+          this.getData(this.datePickerValue[0], this.datePickerValue[1])
         }
         this.visible = e === 'search' ? true : false
         this.num = e === 'search' ? 0 : 12
