@@ -33,7 +33,7 @@
         <span>会员卡信息</span>
       </div>
       <div>
-        <el-button @click="$router.push({path:'/MembershipManagement/MemberProcessing',query:{id:$route.query.id}})">
+        <el-button v-show="clinetInfo.card.length<1" @click="$router.push({path:'/MembershipManagement/MemberProcessing',query:{id:$route.query.id}})">
           开卡
         </el-button>
         <el-table :data="clinetInfo.card">

@@ -57,7 +57,7 @@
       <el-table-column prop="totalBalance" label="卡内未消费金额" align="center"></el-table-column>
       <el-table-column label="操作" width="220" align="center">
         <template slot-scope="scope">
-          <el-button @click="$router.push({path:'/MembershipManagement/MemberProcessing',query:{id:scope.row.id}})"
+          <el-button v-show="scope.row.totalBalance===null" @click="$router.push({path:'/MembershipManagement/MemberProcessing',query:{id:scope.row.id}})"
                      size="mini" type="primary">开卡
           </el-button>
           <el-button @click="$router.push({path:'/MembershipManagement/ModifyCustomers',query:{id:scope.row.id}})"

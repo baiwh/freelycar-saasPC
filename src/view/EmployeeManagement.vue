@@ -74,56 +74,44 @@
       @changePage="getDataList"></pagingDevice>
 
     <!--新增员工、修改员工模态框-->
-    <el-dialog :title="isModifyStaff?'修改员工信息':'新增员工信息'" :visible.sync="dialogVisible1" v-loading="dialogLoading1">
-      <el-row>
-        <el-col :span="4" :offset="2">员工姓名：</el-col>
-        <el-col :span="18">
+    <el-dialog width="500px" :title="isModifyStaff?'修改员工信息':'新增员工信息'"
+               :visible.sync="dialogVisible1" v-loading="dialogLoading1">
+      <el-form label-width="100px" :model="staffData"
+               :rules="staffDataRules" ref="staffData">
+        <el-form-item label="员工姓名：" prop="name">
           <el-input v-model="staffData.name" placeholder="请输入内容" style="width: 80%" size="small"></el-input>
-        </el-col>
-      </el-row>
-      <el-row>
-        <el-col :span="4" :offset="2">性别：</el-col>
-        <el-col :span="18">
+        </el-form-item>
+        <el-form-item label="性别：" prop="gender">
           <el-radio-group v-model="staffData.gender" style="width: 80%">
             <el-radio label="男"></el-radio>
             <el-radio label="女"></el-radio>
           </el-radio-group>
-        </el-col>
-      </el-row>
-      <el-row>
-        <el-col :span="4" :offset="2">手机号码：</el-col>
-        <el-col :span="18">
+        </el-form-item>
+        <el-form-item label="手机号码：" prop="phone">
           <el-input v-model="staffData.phone" placeholder="请输入内容" style="width: 80%" size="small"></el-input>
-        </el-col>
-      </el-row>
-      <el-row>
-        <el-col :span="4" :offset="2">职位：</el-col>
-        <el-col :span="18">
+        </el-form-item>
+        <el-form-item label="职位：" prop="position">
           <el-select v-model="staffData.position" placeholder="请选择职位" size="small">
             <el-option v-for="item in positionOptions" :key="item.value" :label="item.label"
                        :value="item.value"></el-option>
           </el-select>
-        </el-col>
-      </el-row>
-      <el-row>
-        <el-col :span="4" :offset="2">级别：</el-col>
-        <el-col :span="18">
+        </el-form-item>
+        <el-form-item label="级别：" prop="level">
           <el-select v-model="staffData.level" placeholder="请选择级别" size="small">
             <el-option v-for="item in levelOptions" :key="item.value" :label="item.label"
                        :value="item.value"></el-option>
           </el-select>
-        </el-col>
-      </el-row>
-      <el-row>
-        <el-col :span="4" :offset="2">备注：</el-col>
-        <el-col :span="18">
+        </el-form-item>
+        <el-form-item label="备注：" prop="comment">
           <el-input type="textarea" placeholder="请输入内容" v-model="staffData.comment" style="width:80%"></el-input>
-        </el-col>
-      </el-row>
-      <div slot="footer" class="dialog-footer">
-        <el-button @click="dialogVisible1 = false">取 消</el-button>
-        <el-button type="primary" @click="submitModifyStaff">确 定</el-button>
-      </div>
+        </el-form-item>
+
+        <el-form-item>
+          <el-button @click="dialogVisible1 = false">取 消</el-button>
+          <el-button type="primary" @click="submitModifyStaff('staffData')">确 定</el-button>
+        </el-form-item>
+
+      </el-form>
     </el-dialog>
 
     <!--技师开通智能柜模态框-->
@@ -164,6 +152,18 @@
           currentPage: 1,
           pageSize: 10,
           pageTotal: 1000
+        },
+        staffDataRules: {
+          name: [
+            { required: true, message: '请输入活动名称', trigger: 'blur' }
+          ],
+          gender: [
+            { required: true, message: '请选择活动区域', trigger: 'change' }
+          ],
+          phone: [
+            { type: 'number', required: true, message: '输入手机号', trigger: 'blur' },
+            { min: 11, max: 11, message: '请输入11位手机号', trigger: 'blur' }
+          ],
         },
         gender: '',
         staffData: {},
@@ -229,15 +229,22 @@
         this.multipleSelection.filter(v => {
           ids.push(v.id)
         })
-        this.$post('/staff/batchDelete', {
-          ids: ids.join(',')
-        }).then(res => {
-          this.$message({
-            message: '批量删除成功',
-            type: 'success'
+        if (this.multipleSelection.length > 1) {
+          this.$post('/staff/batchDelete', {
+            ids: ids.join(',')
+          }).then(res => {
+            this.$message({
+              message: '批量删除成功',
+              type: 'success'
+            })
+            this.getDataList()
           })
-          this.getDataList()
-        })
+        } else {
+          this.$message({
+            message: '请勾选员工',
+            type: 'error'
+          })
+        }
       },
 
       // 新增员工
@@ -271,25 +278,32 @@
       },
 
       // 提交新增、修改员工
-      submitModifyStaff() {
-        this.dialogLoading1 = true
-        this.$post('/staff/modify', {
-          id: this.staffData.id,
-          storeId: localStorage.getItem('storeId'),
-          comment: this.staffData.comment,
-          name: this.staffData.name,
-          phone: this.staffData.phone,
-          gender: this.staffData.gender,
-          level: this.staffData.level,
-          position: this.staffData.position
-        }).then(res => {
-          this.dialogLoading1 = false
-          this.$message({
-            message: '保存成功',
-            type: 'success'
-          })
-          this.dialogVisible1 = false
-          this.getDataList()
+      submitModifyStaff(formName) {
+        this.$refs[formName].validate((valid) => {
+          if (valid) {
+            this.dialogLoading1 = true
+            this.$post('/staff/modify', {
+              id: this.staffData.id,
+              storeId: localStorage.getItem('storeId'),
+              comment: this.staffData.comment,
+              name: this.staffData.name,
+              phone: this.staffData.phone,
+              gender: this.staffData.gender,
+              level: this.staffData.level,
+              position: this.staffData.position
+            }).then(res => {
+              this.dialogLoading1 = false
+              this.$message({
+                message: '保存成功',
+                type: 'success'
+              })
+              this.dialogVisible1 = false
+              this.getDataList()
+            })
+          } else {
+            console.log('error submit!!');
+            return false;
+          }
         })
       },
 

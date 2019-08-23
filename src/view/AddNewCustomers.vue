@@ -204,7 +204,7 @@
             {required: true, message: '请输入客户姓名', trigger: 'blur'}
           ],
           phone: [
-            {required: true, message: '请输入手机号码', trigger: 'blur'},
+            { type: 'number',required: true, message: '请输入手机号码', trigger: 'blur'},
             { min: 11, max: 11, message: '长度应为11个字符', trigger: 'blur' }
           ]
         },

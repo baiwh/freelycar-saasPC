@@ -46,6 +46,7 @@
             :on-remove="handleRemove"
             :on-success="uploadSuccess"
             :on-error="uploadError"
+            :on-exceed="onExceed"
             :file-list="fileList"
             class="imgWidth imgListWidth">
             <i class="el-icon-plus icon-position"></i>
@@ -94,6 +95,14 @@
             this.fileList.push({name:value.id,url:value.url})
             this.storeImgIds.push(value.id)
           })
+        })
+      },
+
+      // 文件上传个数太多
+      onExceed(){
+        this.$message({
+          message: '图片不能超过5个',
+          type: 'error'
         })
       },
 

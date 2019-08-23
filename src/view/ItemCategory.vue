@@ -14,7 +14,7 @@
           </el-col>
           <el-col :span="10" :offset="1">
             <span>项目类别：</span>
-            <el-select size="small" v-model="itemCategory" placeholder="请选择" style="width: 80%">
+            <el-select size="small" clearable v-model="itemCategory" placeholder="请选择" style="width: 80%">
               <el-option v-for="item in tableData1" :key="item.id" :label="item.name"
                          :value="item.id"></el-option>
             </el-select>
@@ -32,12 +32,12 @@
           <el-col :span="3">
             <el-button type="primary" plain size="small" @click="allDelete">删除项目</el-button>
           </el-col>
-          <el-col :span="4">
-            <el-button type="primary" plain size="small" @click="uploadFile">上传导入文件</el-button>
-          </el-col>
-          <el-col :span="4">
-            <el-button type="primary" plain size="small" @click="downloadFile">下载导入模板</el-button>
-          </el-col>
+          <!--<el-col :span="4">-->
+            <!--<el-button type="primary" plain size="small" @click="uploadFile">上传导入文件</el-button>-->
+          <!--</el-col>-->
+          <!--<el-col :span="4">-->
+            <!--<el-button type="primary" plain size="small" @click="downloadFile">下载导入模板</el-button>-->
+          <!--</el-col>-->
         </el-row>
 
         <!--表格-->
@@ -412,15 +412,23 @@
         this.multipleSelection.filter(v => {
           ids.push(v.id)
         })
-        this.$post('/project/batchDelete',{
-          ids:ids.join(',')
-        }).then(res=>{
-          this.$message({
-            message: '批量删除成功',
-            type: 'success'
+        if(this.multipleSelection.length>1){
+          this.$post('/project/batchDelete',{
+            ids:ids.join(',')
+          }).then(res=>{
+            this.$message({
+              message: '批量删除成功',
+              type: 'success'
+            })
+            this.getDataList()
           })
-          this.getDataList()
-        })
+        } else {
+          this.$message({
+            message: '请勾选项目',
+            type: 'error'
+          })
+        }
+
       },
 
       // 上传导入文件
