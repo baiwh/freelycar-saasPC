@@ -26,7 +26,7 @@
         <el-row>
           <el-col :span="10">
             <el-form-item label="手机号：" prop="phone">
-              <el-input v-model="clientForm.phone"></el-input>
+              <el-input type="number" v-model.number="clientForm.phone"></el-input>
             </el-form-item>
           </el-col>
           <el-col :span="10" :offset="2">
@@ -86,8 +86,7 @@
             {required: true, message: '请输入客户姓名', trigger: 'blur'}
           ],
           phone: [
-            {required: true, message: '请输入手机号码', trigger: 'blur'},
-            { min: 11, max: 11, message: '长度应为11个字符', trigger: 'blur' }
+            {required: true, message: '请输入手机号码', trigger: 'blur'}
           ]
         },
         formLoading:false

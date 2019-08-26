@@ -219,15 +219,23 @@
         this.multipleSelection.filter(v => {
           ids.push(v.id)
         })
-        this.$post('/cardService/batchDelete', {
-          ids: ids.join(',')
-        }).then(res => {
-          this.$message({
-            message: '批量删除成功',
-            type: 'success'
+        if(this.multipleSelection.length>0){
+          this.$post('/cardService/batchDelete', {
+            ids: ids.join(',')
+          }).then(res => {
+            this.$message({
+              message: '批量删除成功',
+              type: 'success'
+            })
+            this.getDataList()
           })
-          this.getDataList()
-        })
+        } else {
+          this.$message({
+            message: '请勾选项目',
+            type: 'error'
+          })
+        }
+
       },
 
       // 新增卡类
