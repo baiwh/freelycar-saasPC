@@ -88,7 +88,7 @@
           </el-radio-group>
         </el-form-item>
         <el-form-item label="手机号码：" prop="phone">
-          <el-input v-model="staffData.phone" placeholder="请输入内容" style="width: 80%" size="small"></el-input>
+          <el-input type="number" v-model.number="staffData.phone" placeholder="请输入内容" style="width: 80%" size="small"></el-input>
         </el-form-item>
         <el-form-item label="职位：" prop="position">
           <el-select v-model="staffData.position" placeholder="请选择职位" size="small">
@@ -119,7 +119,7 @@
       <el-row>
         <el-col :span="6" :offset="2">技师登录账号：</el-col>
         <el-col :span="16">
-          <el-input v-model="arkAccount.account" placeholder="请输入内容" style="width: 80%" size="small"></el-input>
+          <el-input :disabled="true" v-model="arkAccount.account" placeholder="请输入内容" style="width: 80%" size="small"></el-input>
         </el-col>
       </el-row>
       <el-row>
@@ -161,8 +161,7 @@
             { required: true, message: '请选择活动区域', trigger: 'change' }
           ],
           phone: [
-            { type: 'number', required: true, message: '输入手机号', trigger: 'blur' },
-            { min: 11, max: 11, message: '请输入11位手机号', trigger: 'blur' }
+            { required: true, message: '请输入手机号', trigger: 'blur' },
           ],
         },
         gender: '',
@@ -331,25 +330,32 @@
         this.dialogVisible2 = true
         this.arkAccount = {
           id: row.id,
-          account: '',
+          account: row.phone,
           password: ''
         }
       },
 
       // 开通智能柜提交
       submitArkAccount() {
-        this.$get('/staff/openArk', {
-          id: this.arkAccount.id,
-          account: this.arkAccount.account,
-          password: this.arkAccount.password
-        }).then(res => {
-          this.$message({
-            message: '成功开通智能柜账号',
-            type: 'success'
+        if(this.arkAccount.password){
+          this.$get('/staff/openArk', {
+            id: this.arkAccount.id,
+            account: this.arkAccount.account,
+            password: this.arkAccount.password
+          }).then(res => {
+            this.$message({
+              message: '成功开通智能柜账号',
+              type: 'success'
+            })
+            this.dialogVisible2 = false
+            this.getDataList()
           })
-          this.dialogVisible2 = false
-          this.getDataList()
-        })
+        }else {
+          this.$message({
+            message: '密码不能为空',
+            type: 'error'
+          })
+        }
       },
 
       // 关闭智能柜

@@ -124,6 +124,7 @@
         this.$get('/client/list', {
           name: this.name,
           phone: this.phone,
+          licensePlate: this.carNumber,
           currentPage: this.pageData.currentPage,
           pageSize: this.pageData.pageSize,
           storeId: localStorage.getItem('storeId'),

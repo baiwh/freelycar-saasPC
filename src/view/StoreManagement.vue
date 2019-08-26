@@ -48,6 +48,7 @@
             :on-error="uploadError"
             :on-exceed="onExceed"
             :file-list="fileList"
+            accept="image/*"
             class="imgWidth imgListWidth">
             <i class="el-icon-plus icon-position"></i>
             <div slot="tip" class="el-upload__tip">*最多上传五张图片</div>

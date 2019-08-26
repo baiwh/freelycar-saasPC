@@ -420,7 +420,7 @@
               message: '批量删除成功',
               type: 'success'
             })
-            this.getDataList()
+            this.getTableData2()
           })
         } else {
           this.$message({

@@ -262,7 +262,7 @@
       submit() {
         this.$refs['dialog'].validate((valid) => {
           if (valid) {
-            this.dialogLoading = true
+            // this.dialogLoading = true
             this.$post('/cardService/modify', {
               id: this.dialog.id,
               name: this.dialog.name,
