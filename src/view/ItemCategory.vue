@@ -58,7 +58,7 @@
                 <p>确定删除？</p>
                 <div style="text-align: right; margin: 0">
                   <el-button size="mini" type="text" @click="handleClose(scope.$index)">取消</el-button>
-                  <el-button type="primary" size="mini" @click="handleDelete(scope.row)">确定</el-button>
+                  <el-button type="primary" size="mini" @click="handleDelete(scope.row,scope.$index)">确定</el-button>
                 </div>
               </el-popover>
               <el-button slot="reference" size="mini" type="danger" v-popover="scope.$index">删除</el-button>
@@ -442,7 +442,7 @@
       },
 
       // 项目管理行内删除单个项目
-      handleDelete(row) {
+      handleDelete(row,index) {
         this.$get('/project/delete', {
           id: row.id
         }).then((res) => {
@@ -450,6 +450,7 @@
             message: '删除成功',
             type: 'success'
           })
+          this.handleClose(index)
           this.getTableData2()
         })
       },
@@ -479,7 +480,7 @@
             this.getTableData2()
           })
         }
-        this.handleClose(row.id);
+        this.handleClose(row.name);
       },
 
       // 上架下架

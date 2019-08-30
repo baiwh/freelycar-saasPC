@@ -38,10 +38,10 @@
             placement="top"
             width="160"
             :ref="scope.$index">
-            <p>确定删除本条抵用券？</p>
+            <p>确定删除会员卡？</p>
             <div style="text-align: right; margin: 0">
               <el-button size="mini" type="text" @click="handleClose(scope.$index)">取消</el-button>
-              <el-button type="primary" size="mini" @click="handleDelete(scope.row)">确定</el-button>
+              <el-button type="primary" size="mini" @click="handleDelete(scope.row,scope.$index)">确定</el-button>
             </div>
           </el-popover>
           <el-button size="mini" v-popover="scope.$index" type="danger">删除</el-button>
@@ -201,7 +201,7 @@
       },
 
       // 行内删除
-      handleDelete(row) {
+      handleDelete(row,index) {
         this.$get('/cardService/delete', {
           id: row.id
         }).then(res => {
@@ -209,6 +209,7 @@
             message: '删除成功',
             type: 'success'
           })
+          this.handleClose(index)
           this.getDataList()
         })
       },
