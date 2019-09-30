@@ -102,6 +102,12 @@
                        :value="item.value"></el-option>
           </el-select>
         </el-form-item>
+        <el-form-item label="可接项目：" prop="projects">
+          <el-checkbox-group v-model="checkBoxGroup">
+            <el-checkbox v-for="(item,index) in projectType" :label="item.id"
+                         :key="item.id">{{item.name}}</el-checkbox>
+          </el-checkbox-group>
+        </el-form-item>
         <el-form-item label="备注：" prop="comment">
           <el-input type="textarea" placeholder="请输入内容" v-model="staffData.comment" style="width:80%"></el-input>
         </el-form-item>
@@ -202,6 +208,11 @@
         dialogVisible1: false,
         dialogVisible2: false,
         dialogLoading1: false,
+        checkAll: false,
+        checkedProjectType: [],
+        projectType: [],
+        isIndeterminate: true,
+        checkBoxGroup:[]
       }
     },
     methods: {
@@ -261,6 +272,17 @@
         this.dialogVisible1 = true
       },
 
+      // 获取项目类别列表
+      getProjectType() {
+        this.$get('/project/list', {
+          storeId: localStorage.getItem('storeId'),
+          currentPage: 1,
+          pageSize: 1000
+        }).then((res) => {
+          this.projectType = res.data
+        })
+      },
+
       // 修改员工
       modifyStaff(row) {
         this.isModifyStaff = true
@@ -271,6 +293,9 @@
           id: row.id
         }).then((res) => {
           this.staffData = res
+          let projects = []
+          res.projects.map(v=>{projects.push(v.id)})
+          this.checkBoxGroup=projects
           this.dialogLoading1 = false
         })
 
@@ -278,6 +303,15 @@
 
       // 提交新增、修改员工
       submitModifyStaff(formName) {
+        let projects=[]
+        this.checkBoxGroup.map(v=>{
+          this.projectType.map(value=>{
+            if(v===value.id){
+              projects.push(value)
+            }
+          })
+        })
+        this.staffData.projects=projects
         this.$refs[formName].validate((valid) => {
           if (valid) {
             this.dialogLoading1 = true
@@ -289,7 +323,8 @@
               phone: this.staffData.phone,
               gender: this.staffData.gender,
               level: this.staffData.level,
-              position: this.staffData.position
+              position: this.staffData.position,
+              projects:this.staffData.projects
             }).then(res => {
               this.dialogLoading1 = false
               this.$message({
@@ -379,6 +414,7 @@
     },
     mounted: function () {
       this.getDataList()
+      this.getProjectType()
     }
   }
 </script>
