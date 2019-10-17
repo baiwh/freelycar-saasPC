@@ -48,6 +48,7 @@
           <el-table-column align="center" prop="name" label="项目名称"></el-table-column>
           <el-table-column align="center" prop="projectType" label="项目类别"></el-table-column>
           <el-table-column align="center" prop="price" label="项目价格"></el-table-column>
+          <el-table-column align="center" prop="memberPrice" label="会员价格"></el-table-column>
           <el-table-column align="center" prop="createTime" label="创建时间"></el-table-column>
           <el-table-column align="center" prop="comment" label="备注" show-overflow-tooltip></el-table-column>
 
@@ -176,6 +177,9 @@
         <el-form-item label="项目价格：" prop="price">
           <el-input v-model="dialog2.price" placeholder="请输入内容" style="width: 80%" size="small"></el-input>
         </el-form-item>
+        <el-form-item label="会员价格：" prop="memberPrice">
+          <el-input v-model="dialog2.memberPrice" placeholder="请输入内容" style="width: 80%" size="small"></el-input>
+        </el-form-item>
         <el-form-item label="备注：" prop="comment">
           <el-input type="textarea" placeholder="请输入内容" v-model="dialog2.comment" style="width:80%"></el-input>
         </el-form-item>
@@ -226,6 +230,7 @@
           name:'',
           projectTypeId:'',
           price:null,
+          memberPrice:null,
           comment:'',
         },
         dialog2Rules:{
@@ -357,6 +362,7 @@
           projectType: '',
           projectTypeId: '',
           price: null,
+          memberPrice: null,
           comment: '',
           storeId: localStorage.getItem('storeId')
         }
@@ -385,6 +391,7 @@
               name: this.dialog2.name,
               projectTypeId: this.dialog2.projectTypeId,
               price: this.dialog2.price,
+              memberPrice: this.dialog2.memberPrice,
               comment: this.dialog2.comment,
               storeId: localStorage.getItem('storeId')
             }).then((res) => {
