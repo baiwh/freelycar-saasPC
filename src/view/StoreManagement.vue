@@ -33,31 +33,31 @@
         </el-col>
 
         <!--图片上传-->
-        <el-col :span="7" :offset="2">
-          <p>上传图片：</p>
-          <el-upload
-            action="https://www.freelycar.com/api/upload/storeimg"
-            multiple
-            list-type="picture-card"
-            :limit="5"
-            :before-upload="beforeUploadPicture"
-            :on-preview="handlePictureCardPreview"
-            :on-progress="uploadProgress"
-            :on-remove="handleRemove"
-            :on-success="uploadSuccess"
-            :on-error="uploadError"
-            :on-exceed="onExceed"
-            :file-list="fileList"
-            accept="image/*"
-            class="imgWidth imgListWidth">
-            <i class="el-icon-plus icon-position"></i>
-            <div slot="tip" class="el-upload__tip">*最多上传五张图片</div>
-            <div slot="tip" class="el-upload__tip">*注意图片方向和大小</div>
-          </el-upload>
-          <el-dialog :visible.sync="dialogVisible">
-            <img width="100%" :src="dialogImageUrl" alt="">
-          </el-dialog>
-        </el-col>
+        <!--<el-col :span="7" :offset="2">-->
+          <!--<p>上传图片：</p>-->
+          <!--<el-upload-->
+            <!--action="https://www.freelycar.com/api/upload/storeimg"-->
+            <!--multiple-->
+            <!--list-type="picture-card"-->
+            <!--:limit="5"-->
+            <!--:before-upload="beforeUploadPicture"-->
+            <!--:on-preview="handlePictureCardPreview"-->
+            <!--:on-progress="uploadProgress"-->
+            <!--:on-remove="handleRemove"-->
+            <!--:on-success="uploadSuccess"-->
+            <!--:on-error="uploadError"-->
+            <!--:on-exceed="onExceed"-->
+            <!--:file-list="fileList"-->
+            <!--accept="image/*"-->
+            <!--class="imgWidth imgListWidth">-->
+            <!--<i class="el-icon-plus icon-position"></i>-->
+            <!--<div slot="tip" class="el-upload__tip">*最多上传五张图片</div>-->
+            <!--<div slot="tip" class="el-upload__tip">*注意图片方向和大小</div>-->
+          <!--</el-upload>-->
+          <!--<el-dialog :visible.sync="dialogVisible">-->
+            <!--<img width="100%" :src="dialogImageUrl" alt="">-->
+          <!--</el-dialog>-->
+        <!--</el-col>-->
       </el-row>
     </el-card>
   </div>
