@@ -323,7 +323,7 @@
 
       // 智能柜订单过滤器
       orderTypeFormatter(row) {
-        switch (row.payState) {
+        switch (row.orderType) {
           case 2:
             return '是'
             break
