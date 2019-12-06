@@ -20,7 +20,7 @@
             </el-select>
           </el-col>
           <el-col :span="2" :offset="1">
-            <el-button type="primary" size="small" @click="getTableData2">查询</el-button>
+            <el-button type="primary" size="small" @click="getTableData2(1)">查询</el-button>
           </el-col>
         </el-row>
 
@@ -336,10 +336,10 @@
        */
 
       // 获取项目管理列表
-      getTableData2() {
+      getTableData2(search) {
         this.$get('/project/list?', {
           storeId: localStorage.getItem('storeId'),
-          currentPage: this.pageData2.currentPage,
+          currentPage: search?search:this.pageData2.currentPage,
           pageSize: this.pageData2.pageSize,
           name: this.itemName,
           projectTypeId: this.itemCategory

@@ -9,7 +9,7 @@
         <el-input v-model="staffName" placeholder="请输入内容"></el-input>
       </el-col>
       <el-col :span="4">
-        <el-button size="small" type="primary" @click="getDataList">查询</el-button>
+        <el-button size="small" type="primary" @click="getDataList(1)">查询</el-button>
       </el-col>
     </el-row>
 
@@ -217,10 +217,10 @@
     },
     methods: {
       // 获取员工列表
-      getDataList() {
+      getDataList(search) {
         this.$get('/staff/list', {
           storeId: localStorage.getItem('storeId'),
-          currentPage: this.pageData.currentPage,
+          currentPage: search?search:this.pageData.currentPage,
           pageSize: this.pageData.pageSize,
           name: this.staffName,
           staffNumber: this.staffId

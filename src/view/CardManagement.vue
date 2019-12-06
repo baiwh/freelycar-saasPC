@@ -6,7 +6,7 @@
         <el-input v-model="cardName" placeholder="请输入卡类名称"></el-input>
       </el-col>
       <el-col :span="5">
-        <el-button type="primary" size="small" @click="getDataList">查询</el-button>
+        <el-button type="primary" size="small" @click="getDataList(1)">查询</el-button>
       </el-col>
     </el-row>
 
@@ -146,10 +146,10 @@
     },
     methods: {
       // 获取卡类列表
-      getDataList() {
+      getDataList(search) {
         this.$get('/cardService/list', {
           storeId: localStorage.getItem('storeId'),
-          currentPage: this.pageData.currentPage,
+          currentPage: search?search:this.pageData.currentPage,
           pageSize: this.pageData.pageSize,
           name: this.cardName
         }).then((res) => {

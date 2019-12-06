@@ -15,7 +15,7 @@
         </el-date-picker>
       </el-col>
       <el-col :span="4">
-        <el-button type="primary" size="small" @click="getData">查询</el-button>
+        <el-button type="primary" size="small" @click="getData(1)">查询</el-button>
       </el-col>
       <el-col :span="4">
         <el-button type="primary" size="small" @click="getExcel">导出Excel</el-button>
@@ -68,10 +68,10 @@
       }
     },
     methods: {
-      getData() {
+      getData(search) {
         console.log(this.pageData)
         this.$get('/order/listOrderParticulars', {
-          currentPage: this.pageData.currentPage,
+          currentPage: search?search:this.pageData.currentPage,
           pageSize: this.pageData.pageSize,
           storeId: localStorage.getItem('storeId'),
           startTime: this.datePickerValue ? this.datePickerValue[0] : '',

@@ -6,7 +6,7 @@
         <el-input v-model="input" placeholder="请输入抵用券名称"></el-input>
       </el-col>
       <el-col :span="5">
-        <el-button type="primary" size="small" @click="getDataList">查询</el-button>
+        <el-button type="primary" size="small" @click="getDataList(1)">查询</el-button>
       </el-col>
     </el-row>
 
@@ -114,7 +114,7 @@
           </el-select>
         </el-col>
         <el-col :span="4">
-          <el-button type="primary" @click="getServiceList">查询</el-button>
+          <el-button type="primary" @click="getServiceList(1)">查询</el-button>
         </el-col>
       </el-row>
 
@@ -228,10 +228,10 @@
     },
     methods: {
       // 获取卡类列表
-      getDataList() {
+      getDataList(search) {
         this.$get('/couponService/list', {
           storeId: localStorage.getItem('storeId'),
-          currentPage: this.pageData.currentPage,
+          currentPage: search?search:this.pageData.currentPage,
           pageSize: this.pageData.pageSize,
           name: this.input
         }).then((res) => {
@@ -255,10 +255,10 @@
       },
 
       // 获取项目列表
-      getServiceList() {
+      getServiceList(search) {
         this.$get('/project/list?', {
           storeId: localStorage.getItem('storeId'),
-          currentPage: this.pageData2.currentPage,
+          currentPage: search?search:this.pageData2.currentPage,
           pageSize: this.pageData2.pageSize,
           name: this.itemName,
           projectTypeId: this.selectValue

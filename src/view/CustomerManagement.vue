@@ -19,7 +19,7 @@
         <el-button circle :type="buttonType" size="small" @click="onVipButton">是</el-button>
       </el-col>
       <el-col :span="1">
-        <el-button type="primary" size="small" @click="getDataList">查询</el-button>
+        <el-button type="primary" size="small" @click="getDataList(1)">查询</el-button>
       </el-col>
     </el-row>
 
@@ -120,12 +120,12 @@
     },
     methods: {
       // 获取列表
-      getDataList() {
+      getDataList(search) {
         this.$get('/client/list', {
           name: this.name,
           phone: this.phone,
           licensePlate: this.carNumber,
-          currentPage: this.pageData.currentPage,
+          currentPage: search?search:this.pageData.currentPage,
           pageSize: this.pageData.pageSize,
           storeId: localStorage.getItem('storeId'),
           isMember: this.isMember,
