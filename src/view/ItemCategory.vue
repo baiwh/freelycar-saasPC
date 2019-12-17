@@ -33,10 +33,10 @@
             <el-button type="primary" plain size="small" @click="allDelete">删除项目</el-button>
           </el-col>
           <!--<el-col :span="4">-->
-            <!--<el-button type="primary" plain size="small" @click="uploadFile">上传导入文件</el-button>-->
+          <!--<el-button type="primary" plain size="small" @click="uploadFile">上传导入文件</el-button>-->
           <!--</el-col>-->
           <!--<el-col :span="4">-->
-            <!--<el-button type="primary" plain size="small" @click="downloadFile">下载导入模板</el-button>-->
+          <!--<el-button type="primary" plain size="small" @click="downloadFile">下载导入模板</el-button>-->
           <!--</el-col>-->
         </el-row>
 
@@ -47,6 +47,7 @@
           <el-table-column align="center" label="序号" type="index"></el-table-column>
           <el-table-column align="center" prop="name" label="项目名称"></el-table-column>
           <el-table-column align="center" prop="projectType" label="项目类别"></el-table-column>
+          <el-table-column align="center" prop="standard" label="价格类型" :formatter="standardFilter"></el-table-column>
           <el-table-column align="center" prop="price" label="项目价格"></el-table-column>
           <el-table-column align="center" prop="memberPrice" label="会员价格"></el-table-column>
           <el-table-column align="center" prop="createTime" label="创建时间"></el-table-column>
@@ -146,15 +147,15 @@
     <!--项目类别模态框-->
     <el-dialog v-loading="dialogLoading1" :title="projectIsModify?'修改项目类别':'新增项目类别'"
                :visible.sync="addCategoryVisible" width="50%">
-        <el-form :model="dialog1" :rules="dialog1Rules" ref="dialog1" label-width="100px">
-            <el-form-item label="类别名称：" prop="name">
-              <el-input v-model="dialog1.name" placeholder="请输入内容" style="width: 80%" size="small"></el-input>
-            </el-form-item>
-          <el-form-item label="备注：">
-            <el-input type="textarea" :rows="2" placeholder="请输入内容" v-model="dialog1.comment"
-                      style="width:80%"></el-input>
-          </el-form-item>
-        </el-form>
+      <el-form :model="dialog1" :rules="dialog1Rules" ref="dialog1" label-width="100px">
+        <el-form-item label="类别名称：" prop="name">
+          <el-input v-model="dialog1.name" placeholder="请输入内容" style="width: 80%" size="small"></el-input>
+        </el-form-item>
+        <el-form-item label="备注：">
+          <el-input type="textarea" :rows="2" placeholder="请输入内容" v-model="dialog1.comment"
+                    style="width:80%"></el-input>
+        </el-form-item>
+      </el-form>
 
       <div slot="footer" class="dialog-footer">
         <el-button @click="addCategoryVisible = false">取 消</el-button>
@@ -173,6 +174,12 @@
             <el-option v-for="item in tableData1" :key="item.id" :label="item.name"
                        :value="item.id"></el-option>
           </el-select>
+        </el-form-item>
+        <el-form-item label="价格类型：" prop="standard">
+          <template>
+            <el-radio v-model="dialog2.standard" label="0">非标准价格</el-radio>
+            <el-radio v-model="dialog2.standard" label="1">标准价格</el-radio>
+          </template>
         </el-form-item>
         <el-form-item label="项目价格：" prop="price">
           <el-input v-model="dialog2.price" placeholder="请输入内容" style="width: 80%" size="small"></el-input>
@@ -218,30 +225,33 @@
           pageTotal: 100
         },
         dialog1: {
-          name:'',
-          comment:'',
+          name: '',
+          comment: '',
         },
-        dialog1Rules:{
+        dialog1Rules: {
           name: [
-            { required: true, message: '请输入名称', trigger: 'blur' }
+            {required: true, message: '请输入名称', trigger: 'blur'}
           ]
         },
         dialog2: {
-          name:'',
-          projectTypeId:'',
-          price:null,
-          memberPrice:null,
-          comment:'',
+          name: '',
+          projectTypeId: '',
+          price: null,
+          memberPrice: null,
+          comment: '',
         },
-        dialog2Rules:{
+        dialog2Rules: {
           name: [
-            { required: true, message: '请输入名称', trigger: 'blur' }
+            {required: true, message: '请输入名称', trigger: 'blur'}
           ],
           projectTypeId: [
-            { required: true, message: '请选择项目类别', trigger: 'blur' }
+            {required: true, message: '请选择项目类别', trigger: 'blur'}
+          ],
+          standard: [
+            {required: true, message: '请选择价格类型', trigger: 'blur'}
           ],
           price: [
-            { required: true, message: '请输入价格', trigger: 'blur' }
+            {required: true, message: '请输入价格', trigger: 'blur'}
           ]
         },
         dialogLoading1: false,
@@ -339,7 +349,7 @@
       getTableData2(search) {
         this.$get('/project/list?', {
           storeId: localStorage.getItem('storeId'),
-          currentPage: search?search:this.pageData2.currentPage,
+          currentPage: search ? search : this.pageData2.currentPage,
           pageSize: this.pageData2.pageSize,
           name: this.itemName,
           projectTypeId: this.itemCategory
@@ -350,6 +360,18 @@
           this.pageData2.pageSize = res.pageSize
           this.pageData2.pageTotal = res.total
         })
+      },
+
+      // 价格类型过滤器
+      standardFilter(row) {
+        switch (row.standard) {
+          case 0:
+            return '非标准价格'
+            break
+          case 1:
+            return '标准价格'
+            break
+        }
       },
 
       // 新增类别
@@ -393,6 +415,7 @@
               price: this.dialog2.price,
               memberPrice: this.dialog2.memberPrice,
               comment: this.dialog2.comment,
+              standard: this.dialog2.standard,
               storeId: localStorage.getItem('storeId')
             }).then((res) => {
               this.dialogLoading2 = false
@@ -419,10 +442,10 @@
         this.multipleSelection.filter(v => {
           ids.push(v.id)
         })
-        if(this.multipleSelection.length>0){
-          this.$post('/project/batchDelete',{
-            ids:ids.join(',')
-          }).then(res=>{
+        if (this.multipleSelection.length > 0) {
+          this.$post('/project/batchDelete', {
+            ids: ids.join(',')
+          }).then(res => {
             this.$message({
               message: '批量删除成功',
               type: 'success'
@@ -449,7 +472,7 @@
       },
 
       // 项目管理行内删除单个项目
-      handleDelete(row,index) {
+      handleDelete(row, index) {
         this.$get('/project/delete', {
           id: row.id
         }).then((res) => {
