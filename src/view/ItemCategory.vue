@@ -46,13 +46,12 @@
           <el-table-column align="center" type="selection"></el-table-column>
           <el-table-column align="center" label="序号" type="index"></el-table-column>
           <el-table-column align="center" prop="name" label="项目名称"></el-table-column>
-          <el-table-column align="center" prop="projectType" label="项目类别"></el-table-column>
+          <el-table-column align="center" prop="projectTypeName" label="项目类别"></el-table-column>
           <el-table-column align="center" prop="standard" label="价格类型" :formatter="standardFilter"></el-table-column>
           <el-table-column align="center" prop="price" label="项目价格"></el-table-column>
           <el-table-column align="center" prop="memberPrice" label="会员价格"></el-table-column>
           <el-table-column align="center" prop="createTime" label="创建时间"></el-table-column>
           <el-table-column align="center" prop="comment" label="备注" show-overflow-tooltip></el-table-column>
-
           <el-table-column align="center" label="操作" width="150">
             <template slot-scope="scope">
               <el-button size="mini" type="primary" @click="modifyProject2(scope.row)">修改</el-button>
@@ -239,6 +238,7 @@
           price: null,
           memberPrice: null,
           comment: '',
+          standard:null
         },
         dialog2Rules: {
           name: [
@@ -374,7 +374,7 @@
         }
       },
 
-      // 新增类别
+      // 新增项目
       addProject2() {
         this.addManagementVisible = true
         this.projectIsModify2 = false
@@ -385,6 +385,7 @@
           projectTypeId: '',
           price: null,
           memberPrice: null,
+          standard:null,
           comment: '',
           storeId: localStorage.getItem('storeId')
         }
