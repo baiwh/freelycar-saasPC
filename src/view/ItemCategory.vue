@@ -176,8 +176,10 @@
         </el-form-item>
         <el-form-item label="价格类型：" prop="standard">
           <template>
-            <el-radio v-model="dialog2.standard" label="0">非标准价格</el-radio>
-            <el-radio v-model="dialog2.standard" label="1">标准价格</el-radio>
+            <el-radio-group v-model="dialog2.standard">
+              <el-radio :label="0">非标准价格</el-radio>
+              <el-radio :label="1">标准价格</el-radio>
+            </el-radio-group>
           </template>
         </el-form-item>
         <el-form-item label="项目价格：" prop="price">
@@ -400,6 +402,7 @@
           id: row.id
         }).then((res) => {
           this.dialog2 = res
+          console.log(this.dialog2)
           this.dialogLoading2 = false
         })
       },
@@ -409,12 +412,13 @@
         this.$refs['dialog2'].validate((valid) => {
           if (valid) {
             this.dialogLoading2 = true
+            // console.log(this.dialog2.memb)
             this.$post('/project/modify', {
               id: this.dialog2.id,
               name: this.dialog2.name,
               projectTypeId: this.dialog2.projectTypeId,
               price: this.dialog2.price,
-              memberPrice: this.dialog2.memberPrice,
+              memberPrice: this.dialog2.memberPrice===''?null:this.dialog2.memberPrice,
               comment: this.dialog2.comment,
               standard: this.dialog2.standard,
               storeId: localStorage.getItem('storeId')
