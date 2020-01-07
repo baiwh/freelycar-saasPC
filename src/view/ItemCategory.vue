@@ -169,8 +169,14 @@
           <el-input v-model="dialog2.name" placeholder="请输入内容" style="width: 80%" size="small"></el-input>
         </el-form-item>
         <el-form-item label="项目类别：" prop="projectTypeId">
-          <el-select v-model="dialog2.projectTypeId" placeholder="请选择" style="width: 80%">
+          <el-select v-model="dialog2.projectTypeId" placeholder="请选择" @change="selectChange" style="width: 80%">
             <el-option v-for="item in tableData1" :key="item.id" :label="item.name"
+                       :value="item.id"></el-option>
+          </el-select>
+        </el-form-item>
+        <el-form-item v-show="isServiceProvider" label="服务商：" prop="serviceProviderId">
+          <el-select v-model="dialog2.serviceProviderId" placeholder="请选择" style="width: 80%">
+            <el-option v-for="item in serviceProviderList" :key="item.id" :label="item.name"
                        :value="item.id"></el-option>
           </el-select>
         </el-form-item>
@@ -213,6 +219,8 @@
         itemName: '',
         itemCategory: '',
         multipleSelection: [],
+        serviceProviderList: [],
+        isServiceProvider:false,
         tableData1: [],
         tableData2: [],
         pageData1: {
@@ -237,6 +245,7 @@
         dialog2: {
           name: '',
           projectTypeId: '',
+          serviceProviderId: '',
           price: null,
           memberPrice: null,
           comment: '',
@@ -301,6 +310,19 @@
         }
       },
 
+      // 如果选择的是“代驾项目”就显示服务商列表
+      selectChange(e){
+        let item = this.tableData1.filter(item=>{
+          return item.id===e
+        })
+        if(item[0].name==='代驾项目'){
+          this.isServiceProvider=true
+        }else {
+          this.isServiceProvider=false
+          this.dialog2.serviceProviderId = ''
+        }
+      },
+
       // 修改按钮（打开弹框、要获取项目详情）
       modifyProject(row) {
         this.addCategoryVisible = true
@@ -361,6 +383,18 @@
           this.pageData2.currentPage = res.currentPage
           this.pageData2.pageSize = res.pageSize
           this.pageData2.pageTotal = res.total
+          this.getServiceProviderList()
+        })
+      },
+
+      // 获取服务商列表
+      getServiceProviderList(){
+        this.$get('/serviceProvider/list?', {
+          currentPage: 1,
+          pageSize: 1000,
+          name: ''
+        }).then((res) => {
+          this.ServiceProviderList = res.data
         })
       },
 
@@ -385,6 +419,7 @@
           name: '',
           projectType: '',
           projectTypeId: '',
+          serviceProviderId: '',
           price: null,
           memberPrice: null,
           standard:null,
@@ -417,6 +452,7 @@
               id: this.dialog2.id,
               name: this.dialog2.name,
               projectTypeId: this.dialog2.projectTypeId,
+              serviceProviderId: this.dialog2.serviceProviderId,
               price: this.dialog2.price,
               memberPrice: this.dialog2.memberPrice===''?null:this.dialog2.memberPrice,
               comment: this.dialog2.comment,
