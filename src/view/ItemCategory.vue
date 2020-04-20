@@ -315,7 +315,7 @@
         let item = this.tableData1.filter(item=>{
           return item.id===e
         })
-        if(item[0].name==='代驾项目'){
+        if(item[0].name.includes('代驾')){
           this.isServiceProvider=true
         }else {
           this.isServiceProvider=false
@@ -394,7 +394,7 @@
           pageSize: 1000,
           name: ''
         }).then((res) => {
-          this.ServiceProviderList = res.data
+          this.serviceProviderList = res.data
         })
       },
 
@@ -437,6 +437,11 @@
           id: row.id
         }).then((res) => {
           this.dialog2 = res
+          if(res.projectTypeName.includes('代驾')) {
+            this.isServiceProvider = true
+          }else{
+            this.isServiceProvider = false
+          }
           console.log(this.dialog2)
           this.dialogLoading2 = false
         })
