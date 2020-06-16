@@ -41,7 +41,7 @@
                 <i class="el-icon-document"></i>
                 <span>消费开单</span>
               </template>
-              <el-menu-item index="/ConsumptionOrder/QuickBilling"
+              <el-menu-item v-show='false' index="/ConsumptionOrder/QuickBilling"
                             class="el-submenu-margin">快速开单
               </el-menu-item>
               <el-menu-item index="/ConsumptionOrder/DocumentManagement"
