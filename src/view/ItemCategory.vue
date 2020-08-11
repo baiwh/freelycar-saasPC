@@ -42,15 +42,15 @@
 
         <!--表格-->
         <el-table ref="multipleTable" :data="tableData2" tooltip-effect="dark" border
-                  @selection-change="handleSelectionChange">
+                  @selection-change="handleSelectionChange" :default-sort="{prop: 'sort', order: 'ascending'}">
           <el-table-column align="center" type="selection"></el-table-column>
           <el-table-column align="center" label="序号" type="index"></el-table-column>
-          <el-table-column align="center" prop="name" label="项目名称"></el-table-column>
-          <el-table-column align="center" prop="projectTypeName" label="项目类别"></el-table-column>
+          <el-table-column align="center" prop="name" width="80" label="项目名称"></el-table-column>
+          <el-table-column align="center" prop="projectTypeName" width="80" label="项目类别"></el-table-column>
           <el-table-column align="center" prop="standard" label="价格类型" :formatter="standardFilter"></el-table-column>
           <el-table-column align="center" prop="price" label="项目价格"></el-table-column>
-          <el-table-column align="center" prop="memberPrice" label="会员价格"></el-table-column>
-          <el-table-column align="center" prop="createTime" label="创建时间"></el-table-column>
+          <el-table-column align="center" prop="memberPrice" width="80" label="会员价格"></el-table-column>
+          <el-table-column align="center" prop="createTime" width="100" label="创建时间"></el-table-column>
           <el-table-column align="center" prop="comment" label="备注" show-overflow-tooltip></el-table-column>
           <el-table-column align="center" label="操作" width="150">
             <template slot-scope="scope">
@@ -101,6 +101,12 @@
               </el-button>
             </template>
           </el-table-column>
+          <el-table-column align="center" label="排序" width="150">
+        <template slot-scope="scope">
+          <el-button  :disabled="scope.$index===0" size="mini" type="primary" @click="upLayer(scope.$index,scope.row)" >上移</el-button>
+          <el-button :disabled="scope.$index===(tableData2.length-1)" size="mini" type="primary" @click="downLayer(scope.$index,scope.row)">下移</el-button>
+        </template>
+      </el-table-column>
         </el-table>
 
         <!--分页器-->
@@ -380,6 +386,7 @@
         }).then((res) => {
           this.loading = false
           this.tableData2 = res.data
+          console.log(this.tableData2)
           this.pageData2.currentPage = res.currentPage
           this.pageData2.pageSize = res.pageSize
           this.pageData2.pageTotal = res.total
@@ -595,7 +602,52 @@
       //关闭二次确认提示框
       handleClose(id) {
         this.$refs[id].doClose()
+      },
+       // 上移
+      upLayer(index, row) {
+        if (index == 0) {
+          this.$message({
+            message: '处于顶端，不能继续上移',
+            type: 'warning'
+          });
+        } else {
+          let param = {
+          };
+          param[row.id] = this.tableData2[index - 1].sort//该行的门店id和将要切换的sort
+          param[this.tableData2[index - 1].id]=row.sort;//上一行数据的sort
+          console.log(param)
+          //视图移动
+           //访问后台接口传入两个调换的门店id和sort值有后台调换顺序，刷新数据
+          this.switchLocation(param);
+        }
+      },
+      // 下移
+      downLayer(index, row) {
+        if (index == this.tableData2.length-1) {
+          this.$message({
+            message: '处于底端，不能继续下移',
+            type: 'warning'
+          });
+        } else {
+          const param = {};
+          param[row.id] = this.tableData2[index + 1].sort//该行的门店id将要换成的sort
+          param[this.tableData2[index + 1].id]=row.sort;//下一行数据的sort
+          this.switchLocation(param);
+        }
+      },
+      //移动请求
+      switchLocation(param){
+        this.$post('/project/switchLocation', 
+          param
+        ).then(res =>{
+             this.$message({
+              message: '移动成功',
+              type: 'success'
+            });
+            this.getTableData2();
+          });
       }
+
     },
     mounted: function () {
       this.getTableData1()

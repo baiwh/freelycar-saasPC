@@ -13,7 +13,7 @@ module.exports = {
     proxyTable: {
       '/api': {
         target: 'https://www.freelycar.com',
-        // target: 'http://192.168.0.163', //源地址
+        // target: 'http://192.168.0.168', //源地址
         // target: 'http://localhost:8080',
         secure: false,
         changeOrigin: true,

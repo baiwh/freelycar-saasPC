@@ -132,11 +132,31 @@
         }).then((res) => {
           this.loading = false
           this.tableData = res.data
+          console.log(this.tableData)
+          // 车牌号和品牌去重
+          this.deDuplicationPlate(this.tableData)
           this.pageData.currentPage = res.currentPage
           this.pageData.pageSize = res.pageSize
           this.pageData.pageTotal = res.total
           this.getMemberStatistics()
         })
+      },
+
+      //deDuplicationPlate 车牌号和品牌去重
+      deDuplicationPlate(data){
+        for(let k in data){
+          if(data[k].plates !== undefined){
+            let plates =  data[k].plates.split(",");
+            let brands = data[k].brands.split(',');
+            let setplates = new Set(plates)
+            let setbrands = new Set(brands)
+            let newbrands = [...setbrands].join(',')
+            let newplates = [...setplates].join(',')
+            data[k].plates = newplates
+            data[k].brands = newbrands
+          }
+          
+        }
       },
 
       // 获取门店统计信息
