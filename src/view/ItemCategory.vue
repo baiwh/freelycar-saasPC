@@ -657,11 +657,11 @@ export default {
         });
       } else {
         let param = {};
-        param[row.id] = this.tableData2[index - 1].sort; //该行的门店id和将要切换的sort
+        param[row.id] = this.tableData2[index - 1].sort; //该行的网点id和将要切换的sort
         param[this.tableData2[index - 1].id] = row.sort; //上一行数据的sort
         console.log(param);
         //视图移动
-        //访问后台接口传入两个调换的门店id和sort值有后台调换顺序，刷新数据
+        //访问后台接口传入两个调换的网点id和sort值有后台调换顺序，刷新数据
         this.switchLocation(param);
       }
     },
@@ -674,7 +674,7 @@ export default {
         });
       } else {
         const param = {};
-        param[row.id] = this.tableData2[index + 1].sort; //该行的门店id将要换成的sort
+        param[row.id] = this.tableData2[index + 1].sort; //该行的网点id将要换成的sort
         param[this.tableData2[index + 1].id] = row.sort; //下一行数据的sort
         this.switchLocation(param);
       }

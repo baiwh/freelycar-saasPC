@@ -106,7 +106,7 @@
                             class="el-submenu-margin">员工管理
               </el-menu-item>
               <el-menu-item index="/SystemSetup/StoreManagement"
-                            class="el-submenu-margin">门店管理
+                            class="el-submenu-margin">网点管理
               </el-menu-item>
             </el-submenu>
 

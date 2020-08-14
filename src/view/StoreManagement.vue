@@ -2,17 +2,17 @@
   <div>
     <el-card shadow="hover">
       <div slot="header">
-        <span>门店信息</span>
+        <span>网点信息</span>
       </div>
 
       <!--表单信息-->
       <el-row>
         <el-col :span="15">
           <el-form :model="storeForm" label-width="100px">
-            <el-form-item label="门店名称：" prop="storeName">
+            <el-form-item label="网点名称：" prop="storeName">
               <el-input v-model="storeForm.name"></el-input>
             </el-form-item>
-            <el-form-item label="门店地址：" prop="storeAddress">
+            <el-form-item label="网点地址：" prop="storeAddress">
               <el-input v-model="storeForm.address"></el-input>
             </el-form-item>
             <el-form-item label="营业时间：" prop="businessHour">
@@ -82,7 +82,7 @@
       }
     },
     methods: {
-      // 获取门店信息
+      // 获取网点信息
       getStoreDetail() {
         this.$get('/store/detail', {
           id: localStorage.getItem('storeId')
@@ -107,7 +107,7 @@
         })
       },
 
-      // 修改门店信息
+      // 修改网点信息
       submitInfo() {
         console.log(this.storeForm.time)
         this.$post('/store/confirmInfo', {
@@ -122,7 +122,7 @@
           storeImgIds: this.storeImgIds
         }).then(res=>{
           this.$message({
-            message: '门店信息保存成功',
+            message: '网点信息保存成功',
             type: 'success'
           })
         })

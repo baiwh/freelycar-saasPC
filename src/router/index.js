@@ -173,7 +173,7 @@ export default new Router({
             },
             {
               path: 'StoreManagement',
-              name: '门店管理',
+              name: '网点管理',
               component:StoreManagement
             }
           ]

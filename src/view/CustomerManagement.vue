@@ -159,7 +159,7 @@
         }
       },
 
-      // 获取门店统计信息
+      // 获取网点统计信息
       getMemberStatistics() {
         this.$get('/client/memberStatistics', {
           storeId: localStorage.getItem('storeId')
