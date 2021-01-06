@@ -86,8 +86,10 @@
               document.cookie = "jwt=" + res + "; expires=" + time.toGMTString() + ";path=/"
 
               // 获取登录用户信息，将几个基本信息存入localStorage
-              this.getUserInfo(this.form.userName)
+            }else{
+              document.cookie = "jwt="+res+";path=/";
             }
+              this.getUserInfo(this.form.userName)
           }
         })
       },
@@ -97,11 +99,12 @@
         this.$get('/sysUser/getUserInfoByUserName',{
           userName: userName
         }).then((res) => {
-          // console.log(res)
+          console.log(res)
           if(res){
             localStorage.setItem('userName',res.username)
             localStorage.setItem('storeId',res.storeId)
             localStorage.setItem('staffName',res.staffName)
+            localStorage.setItem('storeName',res.storeName);
 
             // 跳转到门户首页
             this.$router.push('/home')

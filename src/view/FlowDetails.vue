@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div class="minwidth">
     <!--选择查找日期-->
     <el-row>
       <el-col :span="16">
@@ -40,7 +40,7 @@
       <el-table-column property="projectNames" label="消费项目" align="center"></el-table-column>
       <el-table-column property="cost" label="金额" align="center"></el-table-column>
       <el-table-column property="serviceTime" label="时间" align="center"></el-table-column>
-      <el-table-column property="isMember" label="是否是会员" align="center"></el-table-column>
+      
     </el-table>
 
     <!--分页器-->
@@ -70,7 +70,7 @@
     methods: {
       getData(search) {
         console.log(this.pageData)
-        this.$get('/order/listOrderParticulars', {
+        this.$get('/order/listOrderReport', {
           currentPage: search?search:this.pageData.currentPage,
           pageSize: this.pageData.pageSize,
           storeId: localStorage.getItem('storeId'),
@@ -114,4 +114,8 @@
   .el-input {
     width: 100px;
   }
+  .minwidth{
+  width : 100%;
+  min-width: 1000px;
+}
 </style>

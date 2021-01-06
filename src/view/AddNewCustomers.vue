@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div class="minwidth">
     <!--客户信息-->
     <el-card shadow="hover">
       <div slot="header">
@@ -304,4 +304,8 @@
   .el-select, .el-input {
     width: 20vw;
   }
+  .minwidth{
+  width : 100%;
+  min-width: 1000px;
+}
 </style>

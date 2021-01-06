@@ -73,12 +73,12 @@
               <el-menu-item index="/ProductManagement/ItemCategory"
                             class="el-submenu-margin">项目管理
               </el-menu-item>
-              <el-menu-item index="/ProductManagement/CardManagement"
+              <!-- <el-menu-item index="/ProductManagement/CardManagement"
                             class="el-submenu-margin">卡类管理
               </el-menu-item>
               <el-menu-item index="/ProductManagement/CreditVoucherManagement"
                             class="el-submenu-margin">抵用券管理
-              </el-menu-item>
+              </el-menu-item> -->
             </el-submenu>
 
             <el-submenu index="财务管理">
@@ -92,9 +92,9 @@
               <el-menu-item index="/FinancialManagement/FlowDetails"
                             class="el-submenu-margin">流水明细
               </el-menu-item>
-              <el-menu-item index="/FinancialManagement/ProcurementExpenditure"
+              <!-- <el-menu-item index="/FinancialManagement/ProcurementExpenditure"
                             class="el-submenu-margin">采购支出
-              </el-menu-item>
+              </el-menu-item> -->
             </el-submenu>
 
             <el-submenu index="系统设置">
@@ -102,9 +102,9 @@
                 <i class="el-icon-setting"></i>
                 <span>系统设置</span>
               </template>
-              <el-menu-item index="/SystemSetup/EmployeeManagement"
+              <!-- <el-menu-item index="/SystemSetup/EmployeeManagement"
                             class="el-submenu-margin">员工管理
-              </el-menu-item>
+              </el-menu-item> -->
               <el-menu-item index="/SystemSetup/StoreManagement"
                             class="el-submenu-margin">网点管理
               </el-menu-item>
@@ -113,9 +113,9 @@
           </el-menu>
         </el-aside>
 
-        <el-main>
+        <el-main class="main">
           <el-container>
-            <el-header class="nav-title">
+            <el-header class="nav-title" style="height:40px;">
               <el-row>
                 <!--<el-col :span="1">-->
                 <!--<el-button icon="el-icon-d-arrow-left" circle @click="modifyNav"></el-button>-->
@@ -204,7 +204,9 @@
   .user-name {
     color: white;
   }
-
+  .main{
+    padding: 0 16px 16px 16px !important;
+  }
   #app {
   }
 </style>

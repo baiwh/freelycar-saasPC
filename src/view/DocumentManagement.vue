@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div class="minwidth">
     <!--第一模块-->
     <el-card shadow="hover">
       <el-form :model="form" ref="form" label-width="100px">
@@ -10,14 +10,14 @@
               <el-input v-model="form.orderId" size="small"></el-input>
             </el-form-item>
           </el-col>
-          <el-col :span="8">
+          <!-- <el-col :span="8">
             <el-form-item label="项目类别：" size="small">
               <el-select v-model="form.projectId" placeholder="请选择项目类别">
                 <el-option v-for="item in projectType" :key="item.id" :label="item.name"
                            :value="item.id"/>
               </el-select>
             </el-form-item>
-          </el-col>
+          </el-col> -->
           <el-col :span="7" :offset="1">
             <span>车辆状态：</span>
             <el-radio-group v-model="form.orderState" size="small" class="circle" @change="getDataList">
@@ -511,4 +511,8 @@
     margin-right: 10px;
     border-radius: 21px;
   }
+  .minwidth{
+  width : 100%;
+  min-width: 1000px;
+}
 </style>

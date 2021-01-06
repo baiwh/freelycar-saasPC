@@ -104,7 +104,7 @@
         </el-form-item>
         <el-form-item label="可接项目：" prop="projects">
           <el-checkbox-group v-model="checkBoxGroup">
-            <el-checkbox v-for="(item,index) in projectType" :label="item.id"
+            <el-checkbox class="el-checkbox" v-for="item in projectType" :label="item.id"
                          :key="item.id">{{item.name}}</el-checkbox>
           </el-checkbox-group>
         </el-form-item>
@@ -331,6 +331,7 @@
                 message: '保存成功',
                 type: 'success'
               })
+              
               this.dialogVisible1 = false
               this.getDataList()
             })
@@ -426,5 +427,8 @@
 
   .el-row {
     margin-bottom: 30px;
+  }
+  .el-checkbox{
+    margin:0 30px 0 0;
   }
 </style>

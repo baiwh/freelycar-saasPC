@@ -28,7 +28,7 @@
     </el-card>
 
     <!--会员卡信息-->
-    <el-card shadow="hover">
+    <!-- <el-card shadow="hover">
       <div slot="header">
         <span>会员卡信息</span>
       </div>
@@ -49,10 +49,10 @@
           </el-table-column>
         </el-table>
       </div>
-    </el-card>
+    </el-card> -->
 
     <!--优惠券信息-->
-    <el-card shadow="hover">
+    <!-- <el-card shadow="hover">
       <div slot="header">
         <span>优惠券信息</span>
       </div>
@@ -62,7 +62,7 @@
         <el-table-column property="price" label="价格" align="center"/>
         <el-table-column property="projectId" label="可用项目" align="center" :formatter="projectTypeFormat"/>
       </el-table>
-    </el-card>
+    </el-card> -->
 
     <!--车辆信息-->
     <el-card>
@@ -109,7 +109,7 @@
         <el-table-column property="projectNames" label="项目" align="center"/>
         <el-table-column property="cost" label="消费金额" align="center"/>
         <el-table-column property="payMethod" label="支付方式" align="center"/>
-        <el-table-column property="useCard" label="是否使用会员卡扣" align="center"/>
+        <!-- <el-table-column property="useCard" label="是否使用会员卡扣" align="center"/> -->
         <el-table-column property="serviceTime" label="服务时间" align="center"/>
       </el-table>
       <el-row>
@@ -122,7 +122,7 @@
     </el-card>
 
     <!--续卡对话框-->
-    <el-dialog title="续卡充值" :visible.sync="renewalCardInfo.renewalCardVisible">
+    <!-- <el-dialog title="续卡充值" :visible.sync="renewalCardInfo.renewalCardVisible">
       <el-form :data="renewalCardInfo" label-width="130px">
         <el-form-item label="会员卡号：">{{cardInfo.cardNumber}}</el-form-item>
         <el-form-item label="卡名称：">{{cardInfo.name}}</el-form-item>
@@ -154,10 +154,10 @@
       <div slot="footer" class="dialog-footer" style="text-align: center;">
         <el-button type="primary" @click="renewalCardSubmit">办 理</el-button>
       </div>
-    </el-dialog>
+    </el-dialog> -->
 
     <!--查看详情对话框-->
-    <el-dialog title="会员卡详情" :visible.sync="detailsVisible">
+    <!-- <el-dialog title="会员卡详情" :visible.sync="detailsVisible">
       <el-row>
         <el-col :span="12">卡类名称：{{cardInfo.name}}</el-col>
         <el-col :span="12">卡类属性：{{cardInfo.type}}</el-col>
@@ -177,7 +177,7 @@
         <el-button @click="detailsVisible = false">取 消</el-button>
         <el-button type="primary" @click="detailsVisible = false">确 定</el-button>
       </div>
-    </el-dialog>
+    </el-dialog> -->
 
     <!--添加车型-->
     <addCarBrand @getCarTypeInfo="getCarTypeInfo"

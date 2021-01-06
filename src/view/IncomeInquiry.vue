@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div class="minwidth">
     <!--选择区间-->
     <el-row>
       <el-col :span="8">
@@ -20,52 +20,21 @@
         <!--<el-button type="primary" icon="el-icon-download">导出Excel</el-button>-->
       <!--</el-col>-->
     </el-row>
-
-    <!--消费金额卡片-->
     <el-row :gutter="20">
-      <el-col :span="8" v-for="(item, index) of dataReportCard" :key="index">
-        <el-card :class="['text-center',item.cardClass]" shadow="hover">
-          <div slot="header" class="clearfix">
-            <span>{{item.title}}</span>
-          </div>
-          <div>￥{{item.number}}</div>
-        </el-card>
+      <el-col :span="8">
+        <span style="fontsize: 26px">总营业额：{{ sum }}元</span>
       </el-col>
     </el-row>
-
-    <!--收款方式模块-->
     <el-row>
-      <el-card shadow="hover">
-        <div slot="header" class="clearfix">
-          <span>收款方式</span>
-        </div>
-        <el-table v-loading="loading" :data="amountMethodsTable">
-          <el-table-column property="cash" label="现金" align="center"/>
-          <el-table-column property="creditCard" label="刷卡" align="center"/>
-          <el-table-column property="suningPay" label="易付宝" align="center"/>
-          <el-table-column property="alipay" label="支付宝" align="center"/>
-          <el-table-column property="wechatPay" label="微信支付" align="center"/>
-          <el-table-column property="card" label="储值卡支付" align="center"/>
-        </el-table>
-      </el-card>
+      <div class="store-echart" id="storeEcharts"></div>
     </el-row>
-
-    <!--项目类别-->
     <el-row>
-      <el-card shadow="hover">
-        <div slot="header" class="clearfix">
-          <span>项目类别</span>
-        </div>
-        <div class="echarts-box" id="echarts">项目类别饼状图</div>
-        <el-table v-loading="loading" :data="itemCategoryTable">
-          <el-table-column property="projectName" label="项目类别" align="center"/>
-          <el-table-column property="count" label="数量" align="center"/>
-          <el-table-column label="占比" align="center">
-            <template slot-scope="scope">{{(scope.row.percent*100).toFixed(2)}}%</template>
-          </el-table-column>
-          <el-table-column property="projectPrice" label="金额" align="center"/>
-        </el-table>
-      </el-card>
+      <el-table :data="storeList" border style="width: 93%">
+        <el-table-column prop="0" label="项目名称"></el-table-column>
+        <el-table-column prop="1" label="所属服务商"></el-table-column>
+        <el-table-column prop="2" label="营业额"></el-table-column>
+        <el-table-column prop="3" label="占比"></el-table-column>
+      </el-table>
     </el-row>
   </div>
 </template>
@@ -80,128 +49,132 @@
         loading: true,
         tabPosition: 'today',
         datePickerValue: '',
-        dataReportCard: [
-          {
-            title: '实收金额',
-            number: '',
-            cardClass: 'orange'
-          }, {
-            title: '会员消费金额',
-            number: '',
-            cardClass: 'green'
-          }, {
-            title: '散客消费金额',
-            number: '',
-            cardClass: 'grey'
-          }
-        ],
         amountMethodsTable: [],
-        itemCategoryTable: [{
-          itemName: '办卡服务',
-          itemNumber: '2',
-          itemProportion: '28.57%',
-          itemPrice: '80'
-        }],
         visible: false,
         num: 12,
         searchDate: {
           today: '',
           thisMonth: [],
-        }
+        },
+        storeId:'',
+        storeList:[],
+        startTime:'',
+        endTime:'',
+        sum:'',
+        storeOption:{},
+        storeName:'',
       }
     },
     methods: {
-      // 获取页面数据
-      getData(startTime, endTime) {
-        this.$get('/order/getStoreIncome', {
-          storeId: localStorage.getItem('storeId'),
-          startTime: startTime,
-          endTime: endTime,
-        }).then(res => {
-          this.loading = false
-          this.dataReportCard = [
-            {
-              title: '实收金额',
-              number: res.memberIncome.allActualIncome,
-              cardClass: 'orange'
+      
+      searchStoreData() {
+      this.$get("/order/getIncomeByStore", {
+        storeId: this.storeId,
+        startTime: this.startTime,
+        endTime: this.endTime,
+      }).then((res) => {
+        console.log(res);
+        this.sum = res.sum;
+        this.storeList = res.list;
+        var storeList = [],
+            price = [],
+            listItem = res.list;
+        for(let i in listItem){
+          storeList.push(listItem[i][0]+'('+listItem[i][1]+')');
+          price.push(listItem[i][2]);
+        }
+        console.log(storeList);
+        
+      this.storeOption = {
+        title: {
+          text: this.storeName+'各项目营业额（元）',
+        },
+        tooltip: {
+          trigger: "axis",
+          axisPointer: {
+            type: "shadow",
+          },
+        },
+        xAxis: {
+          type: "value",
+          boundaryGap: false,
+        },
+        yAxis: {
+          type: "category",
+          data: storeList,
+        },
+        series: [
+          {
+            name: "营业额",
+            type: "bar",
+            data: price,
+            barWidth: 30,
+            itemStyle: {
+              normal: {
+                color: "#409EFF",
+              },
             },
-            {
-              title: '会员消费金额',
-              number: res.memberIncome.memberActualIncome,
-              cardClass: 'green'
-            },
-            {
-              title: '散客消费金额',
-              number: res.memberIncome.nonMemberActualIncome,
-              cardClass: 'grey'
-            }
-          ]
-          this.amountMethodsTable = [res.payMethodIncome]
-          this.itemCategoryTable = res.pieChart
-
-          // pieChart: [{
-          // count: 2
-          // percent: 0.3998
-          // projectId: "ff8080816928f3440169290588ac0007"
-          // projectName: "精洗"
-          // projectPrice: 150}]
-          let echartsData=[]
-          res.pieChart.forEach(value=>{
-            echartsData.push({value: value.percent, name: value.projectName})
-          })
-
-          // 绘制图表
-          let myChart = echarts.init(document.getElementById('echarts'))
-          myChart.setOption({
-            title: {
-              text: '项目类别占比图'
-            },
-            legend: {
-              show: true,
-              orient:'vertical',
-              left:0,
-              top:'10%'
-            },
-            series: [
-              {
-                name: '项目类别占比图',
-                type: 'pie',
-                radius: '55%',
-                data: echartsData
-              }
-            ]
-          })
-        })
-      },
+          },
+        ],
+      };
+      console.log("查询网点");
+      let storeEcharts = echarts.init(document.getElementById("storeEcharts"));
+      storeEcharts.setOption(this.storeOption);
+      });
+    },
 
       // 按钮区间
       onButtonChange(e) {
         if (e === 'today') {
-          this.getData(this.searchDate.today, this.searchDate.today)
+          this.setToday();
+          this.searchStoreData();
         }
         if (e === 'thisMonth') {
-          this.getData(this.searchDate.thisMonth[0], this.searchDate.thisMonth[1])
+          this.setMonth();
+          this.searchStoreData();
         }
-        if (e === 'search') {
-          this.getData(this.datePickerValue[0], this.datePickerValue[1])
+        console.log(e)
+        if(e === 'search'){
+            this.visible = true;
+        }else{
+          this.visible = false;
         }
-        this.visible = e === 'search' ? true : false
-        this.num = e === 'search' ? 0 : 12
       },
+      setMonth(){
+      var date = new Date(),
+      Y = date.getFullYear() + "-",
+      M = (date.getMonth() + 1 < 10
+            ? "0" + (date.getMonth() + 1)
+            : date.getMonth() + 1) + "-",
+      D = '01';
+      this.startTime = Y+M+D;
+      this.endTime = '';
+    },
 
       // 区间查询
       searchData() {
-        this.getData(this.datePickerValue[0], this.datePickerValue[1])
-      }
+        console.log(this.datePickerValue)
+      this.startTime = this.datePickerValue[0];
+      this.endTime = this.datePickerValue[1];
+      this.searchStoreData();
+      },
+      setToday(){
+      var date = new Date(),
+        Y = date.getFullYear() + "-",
+        M =
+          (date.getMonth() + 1 < 10
+            ? "0" + (date.getMonth() + 1)
+            : date.getMonth() + 1) + "-",
+        D = date.getDate();
+        this.startTime = Y + M + (D-1);
+        this.endTime = Y + M + D
+      },
     },
     mounted: function () {
-      let date = new Date()
-      let year = date.getFullYear()
-      let month = date.getMonth() < 9 ? '-0' + (date.getMonth() + 1) : '-' + (date.getMonth() + 1)
-      let day = date.getDate() < 10 ? '-0' + date.getDate() : '-' + date.getDate()
-      this.searchDate.today = year + month + day
-      this.searchDate.thisMonth = [year + month + '-01', year + month + '-31']
-      this.getData(this.searchDate.today, this.searchDate.today)
+      this.storeId = localStorage.getItem('storeId')
+      this.storeName = localStorage.getItem('storeName');
+      this.setToday();
+      this.searchStoreData()
     }
   }
 </script>
@@ -245,4 +218,12 @@
   .grey /deep/ .el-card__header {
     background-color: #ccc;
   }
+  .store-echart {
+  width: 1200px;
+  height: 500px;
+}
+.minwidth{
+  width : 100%;
+  min-width: 1000px;
+}
 </style>

@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div class="minwidth">
     <!--查询条件-->
     <el-row>
       <el-col :span="5">
@@ -14,10 +14,6 @@
         <span>车牌号码：</span>
         <el-input v-model="carNumber" size="small"></el-input>
       </el-col>
-      <el-col :span="4">
-        <span>是否会员：</span>
-        <el-button circle :type="buttonType" size="small" @click="onVipButton">是</el-button>
-      </el-col>
       <el-col :span="1">
         <el-button type="primary" size="small" @click="getDataList(1)">查询</el-button>
       </el-col>
@@ -30,9 +26,9 @@
           <el-button type="primary" plain size="small">新增客户</el-button>
         </router-link>
       </el-col>
-      <el-col :span="3">
+      <!-- <el-col :span="3">
         <el-button type="primary" plain size="small" @click="statisticsVisible = true">会员统计</el-button>
-      </el-col>
+      </el-col> -->
       <el-col :span="3">
         <el-button type="primary" icon="el-icon-download" size="small" @click="exportExcel">导出表单</el-button>
       </el-col>
@@ -51,15 +47,13 @@
       <el-table-column prop="phone" label="手机号码" align="center"></el-table-column>
       <el-table-column prop="plates" label="车牌号码" align="center"></el-table-column>
       <el-table-column prop="brands" label="品牌" align="center"></el-table-column>
-      <el-table-column prop="isMember" label="是否会员" align="center"></el-table-column>
       <el-table-column prop="totalCount" label="总消费次数" align="center"></el-table-column>
       <el-table-column prop="lastVisit" label="最近到店时间" align="center"></el-table-column>
-      <el-table-column prop="totalBalance" label="卡内未消费金额" align="center"></el-table-column>
       <el-table-column label="操作" width="220" align="center">
         <template slot-scope="scope">
-          <el-button v-show="scope.row.totalBalance===null" @click="$router.push({path:'/MembershipManagement/MemberProcessing',query:{id:scope.row.id}})"
+          <!-- <el-button v-show="scope.row.totalBalance===null" @click="$router.push({path:'/MembershipManagement/MemberProcessing',query:{id:scope.row.id}})"
                      size="mini" type="primary">开卡
-          </el-button>
+          </el-button> -->
           <el-button @click="$router.push({path:'/MembershipManagement/ModifyCustomers',query:{id:scope.row.id}})"
                      size="mini" type="primary">修改
           </el-button>
@@ -128,7 +122,7 @@
           currentPage: search?search:this.pageData.currentPage,
           pageSize: this.pageData.pageSize,
           storeId: localStorage.getItem('storeId'),
-          isMember: this.isMember,
+          // isMember: this.isMember,
         }).then((res) => {
           this.loading = false
           this.tableData = res.data
@@ -227,4 +221,9 @@
   .el-row {
     margin-bottom: 40px;
   }
+  .minwidth{
+  width : 100%;
+  min-width: 1000px;
+}
+
 </style>
